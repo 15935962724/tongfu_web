@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+  <meta charset="utf-8" />
+  <title>发布商品</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- SimpleMDE css -->
+  <!--<link th:href="@{/assets/css/vendor/simplemde.min.css}"  rel="stylesheet" type="text/css" />-->
+
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/imgCallBack.css}"  rel="stylesheet" type="text/css" />
+  <script src="https://cdn.bootcss.com/xlsx/0.11.5/xlsx.core.min.js"></script>
+
+  <style>
+    .custom-control{
+      position: relative;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 1.3125rem;
+      padding-left: 1.5rem;
+      margin: 10px 0;
+    }
+    .custom-control-label{
+      position: relative;
+      margin-bottom: 0;
+      vertical-align: top;
+      font-size: 12px;
+    }
+    .activationButton{
+      outline: none !important;
+      padding: .45rem .9rem;
+      font-size: .6rem;
+      line-height: 1.5;
+      border-radius: .15rem;
+    }
+    .custom-control .priceIpt{
+      width: 60px;
+      margin-left: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+    }
+    #ordinary{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #ordinary>div.group_select{
+      padding: 0 0 0 20px;
+      width: 30%;
+      border: 1px solid #e4e4e0;
+      margin-bottom: 20px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <!-- Start Content-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{web/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <h4>商品>商品管理>添加商品</h4><hr/>
+              <div class="card-body">
+
+                <!-- Checkout Steps -->
+                <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                  <li class="nav-item">
+                    <a href="#billing-information" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0 active">
+                      <i class="mdi mdi-account-circle font-18"></i>
+                      <span class="d-none d-lg-block">商品基本信息</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#shipping-information" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                      <i class="mdi mdi-cash-multiple font-18"></i>
+                      <span class="d-none d-lg-block">图片及视频</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#payment-information" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                      <i class="mdi mdi-cash-multiple font-18"></i>
+                      <span class="d-none d-lg-block">详情信息</span>
+                    </a>
+                  </li>
+                </ul>
+
+                <!-- Steps Information -->
+                <form id = "productSave" method="post" novalidate onsubmit="return checkFrom()" th:action="@{/web/product/save}" enctype="multipart/form-data" >
+                  <div class="tab-content">
+                    <!-- Billing Content-->
+                    <div class="tab-pane show active" id="billing-information">
+                      <div class="row">
+                        <div class="col-lg-8">
+                          <h4 class="mt-2">基本信息</h4>
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="name">商品名称</label>
+                                <input class="form-control" type="text" name="name" placeholder="product Name" id="name" required/>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <label for="name">商品主图(260*180)</label>
+
+
+
+                              <div class="input-group imgCallBack">
+                                <img class="imgCallBackView" th:src="@{/assets/img/addImg.png}" src="/assets/img/addImg.png"/>
+                                <div class="custom-file">
+                                  <input type="file"  name = "productimage"  class="custom-file-input" id="productimage" accept="image/*" onchange="callBackImg(this,'imgCallBackView')">
+                                  <label class="custom-file-label" for="productimage">上传主图(260*180)</label>
+                                </div>
+                              </div>
+
+
+
+                            </div>
+                          </div> <!-- end row -->
+
+                          <div class="row">
+                            <div class="col-6">
+                              <div class="form-group">
+                                <label class="col-form-label">商品分类</label>
+                                <select id="inputStates" onchange="inputStatesValue();" class="form-control">
+                                  <option >--请选择--</option>
+                                  <option th:each="category:${productCategories}" th:value="${category.id}" th:text="${category.name}"></option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="form-group">
+                                <label for="productCategory" class="col-form-label">子类</label>
+                                <select id="productCategory" name="productCategory" class="form-control" required>
+                                  <option value="">--请选择--</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+
+                          <div class="row">
+                            <div class="col-6">
+                              <div class="form-group">
+                                <label for="keyword">关键词</label>
+                                <input class="form-control" type="text" name="keyword" placeholder="product Keyword" id="keyword"  required>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="reserveStock">预库存</label>
+                                <input class="form-control" type="number" min="1" name="reserveStock" placeholder="库存" value="1" id="reserveStock" />
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+                          <div class="row">
+
+                            <div class="col-6">
+                              <div class="form-group">
+                                <label for="" class="col-form-label">软件语言</label>
+                                <select class="select2 form-control select2-multiple" id="language" name="language" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                                  <optgroup label="软件语言">
+                                    <option value="中文">中文</option>
+                                    <option value="英文">英文</option>
+                                  </optgroup>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="col-6">
+                              <div class="form-group">
+                                <label for="apparatusCategory" class="col-form-label">医疗器械分类</label>
+                                <select id="apparatusCategory" name="apparatusCategory" class="form-control">
+                                  <option >--请选择--</option>
+                                  <option  value="I" >I类</option>
+                                  <option  value="II" >II类</option>
+                                  <option  value="III" >III类</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+                          <div class="row">
+                            <!--<div class="col-md-6">-->
+                              <!--<div class="form-group">-->
+                                <!--<label for="authenticationMessage">认证信息</label>-->
+                                <!--<input class="form-control" type="text" name="authenticationMessage" placeholder="CFDA" id="authenticationMessage" />-->
+                              <!--</div>-->
+                            <!--</div>-->
+                            <div class="col-md-6">
+                              <label for="authenticationMessage">认证信息</label>
+                              <select class="select2 form-control select2-multiple" id="authenticationMessage" name="authenticationMessage" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                                <optgroup label="认证信息">
+                                  <option value="MFDS">MFDS(韩国)</option>
+                                  <option value="PMDA">PMDA(日本)</option>
+                                  <option value="CE">CE(欧盟)</option>
+                                  <option value="FDA">FDA(美国)</option>
+                                  <option value="CFDA">CFDA(中国)</option>
+                                </optgroup>
+                              </select>
+                            </div>
+
+                            <div class="col-md-6">
+                              <label for="system">系统要求</label>
+                              <select class="select2 form-control select2-multiple" id="system" name="system" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                                <optgroup label="系统要求">
+                                  <option value="Windows">Windows</option>
+                                  <option value="Mac">Mac</option>
+                                  <option value="IOS">IOS</option>
+                                </optgroup>
+                              </select>
+                            </div>
+
+                          </div> <!-- end row -->
+
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label >是否隐藏价格</label>
+                                <div class="custom-control custom-checkbox">
+                                  <input type="checkbox"  class="custom-control-input"  name="isHideprice" id="isHideprice">
+                                  <label class="custom-control-label" for="isHideprice">隐藏价格</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="priceExplain">价格说明</label>
+                                <input class="form-control" type="text" name = "priceExplain" placeholder="注:如选择隐藏价格,请填写价格说明,如不填写系统默认“面议" id="priceExplain" />
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+
+                          <!--<div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="SoftwareSize">软件大小</label>
+                                <input class="form-control" type="text" name="SoftwareSize" placeholder="例如：10M" id="SoftwareSize" />
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="SoftwareVersion">软件版本</label>
+                                <input class="form-control" type="text" name="SoftwareVersion" placeholder="SoftwareVersion" id="SoftwareVersion" />
+                              </div>
+                            </div>
+                          </div>--> <!-- end row -->
+
+
+
+                          <!--<div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label >试用包</label>
+                                <div class="input-group">
+                                  <div class="custom-file">
+                                    <input type="file"  name = "ontrialpackage"  class="custom-file-input" id="ontrialPackage">
+                                    <label class="custom-file-label" for="ontrialPackage">上传试用包</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="ontrialPackageUrl">下载地址</label>
+                                <input class="form-control" type="text" name="ontrialPackageUrl"  placeholder="下载地址" id="ontrialPackageUrl" />
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="isShowOntrialPackageUrl">申请试用</label>
+                                <div class="custom-control custom-checkbox mb-2">
+                                  <input type="checkbox" class="custom-control-input" name="isShowOntrialPackageUrl" id="isShowOntrialPackageUrl">
+                                  <label class="custom-control-label" for="isShowOntrialPackageUrl">是否显示</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div> &lt;!&ndash; end row &ndash;&gt;
+
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label >下载包</label>
+                                <div class="input-group">
+                                  <div class="custom-file">
+                                    <input type="file" name="productpackage"  class="custom-file-input" />
+                                    <label class="custom-file-label">上传下载包</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="productPackageUrl">下载地址</label>
+                                <input class="form-control" type="text" name="productPackageUrl" placeholder="下载地址" id="productPackageUrl" />
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="isShowproductPackageUrl">立即下载</label>
+                                <div class="custom-control custom-checkbox mb-2">
+                                  <input type="checkbox" class="custom-control-input" name="isShowproductPackageUrl" id="isShowproductPackageUrl">
+                                  <label class="custom-control-label" for="isShowproductPackageUrl">是否显示</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>-->
+
+                          <div class="row">
+
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label>申请观摩</label>
+                                <div class="custom-control custom-checkbox mb-2">
+                                  <input type="checkbox" class="custom-control-input" name="isDemonstration" id="isDemonstration">
+                                  <label class="custom-control-label" for="isDemonstration">是否显示</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label>产品类型</label>
+                                <select id="isAddService" name="isAddService" class="form-control">
+                                  <option value="1" selected>普通软件</option>
+                                  <option value="2">增值服务</option>
+                                  <option value="4">3D打印</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-md-4" id="addServiceProduct">
+                              <div class="form-group">
+                                <label>关联增值服务产品</label>
+                                <select id="productId" name="productId" class="form-control">
+                                  <option value="">--请选择--</option>
+                                  <option th:each="product:${isAddServiceProducts}" th:value="${product.id}" th:text="${product.name}"></option>
+                                </select>
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label>科研使用</label>
+                                <div class="custom-control custom-checkbox mb-2">
+                                  <input type="checkbox" class="custom-control-input" name="isScientific" id="isScientific">
+                                  <label class="custom-control-label" for="isScientific">是否临床科研使用</label>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-md-4" id="productSoftwarePackageSelect">
+                              <input type="hidden" name="productSoftwarePackage" id="productSoftwarePackage" >
+                              <div class="form-group">
+                                <label >软件版本</label>
+                                <select id="softwareVersion" name="softwareVersion" class="form-control" onchange="showDownloadModal(this)">
+                                  <option value="0" selected>请选择</option>
+                                  <option value="1">单一版本</option>
+                                  <option value="2">多版本</option>
+                                </select>
+                              </div>
+                            </div>
+
+
+
+
+                          </div> <!-- end row -->
+
+                          <h4 class="mt-4">软件激活方式</h4>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="border p-3 rounded">
+                                <div class="custom-control custom-radio">
+                                  <input type="radio" id="shippingMethodRadio1" name="activationMode"  value="2" class="custom-control-input" checked>
+                                  <label class="custom-control-label font-16 font-weight-bold" for="shippingMethodRadio1">激活码激活</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="border p-3 rounded">
+                                <div class="custom-control custom-radio">
+                                  <input type="radio" id="shippingMethodRadio2" name="activationMode" value="1" class="custom-control-input">
+                                  <label class="custom-control-label font-16 font-weight-bold" for="shippingMethodRadio2">优盘激活</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <h4 class="mt-4">购买方式</h4>
+
+                            <div id="ordinary">
+
+                            </div>
+
+                            <!--<div class="row" id="AddService" style="display: none">-->
+
+                            <!--</div>-->
+
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="form-group mt-3">
+                                <label for="example-textarea">描述:</label>
+                                <textarea class="form-control" id="example-textarea" maxlength="300" rows="3" name="introduction" placeholder="描述"></textarea>
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+                        </div>
+                        <div class="col-lg-4" th:include="~{web/incloud/product::product}"></div> <!-- end col -->
+                      </div> <!-- end row-->
+                    </div>
+                    <!-- End Billing Information Content-->
+
+                    <!-- Shipping Content-->
+                    <div class="tab-pane" id="shipping-information">
+                      <div class="row">
+                        <div class="col-lg-8">
+                          <h4 class="mt-2">图片及视频</h4>
+                          <div class="row" th:each="i:${#numbers.sequence(1,5)}" style="margin-top: 20px;">
+                            <div class="col-md-12">
+                              <label>展示图片[[${i}]]</label>
+                              <div class="input-group imgCallBack">
+                                <img th:class="imgCallBackView+${i}" th:src="@{/assets/img/addImg.png}" src="/assets/img/addImg.png"/>
+                                <div class="custom-file">
+                                  <input type="file" name="inputProductImage"  class="custom-file-input" accept="image/*" th:id="'inputProductImage'+${i}" th:onchange="|callBackImg(this,'imgCallBackView'+${i})|">
+                                  <label class="custom-file-label" th:for="'inputProductImage'+${i}">上传图片[[${i}]]</label>
+                                </div>
+                              </div>
+
+
+
+                            </div>
+                          </div>
+
+                          <div class="row" style="margin-top: 30px;">
+                            <div class="col-md-12">
+                              <label>展示小视频</label>
+                              <div class="input-group">
+                                <div class="custom-file">
+                                  <input type="file"  name = "productvideo"  class="custom-file-input" id="productVideo" accept="video/*">
+                                  <label class="custom-file-label" for="productVideo">上传视频</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- end row-->
+                        </div>
+                        <div class="col-lg-4" th:include="~{web/incloud/product::product}"></div> <!-- end col -->
+                      </div> <!-- end row-->
+
+                    </div>
+                    <!-- End Shipping Information Content-->
+
+                    <!--&lt;!&ndash; Payment Content&ndash;&gt;-->
+                    <div class="tab-pane" id="payment-information">
+
+                      <!-- start page title -->
+
+                      <div class="row">
+                        <div class="col-lg-8">
+                          <div class="card">
+
+                            <div class="card-body">
+                              <h2 class="header-title">软件概览</h2>
+                              <textarea rows="10" cols="80"  name="overview" id="overview" ></textarea>
+
+                              <h2 class="header-title">推荐配置</h2>
+                              <textarea rows="10" cols="80"  name="configure" id="configure" ></textarea>
+
+                              <h2 class="header-title">典型病例</h2>
+                              <textarea rows="10" cols="80"  name="cases" id="cases" ></textarea>
+
+                              <h2 class="header-title">软件教程</h2>
+                              <textarea rows="10" cols="80"  name="tutorial" id="tutorial" ></textarea>
+
+                              <h2 class="header-title">临床文献</h2>
+                              <textarea rows="10" cols="80"  name="clinical" id="clinical" ></textarea>
+
+                              <h2 class="header-title">用户评价</h2>
+                              <textarea rows="10" cols="80"  name="evaluation" id="evaluation" ></textarea>
+
+                              <h2 class="header-title">产品彩页</h2>
+                              <textarea rows="10" cols="80"  name="colorpage" id="colorpage" ></textarea>
+
+                              <!--<h4 class="header-title">应用视频</h4>-->
+                              <!--<div class="input-group">-->
+                                <!--<div class="custom-file">-->
+                                  <!--<input type="file"  name = "productvideo"  class="custom-file-input" id="productVideo">-->
+                                  <!--<label class="custom-file-label" for="productVideo">上传视频</label>-->
+                                <!--</div>-->
+                              <!--</div>-->
+
+                            </div>
+                          </div> <!-- end card-->
+                        </div> <!-- end col-->
+
+
+
+                        <div class="col-lg-4" th:include="~{web/incloud/product::product}"></div>
+                        <!-- end col -->
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-8" style="text-align: center; margin-top:20px;">
+                        <button type="submit" class="btn btn-primary btn-success">确定</button>
+                        <button type="button" class="btn btn-primary" onClick="javascript :history.back(-1);">返回</button>
+                        <button  type="button" hidden class="btn btn-warning" id = "btn-warning" data-toggle="modal" data-target="#warning-alert-modal">警告</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col -->
+        </div>
+        <!-- end row-->
+      </div>
+      <!-- content -->
+
+
+      <div class="downLoadModal">
+
+        <div class="downLoadModal_view">
+
+          <div class="downLoadModal_main">
+            <div class="downLoadModal_content">
+              <div class="downLoadModal_title">
+                测试版
+              </div>
+              <table class="downLoadModal_table">
+                <thead>
+                <tr>
+                  <th>下载地址</th>
+                  <th>版本号</th>
+                  <th>软件大小</th>
+                  <th class="downloadMore" width="60">操作</th>
+                </tr>
+                </thead>
+                <tbody id="testTbody">
+                <tr>
+                  <td><input class="up" type="file" value="上传" onchange="uploadZip(this)" /><input name="url" type="hidden" /></td>
+                  <td><input name="v" type="text" placeholder="请输入版本号" /></td>
+                  <td><input name="size" type="text" placeholder="请输入软件大小" /></td>
+                  <td class="downloadMore"><span onclick="deleteDownloadTr(this)">删除</span></td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="downLoadModal_add" onclick="addDownloadModalTable('testTbody')">+</div>
+            </div>
+            <div class="downLoadModal_content">
+              <div class="downLoadModal_title">
+                正式版
+              </div>
+              <table class="downLoadModal_table">
+                <thead>
+                <tr>
+                  <th>下载地址</th>
+                  <th>版本号</th>
+                  <th>软件大小</th>
+                  <th class="downloadMore" width="60">操作</th>
+                </tr>
+                </thead>
+                <tbody id="formalTbody">
+                <tr>
+                  <td><input class="up" type="file" value="上传" onchange="uploadZip(this)" /><input name="url" type="hidden" /></td>
+                  <td><input name="v" type="text" placeholder="请输入版本号" /></td>
+                  <td><input name="size" type="text" placeholder="请输入软件大小" /></td>
+                  <td class="downloadMore"><span onclick="deleteDownloadTr(this)">删除</span></td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="downLoadModal_add" onclick="addDownloadModalTable('formalTbody')">+</div>
+            </div>
+          </div>
+
+
+            <div class="downLoadModal_btn">
+              <button class="btn btn-light" onclick="closeDownloadModal()">关闭</button>
+              <button class="btn btn-primary" onclick="generateTbaleData()">确定</button>
+            </div>
+        </div>
+
+      </div>
+
+
+
+
+
+      <!--警告弹窗-->
+      <th:block th:replace="~{admin/incloud/status::warning}"></th:block>
+      <!-- Footer Start -->
+      <div th:replace="~{web/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<div class="rightbar-overlay"></div>
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script th:src="@{/assets/js/pages/demo.form-wizard.js}"></script>
+<!-- Summernote js -->
+<script th:src="@{/ueditor/ueditor.config.js}"></script>
+<script th:src="@{/ueditor/ueditor.all.js}"></script>
+<script th:src="@{/ueditor/lang/zh-cn/zh-cn.js}"></script>
+<!--&lt;!&ndash; SimpleMDE demo &ndash;&gt;-->
+<script th:src="@{/assets/js/pages/demo.simplemde.js}"></script>
+
+<script type="text/javascript">
+
+  //加载普通产品的购买方式
+  purchaseData(1);
+
+
+
+  //图片回显
+  function callBackImg(_this,name) {
+    console.log(name);
+    var file = _this.files[0];
+    console.log(file);
+    //判断文件格式
+    if (file.type != 'image/png' && file.type != 'image/jpeg' && file.type != 'image/gif') {
+      alert("图片格式不正确");
+      $("."+name).attr("src","/assets/img/addImg.png");
+      return false;
+    }
+    //读取图片
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    //构造Image对象，获取 Image对象
+    //onload在读取完毕后触发
+    reader.onload = function() {
+      //获取读取的URL
+      var imgURL = this.result;
+      $("."+name).attr("src",imgURL)
+    }
+  }
+
+
+  //单击分类
+  function inputStatesValue() {
+    var id = $('#inputStates') .val();
+    // alert(id);
+
+    // var id = $('#inputStates option:selected') .val();
+    var  productCategoryId  = $('#productCategory')
+    productCategoryId.html("");
+    productCategoryId.append("<option value=''>--请选择--</option>");
+    //加载子类数据
+    $.ajax({
+      type:"GET",
+      url:'[[@{/web/category/queryCategory}]]',
+      data:{id:id},
+      dataType:"json",
+      async: false,
+      success:function(data){
+
+        var html = "";
+        if(data.length>0){
+          for (var i = 0;i<data.length;i++){
+            html = html+ '<option value='+data[i].id+'>'+data[i].name+'</option>';
+          }
+        }
+        productCategoryId.append(html);
+      }
+    });
+
+  }
+
+
+
+  var width,height;
+  $("#productimage").change(function (e) {
+    var file, img;
+    var _URL = window.URL || window.webkitURL;
+    if ((file = this.files[0])) {
+      img = new Image();
+      img.onload = function () {
+        width = this.width;
+        height = this.height;
+        console.log("width:"+ this.width+",height"+this.height+"filesize"+ file.size)
+        // callback && callback({"width": this.width, "height": this.height, "filesize": file.size});
+      };
+      img.src = _URL.createObjectURL(file);
+    }
+  });
+
+  //软件版本下拉监听
+  function showDownloadModal(_this) {
+    if($(_this).val() == 1){
+      $(".downLoadModal").css('display','flex');
+      $(".downLoadModal_add").css('display','none');
+      $(".downloadMore").css('display','none');
+      var testhtml = $("#testTbody tr").eq(0);
+      var formalhtml = $("#formalTbody tr").eq(0);
+      $("#testTbody").html(testhtml);
+      $("#formalTbody").html(formalhtml);
+    }else if($(_this).val() == 2){
+      $(".downLoadModal").css('display','flex');
+      $(".downLoadModal_add").css('display','flex');
+      $(".downloadMore").css('display','revert');
+    }
+  }
+  //软件版本下拉监听
+  function closeDownloadModal() {
+    $(".downLoadModal").css('display','none');
+    var testhtml = $("#testTbody tr").eq(0);
+    var formalhtml = $("#formalTbody tr").eq(0);
+    $("#testTbody").html(testhtml);
+    $("#formalTbody").html(formalhtml);
+  }
+  //增加表格
+  function addDownloadModalTable(_id) {
+    var html = '<tr><td><input class="up" type="file" value="上传" onchange="uploadZip(this)" /><input name="url" type="hidden" /></td><td><input name="v" type="text" placeholder="请输入版本号" /></td><td><input name="size" type="text" placeholder="请输入软件大小" /></td><td class="downloadMore"><span onclick="deleteDownloadTr(this)">删除</span></td></tr>';
+    $("#"+_id).append(html);
+    $(".downloadMore").css('display','revert');
+  }
+  //生成数据
+  function generateTbaleData() {
+    var testJson = [];//测试表格
+    var formalJson = [];//正式表格
+    for(var i = 0; i < $("#testTbody tr").length; i++){
+      var url = $("#testTbody tr").eq(i).find("input[name='url']").val();
+      var v = $("#testTbody tr").eq(i).find("input[name='v']").val();
+      var size = $("#testTbody tr").eq(i).find("input[name='size']").val();
+      if(url == ""){
+        $('#warningContent').html('请上传文件！');
+        $("#btn-warning").click();
+        return false;
+      }
+      if(v == ""){
+        $('#warningContent').html('请输入版本号！');
+        $("#btn-warning").click();
+        return false;
+      }
+      if(size == ""){
+        $('#warningContent').html('请输入版本大小！');
+        $("#btn-warning").click();
+        return false;
+      }
+      testJson.push({
+        'package_url': url,
+        'version_no': v,
+        'package_size': size,
+        'type': 1
+      })
+    }
+    for(var i = 0; i < $("#formalTbody tr").length; i++){
+      var url = $("#formalTbody tr").eq(i).find("input[name='url']").val();
+      var v = $("#formalTbody tr").eq(i).find("input[name='v']").val();
+      var size = $("#formalTbody tr").eq(i).find("input[name='size']").val();
+      if(url == ""){
+        $('#warningContent').html('请上传文件！');
+        $("#btn-warning").click();
+        return false;
+      }
+      if(v == ""){
+        $('#warningContent').html('请输入版本号！');
+        $("#btn-warning").click();
+        return false;
+      }
+      if(size == ""){
+        $('#warningContent').html('请输入版本大小！');
+        $("#btn-warning").click();
+        return false;
+      }
+      formalJson.push({
+        'package_url': url,
+        'version_no': v,
+        'package_size': size,
+        'type': 2
+      })
+    }
+    console.log('测试表格');
+    console.log(testJson);
+    console.log('正式表格');
+    console.log(formalJson);
+    testJson = testJson.concat(formalJson)
+    console.log("合并之后:")
+    console.log(testJson)
+    $('#productSoftwarePackage').val(JSON.stringify(testJson));
+    $(".downLoadModal").css('display','none');
+  }
+  //上传文件
+  function uploadZip(_this) {
+    var formData = new FormData();//这里需要实例化一个FormData来进行文件上传
+    formData.append("sofwarePackage",$(_this)[0].files[0]);
+    $.ajax({
+      type : "post",
+      url : "[[@{/web/product/uploadSofwarePackage}]]",
+      data : formData,
+      processData : false,
+      contentType : false,
+      success : function(data){
+        $(_this).siblings("input[name='url']").val(data);
+      }
+    });
+  }
+  //删除
+  function deleteDownloadTr(_this) {
+    console.log()
+    if($(_this).parents('tbody').children('tr').length > 1){
+      $(_this).parents('tr').remove();
+    }else{
+      $('#warningContent').html('请保留一行。');
+      $("#btn-warning").click();
+      return false;
+    }
+  }
+
+
+
+  //校验表单提交
+  function checkFrom() {
+
+    var p =/^[1-9](\d+(\.\d{1,2})?)?$/;
+    var p1=/^[0-9](\.\d{1,2})?$/;
+    if ($('#name').val() == "") {
+      $('#warningContent').html('商品名称必填');
+      $("#btn-warning").click();
+      return false;
+    }
+    //
+    if ($('#productimage').val() == "") {
+      $('#warningContent').html('请上传商品logo');
+      $("#btn-warning").click();
+      return false;
+    }
+
+
+    if(width!=260&&height!=180){
+      $('#warningContent').html('图片宽高必须是260*180px');
+      $("#btn-warning").click();
+      return false;
+    }
+
+
+
+    var productCategoryId = $('#productCategory option:selected') .val();
+    if (productCategoryId == "") {
+      $('#warningContent').html('请选择商品所属分类');
+      $("#btn-warning").click();
+      return false;
+    }
+
+     var reserveStock = $('#reserveStock').val();
+    if (reserveStock == ""||reserveStock<=0) {
+      $('#warningContent').html('预库存输入有误!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    var language = $('#language').val();
+    if (language == "") {
+      $('#warningContent').html('请选择软件语言!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+
+    var authenticationMessage = $('#authenticationMessage').val();
+    if (authenticationMessage == "") {
+      $('#warningContent').html('请输认证信息!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    var apparatusCategory = $('#apparatusCategory').val();
+    if (apparatusCategory == "") {
+      $('#warningContent').html('请选择器械分类!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    var system = $('#system').val();
+    if (system == "") {
+      $('#warningContent').html('请选择系统要求!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    var productSoftwarePackage = $('#productSoftwarePackage').val();
+    if (productSoftwarePackage == "") {
+      $('#warningContent').html('请设置软版本!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    var size =$('input[name="purchase"]:checked').length;
+    if(size==0){
+      $('#warningContent').html('请设置购买方式');
+      $("#btn-warning").click();
+      return false;
+    }
+
+
+    if ($('#isShowproductPackageUrl').prop('checked')) {
+      var productpackage =  $("input[name='productpackage']").val();
+      var productPackageUrl = $('#productPackageUrl').val();
+      if(productpackage==''&&productPackageUrl==''){
+        $('#warningContent').html('请上传下载安装包或者输入下载包的下载地址！');
+        $("#btn-warning").click();
+        return false;
+      }
+    }
+
+    if ($('#isShowOntrialPackageUrl').prop('checked')) {
+      // var ontrialpackage = $('#ontrialpackage').val();//试用下载包通过id取不到值
+      var ontrialpackage =  $("input[name='ontrialpackage']").val();//通过id取不到值，只能通过name去取值 不晓得什么原因，下载包通过id是可以取到值的
+      var ontrialPackageUrl = $('#ontrialPackageUrl').val();
+      if((ontrialpackage==''||ontrialpackage == undefined)&&((ontrialPackageUrl==''||ontrialPackageUrl == undefined))){
+        $('#warningContent').html('请上传试用包或者请输入试用包的下载地址！');
+        $("#btn-warning").click();
+        return false;
+      }
+    }
+    //
+    var falg = true;
+
+    var chk_value =[];//定义一个数组productPurchase
+
+    var size =$('#ordinary input[name="purchase"]:checked').length;
+    if(size==0){
+      $('#warningContent').html('请设置购买方式');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    $('#ordinary input[name="purchase"]:checked').each(function() {//遍历每一个名字为purchase的复选框，其中选中的执行函数
+      var map = {};
+      var id = $(this).attr('id');
+      var price = $('#price' + id).val();
+      //判断复选框是否设置价格
+      if (price == "" || price <= 0) {
+        $('#warningContent').html('【' + $('#customCheck' + id).text() + '】价格输入有误!');
+        $("#btn-warning").click();
+        falg = false;
+      }
+
+      if ($('#isAddService').val() == 1) {
+        var activation = $('#activation' + id).val();
+        if ((activation == '' || activation == undefined)) {
+          $('#warningContent').html('【' + $('#customCheck' + id).text() + '】请导入激活码!');
+          $("#btn-warning").click();
+          falg = false;
+        }
+        map['activation'] = activation;
+      }
+      map['id'] = id;
+      map['price'] = price;
+      chk_value.push(map);
+    });
+
+      console.log(JSON.stringify(chk_value))
+      $('#purchase').val(JSON.stringify(chk_value))
+      if (!falg) {
+        return falg;
+      }
+
+    var productImageCount = 0;
+    $('input[name="inputProductImage"]').each(function(){//遍历每一个上传文件的内容
+      var values = $(this).val();
+      if(values!=''){
+        productImageCount++;
+      }
+
+    });
+    console.log(productImageCount)
+    if(productImageCount<=0){
+      $('#warningContent').html('至少上传一个商品展示图片!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    return true;
+  }
+
+  // 产品类型
+  $('#isAddService').on('change',function () {
+    $('#productId').val('');
+    $('#softwareVersion').val('0');
+    $("#addServiceProduct").hide();
+    $(".downLoadModal").hide();
+    var type = $(this).val();
+    if (type == 1){
+      $("#addServiceProduct").show();
+      var html = '<tr><td><input class="up" type="file" value="上传" onchange="uploadZip(this)" /><input name="url" type="hidden" /></td><td><input name="v" type="text" placeholder="请输入版本号" /></td><td><input name="size" type="text" placeholder="请输入软件大小" /></td><td class="downloadMore"><span onclick="deleteDownloadTr(this)">删除</span></td></tr>';
+      $("#testTbody").html(html);
+      $("#formalTbody").html(html);
+      $("#productSoftwarePackageSelect").show();
+    }else if (type == 2){
+      $("#productSoftwarePackageSelect").hide();
+      $("#addServiceProduct").hide();
+    }else{
+      $("#addServiceProduct").show();
+    }
+    purchaseData(type);
+  });
+  //购买方式
+  function purchaseData(type){
+    $("#ordinary").empty();
+    $("#AddService").empty();
+    $.ajax({
+      type : "post",
+      url : "[[@{/web/product/getPurchase}]]",
+      data : {type:type},
+      dataType:"json",
+      async: false,
+      success : function(data){
+        console.log(data);
+          var html = '<input class="form-control" type="hidden" name="productPurchase" placeholder="购买方式" id="purchase">';
+          for(var i = 0; i < data.length; i++){
+            html += '<div class="group_select">';
+            html += '<div class="form-group">';
+            html += '<div class="custom-control custom-checkbox">';
+            html += '<label>'+ data[i].name +'</label>';
+            html += '</div>';
+            html += '</div>';
+            var purchases = data[i].purchases;
+            for(var k = 0; k < purchases.length; k++){
+              html += '<div class="form-group">';
+              html += '<div class="custom-control custom-checkbox">';
+              html += '<input type="checkbox" class="custom-control-input" name="purchase" id="'+purchases[k].id+'">';
+              html += '<label class="custom-control-label" for="'+purchases[k].id+'" id="customCheck'+purchases[k].id+'">'+purchases[k].name+'</label>';
+              html += '<input type="number" placeholder="价格" id="price'+purchases[k].id+'" class="priceIpt" />/元';
+              html += '</div>';
+              if(type == 1){
+                html += '<input type="hidden" placeholder="激活码" id="activation'+purchases[k].id+'" style="width: 60px;" />';
+                html += '<button type="button" id="activationButton'+purchases[k].id+'" class="btn btn-light activationButton" onclick="activationButtonImport(this)">导入激活码</button>';
+                html += '<input type="file" style="display: none" id="activationFile'+purchases[k].id+'" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" filetype="TombAlbums" />';
+              }
+              html += '</div>';
+            }
+            html += '</div>';
+          }
+        $("#ordinary").append(html);
+
+
+      }
+    });
+  }
+
+  // 导入激活码
+  function activationButtonImport(_this){
+    // console.log($(this).attr("id"));
+
+    var activationButtonId = $(_this).attr("id");
+    console.log(activationButtonId);
+    var id = activationButtonId.replace('activationButton','');
+    console.log(id);
+    // 触发上传文件按钮
+    $('#activationFile'+id).trigger("click");
+
+    var wb;//读取完成的数据
+    var rABS = false; //是否将文件读取为二进制字符串
+
+    $('#activationFile'+id).change(function(){
+
+      console.log($(_this).val())
+      var location = $(_this).val();
+      var point = location.lastIndexOf(".");
+      var type = location.substr(point);
+      // var filePath="D:\abcd9.com.xls"; //要读取的xls
+      // var filePath=$(this).val(); //要读取的xls
+
+      var formData = new FormData();//这里需要实例化一个FormData来进行文件上传
+      formData.append("file",$('#activationFile'+id)[0].files[0]);
+      $.ajax({
+        type : "post",
+        url : "[[@{/web/product/activations}]]",
+        data : formData,
+        processData : false,
+        contentType : false,
+        success : function(data){
+          console.log(data)
+          $('#activation'+id).val(data);
+
+        }
+      });
+    });
+  }
+
+</script>
+
+<script type="text/javascript">
+
+  //软件概览
+  UE.getEditor('overview',{initialFrameWidth:'100%',initialFrameHeight:180});
+  // CKEDITOR.replace( 'overview');
+  //推荐配置
+  UE.getEditor('configure',{initialFrameWidth:'100%',initialFrameHeight:180});
+  // CKEDITOR.replace( 'configure');
+  //典型病例
+  UE.getEditor('cases',{initialFrameWidth:'100%',initialFrameHeight:180});
+  // CKEDITOR.replace( 'cases');
+  //软件教程
+  UE.getEditor('tutorial',{initialFrameWidth:'100%',initialFrameHeight:180});
+  // CKEDITOR.replace( 'tutorial');
+  //临床文献
+  UE.getEditor('clinical',{initialFrameWidth:'100%',initialFrameHeight:180});
+  // CKEDITOR.replace( 'clinical');
+  //用户评价
+  UE.getEditor('evaluation',{initialFrameWidth:'100%',initialFrameHeight:180});
+  // CKEDITOR.replace( 'evaluation');
+  //产品彩页
+  UE.getEditor('colorpage',{initialFrameWidth:'100%',initialFrameHeight:180});
+  // CKEDITOR.replace( 'colorpage');
+
+
+</script>
+
+</body>
+
+</html>

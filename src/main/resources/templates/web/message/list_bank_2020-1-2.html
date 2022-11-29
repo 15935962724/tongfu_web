@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>学术活动</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <!-- Start Content-->
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+            <div class="content">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">未处理</a></li>
+                                    <li class="breadcrumb-item active">已处理</li>
+                                </ol>
+                            </div>
+                            <h4 class="page-title">咨询</h4>
+                        </div> <!-- end page-title-box -->
+                    </div> <!-- end col-->
+                </div>
+                <!-- end page title -->
+                <div class="row">
+                    <div class="col-lg-4">
+                        <!-- Chat-->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="dropdown float-right">
+                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="mdi mdi-dots-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Settings</a>
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                                    </div>
+                                </div>
+                                <h4 class="header-title mb-3">Chat</h4>
+
+                                <div class="chat-conversation">
+                                    <ul class="conversation-list slimscroll" style="max-height: 350px;">
+                                        <li class="clearfix">
+                                            <div class="chat-avatar">
+                                                <img th:src="@{/assets/images/users/avatar-5.jpg}" alt="male">
+                                                <i>10:00</i>
+                                            </div>
+                                            <div class="conversation-text">
+                                                <div class="ctext-wrap">
+                                                    <i>Geneva</i>
+                                                    <p>
+                                                        Hello!
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="clearfix odd">
+                                            <div class="chat-avatar">
+                                                <img th:src="@{/assets/images/users/avatar-1.jpg}" alt="Female">
+                                                <i>10:01</i>
+                                            </div>
+                                            <div class="conversation-text">
+                                                <div class="ctext-wrap">
+                                                    <i>Dominic</i>
+                                                    <p>
+                                                        Hi, How are you? What about our next meeting?
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <form class="needs-validation" novalidate name="chat-form" id="chat-form">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input type="text" class="form-control chat-input" placeholder="输入文本内容" required>
+                                                <div class="invalid-feedback">
+                                                    请输入你的消息
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="submit" class="btn btn-danger chat-send btn-block waves-effect waves-light">Send</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div> <!-- end .chat-conversation-->
+                            </div>
+                        </div> <!-- end card-->
+                    </div> <!-- end col-->
+
+                </div>
+                <!-- end row-->
+
+            </div> <!-- content -->
+
+            <!-- Footer Start -->
+            <div th:replace="~{web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div>
+    </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+<!-- third party:js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+<!-- third party end -->
+<!-- Chat js -->
+<script th:src="@{/assets/js/ui/component.chat.js}"></script>
+<!-- Todo js -->
+<script th:src="@{/assets/js/ui/component.todo.js}"></script>
+<!-- demo:js -->
+<script th:src="@{/assets/js/pages/demo.widgets.js}"></script>
+<!-- demo end -->
+</body>
+</html>

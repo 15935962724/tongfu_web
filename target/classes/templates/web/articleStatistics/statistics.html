@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>文章统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+    <!--<link th:href="@{/assets/css/datePicker/daterangepicker.css}"  rel="stylesheet" type="text/css" />-->
+
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <script th:src="@{/assets/js/vendor/jquery-jvectormap-cn-mill.js}"></script>
+
+    <style>
+        .articleList{
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            height: 400px;
+            overflow-y: scroll;
+        }
+        .articleList::-webkit-scrollbar {
+              width: 6px;
+          }
+        .articleList::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.2);
+        }
+        .articleList::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            border-radius: 0;
+            background: rgba(0,0,0,0.1);
+
+        }
+        .articleMain{
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+
+            <div class="content">
+
+
+                <div class="row">
+
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">文章数量统计</h4>
+                                <input class="datePicker" id="companySalesStatisicsInput" />
+                                <div id="companySalesStatisics" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body"  style="height: 451px;">
+                                <h4 class="header-title">文章数量占比</h4>
+                                <input class="datePicker" id="companySalesProportionInput" />
+                                <div id="companySalesProportion" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+
+
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body"  style="height: 451px;">
+                                <h4 class="header-title">文章访问量占比</h4>
+                                <input class="datePicker" id="articleProportionInput" />
+                                <div id="articleProportion" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+
+
+                    <!-- end col-->
+                </div>
+
+                <div class="row">
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">文章访问量统计</h4>
+                                <input class="datePicker" id="articleStatisicsInput" />
+                                <div id="articleStatisics" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body"  style="height: 451px;">
+                                <h4 class="header-title">文章访问量排名</h4>
+                                <div class="articleList">
+                                    <div class="articleMain" th:each="vistit,vistitStart:${visitsRanking}"  th:if="${vistitStart.index<20}" >[[${vistitStart.index+1}]].[[${vistit.title}]]</div>
+                                </div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+
+
+
+                    <!-- end col-->
+                </div>
+            </div>
+            <!-- Footer Start -->
+            <div th:replace="~{web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+    </div> <!-- end wrapper-->
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+<!-- third party js -->
+<script src="assets/js/vendor/Chart.bundle.min.js" th:src="@{/assets/js/vendor/Chart.bundle.min.js}"></script>
+<script src="assets/js/vendor/jquery-jvectormap-1.2.2.min.js" th:src="@{/assets/js/vendor/jquery-jvectormap-1.2.2.min.js}"></script>
+<script src="assets/js/vendor/jquery-jvectormap-cn-mill.js" th:src="@{/assets/js/vendor/jquery-jvectormap-cn-mill.js}"></script>
+<!--<script th:src="@{/assets/js/datePicker/moment.min.js}"></script>-->
+<!--<script th:src="@{/assets/js/datePicker/daterangepicker.min.js}"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+<!-- third party end -->
+<!--<script th:src="@{/assets/js/pages/demo.apex-mixed.js}"></script>-->
+<script th:inline="javascript" type="text/javascript">
+
+    //页面加载就调用
+    $(function(){
+
+       // 文章数量统计
+        var articles = [[${articles}]];
+        var companySalesColors = [];
+        var companySalesData = [];
+        var companySalesCategories = [];
+
+        for (var i = 0;i<articles.length;i++){
+            companySalesColors.push(randomColor());
+            companySalesData.push(articles[i].countNum);
+            companySalesCategories.push(articles[i].name);
+        }
+        var companySalesUrl = [[@{/web/articleStatistics/articleSize}]];
+        var companySalesOptions = {
+            chart: {
+                height: 380,
+                type: "bar",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        customIcons: [{
+                            icon: '<img src="../../assets/img/day.png" width="20">',
+                            index: 0,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("按日统计")
+                                provinces = returnDate(companySalesUrl,1);
+                                var dayColor = [];
+                                var daySeries = [];
+                                var dayLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    dayColor.push(randomColor());
+                                    dayLabels.push(provinces[i].name);
+                                    daySeries.push(provinces[i].countNum);
+                                }
+                                companySalesColumn.updateOptions({
+                                    series: [{"name": "销量", "data": daySeries}],
+                                    labels: dayLabels,
+                                    colors: dayColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/week.png" width="20">',
+                            index: 1,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(companySalesUrl,2);
+                                var weekColor = [];
+                                var weekSeries = [];
+                                var weekLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    weekColor.push(randomColor());
+                                    weekLabels.push(provinces[i].name);
+                                    weekSeries.push(provinces[i].countNum);
+                                }
+                                companySalesColumn.updateOptions({
+                                    series: [{"name": "销量", "data": weekSeries}],
+                                    labels: weekLabels,
+                                    colors: weekColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/month.png" width="20">',
+                            index: 2,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(companySalesUrl,3);
+                                var monthColor = [];
+                                var monthSeries = [];
+                                var monthLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    monthColor.push(randomColor());
+                                    monthLabels.push(provinces[i].name);
+                                    monthSeries.push(provinces[i].countNum);
+                                }
+                                companySalesColumn.updateOptions({
+                                    series: [{"name": "销量", "data": monthSeries}],
+                                    labels: monthLabels,
+                                    colors: monthColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/year.png" width="20">',
+                            index: 3,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(companySalesUrl,4);
+                                var yearColor = [];
+                                var yearSeries = [];
+                                var yearLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    yearColor.push(randomColor());
+                                    yearLabels.push(provinces[i].name);
+                                    yearSeries.push(provinces[i].countNum);
+                                }
+                                companySalesColumn.updateOptions({
+                                    series: [{"name": "销量", "data": yearSeries}],
+                                    labels: yearLabels,
+                                    colors: yearColor,
+                                })
+                            }
+                        },{
+                            icon: '<p class="apexChartsDatePicker"><img src="../../assets/img/datePicker.png" width="20"></p>',
+                            index: 4,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                $('#companySalesStatisicsInput').click()
+                            }
+                        }]
+                    }
+                }
+            },
+            colors: companySalesColors,
+            plotOptions: {bar: {columnWidth: "45%", distributed: !0}},
+            dataLabels: {enabled: !1},
+            series: [{"name": "数量", "data": companySalesData}],
+            xaxis: {
+                categories: companySalesCategories,
+                labels: {style: {colors: companySalesColors, fontSize: "14px"}}
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+            },
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var companySalesColumn = new ApexCharts(document.querySelector("#companySalesStatisics"), companySalesOptions);
+        companySalesColumn.render();
+
+        // 文章数量占比
+        var companySalesProportionColor = [];
+        var companySalesProportionSeries = [];
+        var companySalesProportionLabels = [];
+        var articles = [[${articles}]];
+        for (var i = 0;i<articles.length;i++){
+            companySalesProportionColor.push(randomColor());
+            companySalesProportionLabels.push(articles[i].name);
+            companySalesProportionSeries.push(articles[i].countNum);
+        }
+
+        var companySalesProportionOptions = {
+            chart: {
+                height: 400,
+                type: "donut",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        customIcons: [{
+                            icon: '<img src="../../assets/img/day.png" width="20">',
+                            index: 0,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("按日统计")
+                                provinces = returnDate(companySalesUrl,1);
+                                var dayColor = [];
+                                var daySeries = [];
+                                var dayLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    dayColor.push(randomColor());
+                                    dayLabels.push(provinces[i].name);
+                                    daySeries.push(provinces[i].countNum);
+                                }
+                                companySalesProportionColumn.updateOptions({
+                                    series: daySeries,
+                                    labels: dayLabels,
+                                    colors: dayColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/week.png" width="20">',
+                            index: 1,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(companySalesUrl,2);
+                                var weekColor = [];
+                                var weekSeries = [];
+                                var weekLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    weekColor.push(randomColor());
+                                    weekLabels.push(provinces[i].name);
+                                    weekSeries.push(provinces[i].countNum);
+                                }
+                                companySalesProportionColumn.updateOptions({
+                                    series: weekSeries,
+                                    labels: weekLabels,
+                                    colors: weekColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/month.png" width="20">',
+                            index: 2,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(companySalesUrl,3);
+                                var monthColor = [];
+                                var monthSeries = [];
+                                var monthLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    monthColor.push(randomColor());
+                                    monthLabels.push(provinces[i].name);
+                                    monthSeries.push(provinces[i].countNum);
+                                }
+                                companySalesProportionColumn.updateOptions({
+                                    series: monthSeries,
+                                    labels: monthLabels,
+                                    colors: monthColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/year.png" width="20">',
+                            index: 3,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(companySalesUrl,4);
+                                var yearColor = [];
+                                var yearSeries = [];
+                                var yearLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    yearColor.push(randomColor());
+                                    yearLabels.push(provinces[i].name);
+                                    yearSeries.push(provinces[i].countNum);
+                                }
+                                companySalesProportionColumn.updateOptions({
+                                    series: yearSeries,
+                                    labels: yearLabels,
+                                    colors: yearColor,
+                                })
+                            }
+                        },{
+                            icon: '<p class="apexChartsDatePicker"><img src="../../assets/img/datePicker.png" width="20"></p>',
+                            index: 4,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log(1)
+                                $('#companySalesProportionInput').click()
+                            }
+                        }]
+                    }
+                },
+            },
+            plotOptions: {
+                pie: {
+                    size: 100
+                }
+            },
+            series: companySalesProportionSeries,
+            labels: companySalesProportionLabels,
+            colors: companySalesProportionColor,
+            legend: {
+                show: !0,
+                height: 400,
+                position: "left",
+                horizontalAlign: "left",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: -20,
+                offsetY: 0
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 400}, legend: {show: !1}}}]
+        };
+        var companySalesProportionColumn = new ApexCharts(document.querySelector("#companySalesProportion"), companySalesProportionOptions);
+        companySalesProportionColumn.render();
+
+        // 文章访问量占比
+        var acticleHitsProportionColor = [];
+        var acticleHitsProportionSeries = [];
+        var acticleHitsProportionLabels = [];
+        var articles = [[${articles}]];
+        for (var i = 0;i<articles.length;i++){
+            acticleHitsProportionColor.push(randomColor());
+            acticleHitsProportionLabels.push(articles[i].name);
+            acticleHitsProportionSeries.push(articles[i].sumHits);
+        }
+
+        var sumHitsProportionOptions = {
+            chart: {
+                height: 400,
+                type: "donut",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true
+                    }
+                },
+            },
+            plotOptions: {
+                pie: {
+                    size: 100
+                }
+            },
+            series: acticleHitsProportionSeries,
+            labels: acticleHitsProportionLabels,
+            colors: acticleHitsProportionColor,
+            legend: {
+                show: !0,
+                height: 400,
+                position: "left",
+                horizontalAlign: "left",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: -20,
+                offsetY: 0
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 400}, legend: {show: !1}}}]
+        };
+        var sumHitsProportionColumn = new ApexCharts(document.querySelector("#articleProportion"), sumHitsProportionOptions);
+        sumHitsProportionColumn.render();
+
+
+        // 文章访问量统计
+        var articlesHits = [[${articles}]];
+        var articlesHitsColors = [];
+        var articlesHitsData = [];
+        var articlesHitsCategories = [];
+
+        for (var i = 0;i<articlesHits.length;i++){
+            articlesHitsColors.push(randomColor());
+            articlesHitsData.push(articlesHits[i].sumHits);
+            articlesHitsCategories.push(articlesHits[i].name);
+        }
+        console.log(articlesHitsData)
+        var articlesHitsUrl = [[@{/web/articleStatistics/articleHits}]];
+        var articlesHitsOptions = {
+            chart: {
+                height: 380,
+                type: "bar",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true
+                    }
+                }
+            },
+            colors: articlesHitsColors,
+            plotOptions: {bar: {columnWidth: "45%", distributed: !0}},
+            dataLabels: {enabled: !1},
+            series: [{"name": "点击量", "data": articlesHitsData}],
+            xaxis: {
+                categories: articlesHitsCategories,
+                labels: {style: {colors: articlesHitsColors, fontSize: "14px"}}
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+            },
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var articlesHitsColumn = new ApexCharts(document.querySelector("#articleStatisics"), articlesHitsOptions);
+        articlesHitsColumn.render();
+
+
+
+
+        //日期选择配置
+        var locale = {
+            "format": 'YYYY-MM-DD',
+            "separator": " - ",
+            "applyLabel": "确定",
+            "cancelLabel": "取消",
+            "fromLabel": "起始时间",
+            "toLabel": "结束时间'",
+            "customRangeLabel": "自定义",
+            "weekLabel": "W",
+            "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+            "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            "firstDay": 1
+        };
+        var chartNumber = [
+            {
+                "id": "companySalesStatisicsInput",
+                "name": companySalesColumn,
+                "url": companySalesUrl
+            },{
+                "id": "companySalesProportionInput",
+                "name": companySalesProportionColumn,
+                "url": companySalesUrl
+            },{
+                "id": "articleProportionInput",
+                "name": sumHitsProportionColumn,
+                "url": articlesHitsUrl
+            },  {
+                "id": "articleStatisicsInput",
+                "name": articlesHitsColumn,
+                "url": articlesHitsUrl
+            }
+        ];
+        for(var i = 0; i < chartNumber.length; i++){
+            $('#'+chartNumber[i].id).daterangepicker({
+                'locale': locale,
+                "alwaysShowCalendars": true,
+                "startDate": new Date(),
+                "endDate": new Date(),
+                "opens": "right",
+            });
+            $('#'+chartNumber[i].id).on('apply.daterangepicker', function(ev, picker) {
+                var elementID = this.id;
+                var dataObj;
+                chartNumber.forEach(function (e) {
+                    if(e.id == elementID){
+                        return dataObj = e;
+                    }
+                });
+                provinces = returnDate(dataObj.url,null,picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'));
+                var dateColor = [];
+                var dateSeries = [];
+                var dateLabels = [];
+
+                for (var i = 0;i<provinces.length;i++){
+                    dateColor.push(randomColor());
+                    dateLabels.push(provinces[i].name);
+                    if(dataObj.id == "companySalesStatisicsInput" || dataObj.id == "companySalesProportionInput" ){
+                        dateSeries.push(provinces[i].countNum);
+                    }else{
+                        dateSeries.push(provinces[i].sumHits);
+                    }
+
+                };
+                if(dataObj.id == "companySalesStatisicsInput"){
+                    dateSeries = [{"name": "数量", "data": dateSeries}]
+                }else if(dataObj.id == "articleStatisicsInput"){
+                    dateSeries = [{"name": "点击量", "data": dateSeries}]
+                }
+                console.log(dateSeries)
+                console.log(dateLabels)
+                console.log(dateColor)
+                console.log(dataObj)
+                console.log(dataObj.name)
+                dataObj.name.updateOptions({
+                    series: dateSeries,
+                    labels: dateLabels,
+                    colors: dateColor,
+                })
+            });
+        }
+
+
+
+
+        //自定义查询使用公共方法
+        function returnDate(url,type,startDate,endDate) {
+            var returnDates;
+            $.ajax({
+                type:"POST",
+                url:url,
+                data:{type:type,startDate:startDate,endDate:endDate},
+                dataType:"json",
+                async: false,
+                success:function (data) {
+                    console.log(data.data);
+                    returnDates =  data.data;
+                },
+                error:function(data){
+                    console.log(data.responseJSON);
+                }
+            });
+            if(returnDates.length == 0){
+                alert("该时间段暂无数据！");
+                return returnDates;
+            }else{
+                return returnDates;
+            }
+        }
+
+
+
+        /*随机颜色*/
+        function randomColor() {
+            var r = Math.floor(Math.random()*256);
+            var g = Math.floor(Math.random()*256);
+            var b = Math.floor(Math.random()*256);
+            if(r < 16){
+                r = "0"+r.toString(16);
+            }else{
+                r = r.toString(16);
+            }
+            if(g < 16){
+                g = "0"+g.toString(16);
+            }else{
+                g = g.toString(16);
+            }
+            if(b < 16){
+                b = "0"+b.toString(16);
+            }else{
+                b = b.toString(16);
+            }
+            return "#"+r+g+b;
+        }
+
+    });
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,332 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>产品详情页</title>
+
+    <link rel="stylesheet" href="iconfont.css" th:href="@{/assets/css/productView/iconfont.css}" type="text/css" />
+    <link rel="stylesheet" href="/demo.css" th:href="@{/assets/css/productView/demo.css}" type="text/css" />
+    <link rel="stylesheet" href="cpxx.css"  th:href="@{/assets/css/productView/cpxx.css}" type="text/css" />
+    <link rel="stylesheet" href="../css/cloudzoom.css" type="text/css" th:href="@{/assets/css/cloudzoom.css}"/>
+
+
+    <script src="js/jquery.min.js" th:src="@{/assets/js/productView/jquery.min.js}"></script>
+    <script type="text/javascript" src="js/huaceng.js" th:src="@{/assets/js/productView/huaceng.js}"></script>
+    <script src="js/iconfont.js" th:src="@{/assets/js/productView/iconfont.js}"></script>
+    <script type="text/javascript" th:src="@{/assets/js/cloudzoom.js}"></script>
+    <style>
+        li{
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="log_con1">
+
+    <div class="kua">
+        <div class="leftu">
+            <div class="box">
+
+                <div class="tb-booth tb-pic tb-s310">
+                    <a class="jqueryzoom">
+                        <img id="img" class="cloudzoom" th:src="@{${picture.source}}"
+                             th:data-cloudzoom="'zoomSizeMode:\''+image+'\',zoomImage: \''+@{${picture.source}}+'\',autoInside: 30'"/>
+                    </a>
+                </div>
+
+                <ul class="tb-thumb" id="thumblist">
+                    <li th:each="Img:${listImg}" class="tb-selected">
+                        <!--<div class="tb-pic tb-s40"><a th:href="'javascript:chanImg(\''+${path+Img.source}+'\')'"><img width="80px;" th:mid="@{${path+Img.source}}"  th:big="@{${path+Img.source}}"   th:src="@{${path+Img.source}}" th:onclick="changeImg()"></a></div></li>-->
+                        <a class="tb-pic tb-s40">
+                            <img class="cloudzoom-gallery" width="80px;" th:src="@{${Img.source}}"
+                                 th:data-cloudzoom="'useZoom: \''+.cloudzoom+'\',image:\''+@{${Img.source}}+'\',zoomImage:\''+@{${Img.source}}+'\''"/>
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+            <div id="ann">
+                <ul>
+
+                    <th:block th:if="${product.isDemonstration==false}">
+                        <li style="background-color:#bbb;cursor: pointer; ">
+                            <a href="JavaScript:void(0)">申请演示</a>
+                        </li>
+                    </th:block>
+                    <th:block th:if="${product.isDemonstration==true}">
+                        <li style="cursor: pointer" ><a href="JavaScript:void(0)">申请演示</a></li>
+                    </th:block>
+
+                    <th:block th:if="${product.isShowOntrialPackageUrl==false}">
+                        <li style="background-color:#bbb;cursor: pointer;">
+                            <a href="JavaScript:void(0)" style=" text-decoration: none;">免费试用</a>
+                        </li>
+                    </th:block>
+                    <th:block th:if="${product.isShowOntrialPackageUrl==true}">
+                        <li style="cursor: pointer;" ><a style=" text-decoration: none;" href="JavaScript:void(0)">免费试用</a></li>
+                    </th:block>
+
+                    <th:block th:if="${parentProductCategory.id!=28}">
+                        <th:block th:if="${product.isShowproductPackageUrl==false}">
+                            <li style="background-color:#bbb;cursor: pointer;">
+                                <a href="JavaScript:void(0)" style=" text-decoration: none;">立即下载</a>
+                            </li>
+                        </th:block>
+                        <th:block th:if="${product.isShowproductPackageUrl==true}">
+                            <li style="cursor: pointer" > <a href="JavaScript:void(0)" style=" text-decoration: none;">立即下载</a></li>
+                        </th:block>
+                    </th:block>
+
+                    <div id="fade" class="black_overlay"></div>
+
+                </ul>
+                <th:block th:if="${product.isScientific}">
+                    <div class="zhans">仅供临床科研使用</div>
+                </th:block>
+            </div>
+        </div>
+        <div class="rightxx">
+            <div class="bt"><span id="name" >[[${product.name}]]</span><span id="log"><img th:src="@{${company.logo}}" onerror="src='/tongfu/assets/img/projects/cplogo.jpg'"  /></span></div>
+            <table width="100%" border="0" class="table1">
+                <tr>
+                    <td width="78">销售价格：</td>
+                    <td style="color:#ff7f25;"><span style="font-size:14px;">￥</span><span style="font-size:22px;" id="priceId" >0.01</span></td>
+                </tr>
+                <tr>
+                    <td>商品编号：</td>
+                    <td>[[${product.sn}]]</td>
+                </tr>
+                <tr>
+                    <td>软件大小：</td>
+                    <td th:text="${(product.softwareSize ==null || #strings.isEmpty(product.softwareSize))?'未知':product.softwareSize}">310M</td>
+                </tr>
+                <tr>
+                    <td>软件版本：</td>
+                    <td th:text="${(product.softwareVersion ==null || #strings.isEmpty(product.softwareVersion))?'未知':product.softwareVersion}">V 4.99</td>
+                </tr>
+                <tr>
+                <tr>
+                    <td>软件语言：</td>
+                    <td>中文</td>
+                </tr>
+                <tr>
+                <tr>
+                    <td>器械分类：</td>
+                    <td>Ⅱ</td>
+                </tr>
+                <tr>
+                    <td>生产厂家：</td>
+                    <td th:text="${(product.manufactor ==null || #strings.isEmpty(product.manufactor))?'未知':product.manufactor}">EDDA Technology, Inc.</td>
+                </tr>
+                <tr>
+                    <td>公司网址：</td>
+                    <td th:text="${(product.url ==null || #strings.isEmpty(product.url))?'未知':product.url}">www.eddatech.com.cn</td>
+                </tr>
+                <tr>
+                    <td>认证信息：</td>
+                    <td>CFDA</td>
+                </tr>
+                <tr>
+                    <td>系统要求：</td>
+                    <td>Windows   Mac   iOS</td>
+                </tr>
+                <tr>
+                    <td>促销信息：</td>
+                    <td style="color:#ff7f25;">购买2个病例，送DICOM...   <a href="#">详情<i class="iconfont">&#xe638;</i></a></td>
+                </tr>
+            </table>
+            <div class="guige" th:style="${product.isHideprice?'display: none;':''}">
+                <div id="fang">购买方式：<Br/>
+                    购买规格：</div>
+                <div class="ggtit">
+                    <div id="tit">
+                        <a href="javascript:void(0)">
+                            <li th:each="purchase:${purchases}" th:text="${purchase.name}"
+                                th:onclick="'javascript:dataSource(\''+${purchase.id}+'\',this)'"
+                                th:id="${purchaseStat.index==0?'JKDiv_DEF':''}"
+                                th:class="${purchaseStat.index==0?'Selected':''}">
+                            </li>
+                        </a>
+
+
+                       <!-- <li onMouseMove= "JavaScript:ChangeDiv('1','JKDiv_',2,this)">按使用时间购买</li>
+                        <li onMouseMove= "JavaScript:ChangeDiv('2','JKDiv_',2,this)">按客户端授权购买</li>-->
+                    </div>
+                    <div class="con" id="JKDiv_0">
+                        <div class="guige_b">
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="tab2" style="border:0px;">
+                <span id="fang">购买数量：</span>
+                <div class="shul"><span>+</span><span>1</span><span>-</span></div>
+            </div>
+            <div class="goul">
+                <button type="button" class="gw">加入购物车</button>
+                <button type="button" class="gm">立即购买</button>
+                <th:block th:if="${product.productId!=null}">
+                    <a href="javascript:void(0)">
+                        <button type="button" style="cursor:pointer" class="zzfw" th:style="${product.productId!=null}?'':'background-color:#bbb'">
+                            <img th:src="@{/assets/img/zzfwzs.png}"/>
+                            增值服务
+                        </button>
+                    </a>
+                </th:block>
+
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+
+    <div class="clear"></div>
+    <div class="showAddsRight fr">
+        <div class="bq_box">
+            <div class="s-left-banner" style="display: none;"></div>
+            <div class="s-left-list" id="firstNav">
+                <ul>
+                    <li th:each="spe1:${listSpe}" th:onclick="|ChangeDiv(${spe1Stat.index},'JKDiv2_',3,this)|"
+                        th:id="${spe1Stat.index==0?'JKDiv2_DEF':''}" th:class="${spe1Stat.index==0?'Selected':''}"><span>[[${spe1.title}]]</span>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="s-left-box">
+                <div class="product-detail-div clearfix" style="display:block;">
+                    <div class="con2" th:each="spea:${listSpe}" th:id="${'JKDiv2_'+speaStat.index}"
+                         th:style="${speaStat.index==0?'display:block':'display:none'}" style="display:none;">
+                        <div class="pzxx" th:utext="${spea.content}" style="padding:20px 60px;">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div id="helpInfoContent"> </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="clear"></div>
+
+</div>
+</div>
+
+
+<script>
+
+    var id = [[${product.id}]]; //产品id
+    console.log([[${purchases[0].id}]]);
+    var firstPurId = [[${purchases[0].id}]]; //当前产品的第一个购买方式的id
+    var navWidth = $("#firstNav").width();
+    loadGuiGe(id, firstPurId);
+
+    //展示咨询框
+    function dataSource(parentid, obj) {
+        var id = [[${product.id}]]; //产品id
+        $(obj).addClass("Selected");
+        $(obj).siblings().removeClass("Selected");
+        //查询出parentid后，根据panrentid和productid获取到相关的购买规格展示出来，然后添加到html中。
+        loadGuiGe(id, parentid);
+        //购物车数量归为1
+        $("#num").html(1);
+    }
+
+
+    CloudZoom.quickStart();
+    console.log(navWidth);
+    $(window).scroll(function () {
+        var nav = $("#firstNav"),
+            navBox = $(".showAddsRight");
+        if ($(this).scrollTop() > navBox.offset().top) {
+            nav.addClass('onfix');
+            nav.css({
+                'width': navWidth + 'px'
+            });
+        } else {
+            nav.removeClass('onfix');
+            nav.removeAttr('style');
+        }
+        if ($(this).scrollTop() > $(window).height()) {
+            $('.fsFixedTopContent').fadeIn();
+        } else {
+            $('.fsFixedTopContent').fadeOut();
+        }
+    });
+
+    function ChangeDiv(divId,divName,zDivCount,obj){
+        $(obj).addClass("Selected");
+        $(obj).siblings("li").removeClass("Selected");
+        $("#"+divName+divId).show();
+        $("#"+divName+divId).siblings("div.con2").hide();
+    }
+
+    //加载购买规格
+    function loadGuiGe(id, firstPurId) {
+        $.ajax({
+            type: "POST",
+            url: '[[@{/web/product/selectGuige}]]',
+            data: {
+                id: id,
+                parentid: firstPurId
+            },
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var list = data;
+                var html = "";
+                if (list.length > 0) {
+                    var price = list[0].price;
+                    var fals = [[${product.isHideprice}]];
+                    if (fals){  //判断是否隐层价格
+                        price = '[[${product.priceExplain}]]';
+                        $("#priceId").html(price);
+                    } else {
+                        $("#priceId").html(price);
+                    }
+
+                    for (var i = 0; i < list.length; i++) {
+
+                        html = html + "<a href='javascript:void(0)'><li" ;
+                        if (i==0) {
+                            html = html +    " class='ding' " ;
+                        }
+                        html = html +  " onclick='updatePrice(" + list[i].price + ",this)'>" + list[i].name + "</li></a>";
+                    }
+                    $("#JKDiv_0").children().html("");
+                    $("#JKDiv_0").children().append($(html));
+                }
+            }
+
+        });
+    }
+
+    function updatePrice(price,obj) {
+        //根据购买规格获取价格
+        var fals = [[${product.isHideprice}]];
+        if (fals){  //判断是否隐层价格
+            price = '[[${product.priceExplain}]]';
+            $("#priceId").html(price);
+        } else {
+            $("#priceId").html(price);
+        }
+        var ys = $(".ding");
+        ys.removeClass("ding");
+        $(obj).addClass("ding");
+        //购物车数量归为1
+        $("#num").html(1);
+
+    }
+
+
+</script>
+
+</body>
+</html>
+
+

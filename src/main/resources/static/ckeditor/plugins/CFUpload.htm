@@ -1,0 +1,333 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="/tea/mt.js"></script>
+</head>
+<body style="margin:0;margin-bottom:4px;">
+
+<script>
+var TYPE=mt.get('type');
+function challs_flash_update()
+{
+  var a={};
+  //a.title="上传文件";
+  //a.FormName="Filedata";
+  a.url="/Attchs.do?community="+cook.get('community')+"&act=fck";
+  //a.parameter="";//设置提交参数，以GET形式提交,例："key=value&key=value&..."
+  if(TYPE=='flash')
+    a.typefile=["Flash (*.mp4;*.mp3;*.flv;*.swf;*.jpg;)","*.mp4;*.mp3;*.flv;*.swf;*.jpg;"];
+  else
+    a.typefile=["Images (*.jpg;*.png;*.gif;)","*.jpg;*.png;*.gif;"];
+	//设置可以上传文件 数组类型
+	//"Images (*.gif,*.png,*.jpg)"为用户选择要上载的文件时可以看到的描述字符串,
+	//"*.gif;*.png;*.jpg"为文件扩展名列表，其中列出用户选择要上载的文件时可以看到的 Windows 文件格式，以分号相隔
+	//2个为一组，可以设置多组文件类型
+
+//	a.newTypeFile = ["Images (*.gif,*.png,*.jpg,*jpeg)","*.gif;*.png;*.jpg;*.jpeg;","JPE;JPEG;JPG;GIF;PNG",
+//				"GIF (*.gif)","*.gif;","GIF",
+//				"PNG (*.png)","*.png;","PNG",
+//				"JPEG (*.jpg,*.jpeg)","*.jpg;*.jpeg;","JPE;JPEG;JPG"];
+	//设置可以上传文件，多了一个苹果电脑文件类型过滤 数组类型, 设置了此项，typefile将无效
+	//"Images (*.gif,*.png,*.jpg)"为用户选择要上载的文件时可以看到的描述字符串,
+	//"*.gif;*.png;*.jpg"为文件扩展名列表，其中列出用户选择要上载的文件时可以看到的 Windows 文件格式，以分号相隔
+	//"JPE;JPEG;JPG;GIF;PNG" 分号分隔的 Macintosh 文件类型列表，如下面的字符串所示："JPEG;jp2_;GI
+
+	//a.fileNum=0;//可限制待传文件的数量，0或负数为不限制
+	//a.mixFileNum=0;//至少选择的文件数量，设置这个将限制文件列表最少正常数量（包括等待上传和已经上传）为设置的数量，才能点击上传，0为不限制
+	//a.ForceFileNum=0;//强制条目数量，已上传和待上传条目相加等于为设置的值（不包括上传失败的条目），否则不让上传, 0为不限制，设置限制后mixFileNum,autoClose和fileNum属性将无效！
+
+	//a.UpSize=0;//可限制传输文件总容量，0或负数为不限制，单位MB
+	//a.size=1;//上传单个文件限制大小，单位MB，可以填写小数类型
+	a.FormID=['resize','watermark'];
+	//设置每次上传时将注册了ID的表单数据以POST形式发送到服务器
+	//需要设置的FORM表单中checkbox,text,textarea,radio,select项目的ID值,radio组只需要一个设置ID即可
+	//参数为数组类型，注意使用此参数必须有 challs_flash_FormData() 函数支持
+
+	a.autoClose=1;//是否自动删除上传过的列表，值为延迟时间，以秒为单位，-1:不删除
+	//a.CompleteClose=true;//禁止删除列表
+	//a.repeatFile=true;//是否过滤已经选择的重复文件
+	a.returnServer=true;//设置为true时，组件必须等到服务器有反馈值了才会进行下一个步骤，否则不会等待服务器返回值，直接进行下一步骤，默认为false
+
+	//a.MD5File=0;
+	//设置MD5文件签名模式，参数如下 ,注意：FLASH无法计算超过100M的文件,在无特殊需要时，请设置为0
+	//0为关闭MD5计算签名
+	//1为直接计算MD5签名后上传
+	//2为计算签名，将签名提交服务器验证，在根据服务器反馈来执行上传或不上传
+	//3为先提交文件基本信息，根据服务器反馈，执行MD5签名计算或直接上传，如果是要进行MD5计算，计算后，提交计算结果，在根据服务器反馈，来执行是否上传或不上传
+
+	//a.loadFileOrder=true;//选择的文件加载文件列表顺序
+
+	a.ListShowType=TYPE=='flash'?5:2;//文件列表显示类型：1 = 传统列表显示，2 = 缩略图列表显示（适用于图片专用上传）
+
+	//a.InfoDownRight=null;//右下角统计信息的文本设置,文本中的 %1% = 等待上传数量的替换符号，%2% = 已经上传数量的替换符号，例子“等待上传：%1%个  已上传：%2%个”
+	a.TitleSwitch=false;//是否显示组件头部
+	//a.isShowUploadButton=true;//是否显示上传按钮
+	//a.deleteAllShow=true;//是否显示清除按钮
+
+	//a.autoUpload=false;//设置为true时，用户选择文件后，直接开始上传，无需点击上传，默认为false;
+	//a.adjustOrder=true;//设置为true时，用户可以拖动列表，重新排列位置
+	//a.language=0;//语言包控制，0 自动检测 1 简体中文，2 繁体中文 3 英文
+
+	//a.countData=false;
+	//是否向服务器端提交组件文件列表统计信息，POST方式提交数据
+	//access2008_box_info_max 列表总数量
+	//access2008_box_info_upload 剩余数量 （包括当前上传条目）
+	//access2008_box_info_over 已经上传完成数量 （不包括当前上传条目)
+	return a;
+}
+
+function challs_flash_language()
+{
+  return{
+    // $[1]$ $[2]$ $[3]$是替换符号
+    // \n 是换行符号
+
+    //按钮文字
+    ButtonTxt_1:'停 止',
+    ButtonTxt_2:'选择文件',
+    ButtonTxt_3:'上 传',
+    ButtonTxt_4:'清空',
+
+    //全局文字设置
+    Font:'宋体',
+    FontSize:12,
+
+    //提示文字
+    Alert_1:'初始化错误：\n\n没有找到 JAVASCRITP 函数 \n函数名为 challs_flash_update()',
+    Alert_2:'初始化错误：\n\n函数 challs_flash_update() 返回类型必须是 "Object" 类型',
+    Alert_3:'初始化错误：\n\n没有设置上传路径地址',
+    Alert_4:'添加上传文件失败，\n\n不可以在添加更多的上传文件!',
+    Alert_5:'添加上传文件失败，\n\n等待上传文件列表只能有$[1]$个，\n请先上传部分文件!',
+    Alert_6:'提示信息：\n\n请再选择$[1]$个上传文件！',
+    Alert_7:'提示信息：\n\n请至少再选择$[1]$个上传文件！',
+    Alert_8:'请选择上传文件！',
+    Alert_9:'上传错误：\n\n$[1]$',
+
+    //界面文字
+    Txt_5:'等待上传',
+    Txt_6:'等待上传：$[1]$个  已上传：$[2]$个',
+    Txt_7:'字节',
+    Txt_8:'总量限制（$[1]$MB）,上传失败',
+    Txt_9:'文件超过$[1]$MB,上传失败',
+    Txt_10:'秒',
+    Txt_11:'保存数据中...',
+    Txt_12:'上传完毕',
+    Txt_13:'文件加载错误',
+    Txt_14:'扫描文件...',
+    Txt_15:'验证文件...',
+    Txt_16:'取消',
+    Txt_17:'无图',
+    Txt_18:'加载中',
+
+    Txt_20:'关闭',
+    Txt_21:'确定',
+    Txt_22:'上传文件',
+
+    //错误提示
+    Err_1:'上传地址URL无效',
+    Err_2:'服务器报错：$[1]$',
+    Err_3:'上传失败,$[1]$',
+    Err_4:'服务器提交效验错误',
+    Err_5:'效验数据无效错误'
+  };
+}
+
+function log(n,a)
+{
+  var h=n;
+  for(var p in a)
+  {
+    h+="\r\n  "+p+":"+a[p];
+  }
+//  console.log(h);
+}
+
+//选择文件 a:选择文件个数
+function challs_flash_onSelectFile(a)
+{
+}
+
+//开始上传
+function challs_flash_onStart(a)
+{
+  var name=a.fileName; //获取上传文件名
+  var size=a.fileSize; //获取上传文件大小，单位字节
+  var type=a.fileType; //获取文件类型，在 Windows 上，此属性是文件扩展名。 在 Macintosh 上，此属性是由四个字符组成的文件类型
+  var creationDate = a.fileCreationDate //获取文件创建时间
+  var modificationDate = a.fileModificationDate //获取文件最后修改时间
+  log('challs_flash_onStart',a);
+  return true; //返回 false 时，组件将会暂停上传
+}
+
+//上传完成
+var file={};
+function challs_flash_onComplete(a)
+{
+  var name=a.fileName; //获取上传文件名
+  var size=a.fileSize; //获取上传文件大小，单位字节
+  var time=a.updateTime; //获取上传所用时间 单位毫秒
+  var type=a.fileType; //获取文件类型，在 Windows 上，此属性是文件扩展名。 在 Macintosh 上，此属性是由四个字符组成的文件类型
+  var creationDate = a.fileCreationDate //获取文件创建时间
+  var modificationDate = a.fileModificationDate //获取文件最后修改时间
+  log('challs_flash_onComplete',a);
+  file=a;
+}
+
+//获取返回内容
+var datas=[];
+function challs_flash_onCompleteData(a)
+{
+  log('challs_flash_onCompleteData',stats);
+  if(a=='null')
+  {
+    if(file.fileSize==0)alert('抱歉，空文件不可上传！');
+    return;
+  }
+  datas.push(a);
+}
+
+//文件数量/状态统计
+var stats={uploadFile:0};
+function challs_flash_onStatistics(a)
+{
+  stats=a;
+  var uploadFile = a.uploadFile; //等待上传数量
+  var overFile = a.overFile; //已经上传数量
+  var errFile = a.errFile; //上传错误数量, BUG:errFile经常也会加1
+  log('challs_flash_onStatistics',a);
+}
+
+//当提示时，会将提示信息传入函数，参数 a 字符串类型
+function challs_flash_alert(a)
+{
+  //alert(a);
+}
+
+//全部上传完成 a:上传失败的数量
+function challs_flash_onCompleteAll(a)
+{
+  log('challs_flash_onCompleteAll',stats);
+  if(datas.length<1)return;
+  var dl=parent.CKEDITOR.dialog.getCurrent();
+  if(TYPE=='flash')
+  {
+    for(var i=0;i<datas.length;i++)
+    {
+      if(datas[i].indexOf('.jpg')>0)
+        dl.setValueOf("Upload","image",datas[i]);
+      else
+        dl.setValueOf('info','src',datas[i]);
+    }
+    dl.selectPage('info');
+  }else
+  if(datas.length==1)
+  {
+    dl.setValueOf('info','txtUrl',datas[0]);
+    dl.selectPage('info');
+    dl._.tabs['info'][1].$.parentNode.style.padding="";
+  }else
+  {
+    var h="";
+    for(var i=0;i<datas.length;i++)
+    {
+      h+="<img src='"+datas[i]+"'><br/>";
+    }
+    var c=parent.CKEDITOR.instances.content;
+    c.insertHtml(h);
+    dl.hide();
+  }
+  datas=[];
+}
+
+
+//清空
+function challs_flash_deleteAllFiles()
+{
+  return stats.uploadFile<1||confirm("你确定要清空列表吗?");
+}
+
+//上传出错
+function challs_flash_onError(a)
+{
+  var err=a.textErr; //错误信息
+  var name=a.fileName; //获取上传文件名
+  var size=a.fileSize; //获取上传文件大小，单位字节
+  var type=a.fileType; //获取文件类型，在 Windows 上，此属性是文件扩展名。 在 Macintosh 上，此属性是由四个字符组成的文件类型
+  var creationDate = a.fileCreationDate //获取文件创建时间
+  var modificationDate = a.fileModificationDate //获取文件最后修改时间
+  log('challs_flash_onError',a);
+}
+
+//使用FormID参数时必要函数
+function challs_flash_FormData(a)
+{
+  if(a=='resize')
+    return localStorage.getItem('fck.scale')!='false'?localStorage.getItem('fck.resize')||600:null;
+  else if(a=='watermark')
+    return localStorage.getItem('fck.watermark')!='false';
+}
+
+function challs_flash_style(){ //组件颜色样式设置函数
+	var a = {};
+
+	/*  整体背景颜色样式 */
+	a.backgroundColor=['#FFFFFF','#FFFFFF','#FFFFFF'];	//颜色设置，3个颜色之间过度
+	a.backgroundLineColor='#FFFFFF';					//组件外边框线颜色
+	a.backgroundFontColor='#000000';					//组件最下面的文字颜色
+	a.backgroundInsideColor='#FFFFFF';					//组件内框背景颜色
+	a.backgroundInsideLineColor=['#e5edf5','#34629e'];	//组件内框线颜色，2个颜色之间过度
+
+
+	/*  头部颜色样式 */
+	a.Top_backgroundColor=['#e0eaf4','#bcd1ea']; 		//颜色设置，数组类型，2个颜色之间过度
+	a.Top_fontColor='#245891';							//头部文字颜色
+
+
+	/*  按钮颜色样式 */
+	a.button_overColor=['#ffffff','#E5E5E5'];			//鼠标移上去时的背景颜色，2个颜色之间过度 f3840d
+	a.button_overLineColor='#A6A6A6';					//鼠标移上去时的边框颜色
+	a.button_overFontColor='#000000';					//鼠标移上去时的文字颜色
+	a.button_outColor=['#FFFFFF','#F3F3F3']; 			//鼠标离开时的背景颜色，2个颜色之间过度 dde8fe
+	a.button_outLineColor='#C4C4C4';					//鼠标离开时的边框颜色 91bdef
+	a.button_outFontColor='#000000';					//鼠标离开时的文字颜色
+
+	/* 滚动条样式 */
+	a.List_scrollBarColor=0x000000;				//滚动条颜色
+	a.List_scrollBarGlowColor=0x34629e;			//滚动条阴影颜色
+
+	/* 文件列表样式 */
+	a.List_backgroundColor='#EAF0F8';					//列表背景色
+	a.List_fontColor='#333333';						//列表文字颜色
+	a.List_errFontColor='#ff0000';							//列表错误信息文字颜色
+	a.List_LineColor='#B3CDF1';							//列表分割线颜色
+	a.List_cancelOverFontColor='#ff0000';				//列表取消文字移上去时颜色
+	a.List_cancelOutFontColor='#D76500';				//列表取消文字离开时颜色
+	a.List_progressBarLineColor='#C9CCCF';				//进度条边框线颜色
+	a.List_progressBarBackgroundColor='#FFFFFF';		//进度条背景颜色
+	a.List_progressBarColor=['#FFCC00','#FFFF00'];		//进度条进度颜色，2个颜色之间过度
+
+	/* 错误提示框样式 */
+	a.Err_backgroundColor='#B9B9B9';					//提示框背景色
+	a.Err_fontColor='#000000';							//提示框文字颜色
+	a.Err_shadowColor='#FFFFFF';						//提示框阴影颜色
+
+	return a;
+}
+
+mt.embed("/tea/ckeditor/plugins/CFUpload.swf","100%","100%");
+document.write("<iframe id='ifr' style='position:absolute;margin-left:16;margin-top:-16;width:200px;height:21px;background:#FFFFFF;padding:0' scrolling='no' frameborder='0'></iframe>");
+if(TYPE!='flash')
+{
+  var doc=document.getElementById('ifr').contentWindow.document;
+  doc.write("<body style='margin:0;font-size:12px'><input type='checkbox' id='scale' "+(localStorage.getItem('fck.scale')!='false'?'checked':'')+" onclick=localStorage.setItem('fck.scale',checked);resize.disabled=!checked; />缩小至<input id='resize' value="+(localStorage.getItem('fck.resize')||600)+" onchange=localStorage.setItem('fck.resize',value) style='width:40;height:18;border:1px solid #7F9DB9' />像素　<input type='checkbox' id='watermark' "+(localStorage.getItem('fck.watermark')!='false'?'checked':'')+" onclick=localStorage.setItem('fck.watermark',checked); /><label for='watermark'>添加水印</label></body>");
+  doc.close();
+}
+//ifr.scale.onclick();
+
+//$$('CFUpdate').parentNode.style.margin="-8px";
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>发票管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{admin/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+        <div class="content-page">
+            <div class="content">
+                <!-- end page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <!--开票弹窗-->
+                                <div id="edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                            <div class="modal-body">
+                                                <div class="text-center mt-2 mb-4">
+                                                    <a class="text-success">
+                                                        <span>开票</span>
+                                                    </a>
+                                                </div>
+
+                                                    <div class="form-group">
+                                                        <label for="example-textarea">请说明拒绝开票原因:</label>
+                                                        <textarea class="form-control" id="example-textarea" maxlength="30" rows="3" name="message" placeholder="说明"></textarea>
+                                                    </div>
+
+                                                    <div class="form-group text-center">
+                                                        <button class="btn btn-primary" type="submit" onclick="updateIsMakeInvoice(null,3,null)">提交</button>
+                                                    </div>
+
+
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div>
+
+                                总共 [[${page.total}]]条&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div class="row mb-2">
+                                    <div class="col-lg-8">
+                                        <form id="list" th:action="@{/admin/orderInvoice/list}" class="form-inline">
+                                            <input type="hidden" id="pageNum" name="pageNum" th:value="${page.pageNum}" />
+                                            <input type="hidden" id="pageSize" name="pageSize" th:value="${page.pageSize}" />
+                                            <div class="form-group mb-2">
+                                                <label for="orderSn" class="mr-2">订单号</label>
+                                                <input type="search" class="form-control" name="orderSn" th:value="${orderSn}" id="orderSn" placeholder="订单号">
+                                            </div>
+
+                                            <div class="form-group ml-2 mb-2">
+                                                <label class="mr-2">开票类型</label>
+                                                <select class="custom-select" name="type">
+                                                    <option value="">全部</option>
+                                                    <option th:selected="${type==1}" value="1" >电子普通发票</option>
+                                                    <option th:selected="${type==2}" value="2" >增值税专用发票</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group ml-2 mb-2">
+                                                <label class="mr-2">开票状态</label>
+                                                <select class="custom-select" name="isMakeInvoice">
+                                                    <option value="">全部</option>
+                                                    <option th:selected="${isMakeInvoice==1}" value="1" >待开票</option>
+                                                    <option th:selected="${isMakeInvoice==2}" value="2" >已开票</option>
+                                                    <option th:selected="${isMakeInvoice==3}" value="3" >拒开票</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group ml-2 mb-2">
+                                                <label class="mr-2">申请开票时间</label>
+                                                <th:block th:replace="~{admin/incloud/status::selectDate}"></th:block>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-lg-right">
+                                            <button type="button" onclick="$('#list').submit();" id = "search" class="btn btn-light mb-2">搜索</button>
+                                        </div>
+                                    </div><!-- end col-->
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-centered mb-0">
+                                        <thead class="thead-light">
+                                        <tr class="text-lg-center">
+                                            <th>序号</th>
+                                            <th>订单号</th>
+                                            <th>买家</th>
+                                            <th><!--供应商-->发票抬头</th>
+                                            <th>索票时间</th>
+                                            <th>发票类型</th>
+                                            <th>开票金额</th>
+                                            <th style="width: 70px;">状态</th>
+                                            <th style="width: 150px;">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="orderInvoice ,orderInvoiceStart :${page.list}" class="text-lg-center">
+                                            <td th:text="${orderInvoiceStart.index+1}"></td>
+                                            <td th:text="${orderInvoice.sn}"></td>
+                                            <td th:text="${orderInvoice.username}"></td>
+                                            <td th:text="${orderInvoice.title}"></td>
+                                            <td th:text="${#dates.format(orderInvoice.create_date,'yyyy-MM-dd HH:mm')}"></td>
+                                            <td>
+                                                <th:block th:if="${orderInvoice.type==1}">
+                                                    普通电子发票
+                                                </th:block>
+                                                <th:block th:if="${orderInvoice.type==2}">
+                                                    增值税专用发票
+                                                </th:block>
+                                            </td>
+                                            <td >[[${orderInvoice.amount}]]</td>
+                                            <td th:title="${orderInvoice.is_make_invoice==3}?${orderInvoice.message}">
+                                                <th:block th:if="${orderInvoice.is_make_invoice==1}">
+                                                    待开
+                                                </th:block>
+                                                <th:block th:if="${orderInvoice.is_make_invoice==2}">
+                                                    已开
+                                                </th:block>
+                                                <th:block th:if="${orderInvoice.is_make_invoice==3}">
+                                                    拒开
+                                                </th:block>
+                                            </td>
+                                            <td>
+                                                <a href="javaScript:void(0)" th:onclick="|print(${orderInvoice.id})|" >[打印]</a>
+                                                <th:block th:if="${orderInvoice.is_make_invoice==1}">
+                                                    <a href="javaScript:void(0)" th:onclick="|updateIsMakeInvoice(${orderInvoice.id},2)|">[确认开票]</a>
+                                                    <a href="javaScript:void(0)" th:onclick="|notInvoice(${orderInvoice.id},3)|" >[拒开]</a>
+                                                </th:block>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- end card-body-->
+                        </div> <!-- end card-->
+                    </div> <!-- end col -->
+                </div>
+
+                <div class="row" style="display: none;" id="print">
+
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3" >开票信息【<span id="type"></span>】</h4>
+
+                                <ul class="list-unstyled mb-0">
+                                    <li>
+                                        <p class="mb-2"><span class="font-weight-bold mr-2">发票抬头:</span><span id="title"></span> </p>
+                                        <p class="mb-2"><span class="font-weight-bold mr-2">发票内容:</span><span id="pcontent"></span></p>
+                                        <p class="mb-2"><span class="font-weight-bold mr-2">单位名称:</span> <span id="companyName"></span></p>
+                                        <p class="mb-0"><span class="font-weight-bold mr-2">纳税人识别号:</span><span id="taxpayerNo"></span></p>
+                                        <p class="mb-0"><span class="font-weight-bold mr-2">注册地址:</span><span id="registerAddress"></span></p>
+                                        <p class="mb-0"><span class="font-weight-bold mr-2">注册电话:</span><span id="registerMobile"></span></p>
+                                        <p class="mb-0"><span class="font-weight-bold mr-2">开户行:</span><span id="bank"></span></p>
+                                        <p class="mb-0"><span class="font-weight-bold mr-2">银行账户:</span><span id="bankAccount"></span></p>
+                                        <p class="mb-0"><span class="font-weight-bold mr-2">开票金额:</span><span id="amount"></span></p>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">收票人信息</h4>
+
+                                <ul class="list-unstyled mb-0">
+                                    <li>
+                                        <p class="mb-2"><span class="font-weight-bold mr-2">收票人姓名:</span><span id="memberName"></span></p>
+                                        <p class="mb-2"><span class="font-weight-bold mr-2">收票人地址:</span><span id="address"></span></p>
+                                        <p class="mb-2"><span class="font-weight-bold mr-2">收票人电话:</span><span id="pmobile"></span></p>
+                                        <p class="mb-0"><span class="font-weight-bold mr-2">收票人邮箱:</span><span id="pemail"></span></p>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+
+
+                </div>
+                <!-- end row -->
+
+
+                <!--警告弹窗-->
+                <th:block th:replace="~{admin/incloud/status::warning}"></th:block>
+                <!-- end row-->
+                <div th:replace="~{admin/incloud/page::page}"></div>
+            </div> <!-- content -->
+            <!-- Footer Start -->
+            <div th:replace="~{admin/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+    </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+<!-- third party js -->
+<script src="assets/js/vendor/jquery.dataTables.min.js" th:src="@{/assets/js/vendor/jquery.dataTables.min.js}"></script>
+<script src="assets/js/vendor/dataTables.bootstrap4.js" th:src="@{/assets/js/vendor/dataTables.bootstrap4.js}"></script>
+<script src="assets/js/vendor/dataTables.responsive.min.js" th:src="@{/assets/js/vendor/dataTables.responsive.min.js}"></script>
+<script src="assets/js/vendor/responsive.bootstrap4.min.js" th:src="@{/assets/js/vendor/responsive.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/dataTables.buttons.min.js" th:src="@{/assets/js/vendor/dataTables.buttons.min.js}"></script>
+<script src="assets/js/vendor/buttons.bootstrap4.min.js" th:src="@{/assets/js/vendor/buttons.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/buttons.html5.min.js" th:src="@{/assets/js/vendor/buttons.html5.min.js}"></script>
+<script src="assets/js/vendor/buttons.flash.min.js" th:src="@{/assets/js/vendor/buttons.flash.min.js}"></script>
+<script src="assets/js/vendor/buttons.print.min.js" th:src="@{/assets/js/vendor/buttons.print.min.js}"></script>
+<script src="assets/js/vendor/dataTables.keyTable.min.js" th:src="@{/assets/js/vendor/dataTables.keyTable.min.js}"></script>
+<script src="assets/js/vendor/dataTables.select.min.js" th:src="@{/assets/js/vendor/dataTables.select.min.js}"></script>
+
+<script th:src="@{/assets/js/jquery.jqprint-0.3.js}"></script>
+<!-- third party js ends -->
+<!-- demo app -->
+<script src="assets/js/pages/demo.datatable-init.js" th:src="@{/assets/js/pages/demo.datatable-init.js}"></script>
+<!-- end demo js-->
+<script th:src="@{/assets/js/list.js}"></script>
+
+<script>
+
+    function print(id) {
+
+        $.ajax({
+            type:"POST",
+            url:'[[@{/admin/orderInvoice/printView}]]',
+            contentType: "application/json;charset=UTF-8",//指定消息请求类型
+            data:JSON.stringify({id:id}),
+            dataType:"json",
+            async: false,
+            success:function(data){
+
+                    $('#type').text(data.type==1?"普通电子发票":"增值税专用发票");
+                    $('#title').text(data.title);
+                    $('#pcontent').text(data.pcontent);
+                    $('#companyName').text(data.companyName);
+                    $('#taxpayerNo').text(data.taxpayerNo);
+                    $('#registerAddress').text(data.registerAddress);
+                    $('#registerMobile').text(data.registerMobile);
+                    $('#bank').text(data.bank);
+                    $('#bankAccount').text(data.bankAccount);
+                    $('#memberName').text(data.memberName);
+                    $('#address').text(data.address);
+                    $('#pmobile').text(data.pmobile);
+                    $('#pemail').text(data.pemail);
+                    $('#amount').text(data.amount);
+
+                $("#print").printArea();
+                return false;
+
+            },error:function (error,data) {
+                $('#warningContent').html('打印出错!');
+                $("#btn-warning").click();
+                return false;
+            }
+
+        });
+
+
+    }
+
+    var invoiceID, invoiceStatus;
+    function notInvoice(id, status){
+        invoiceID = id;
+        invoiceStatus = status;
+        $("#edit-modal").modal('show')
+    };
+
+    function updateIsMakeInvoice(id,status) {
+        if(status == 3){
+            if($("#example-textarea").val() == ""){
+                alert("请输入拒绝开票原因！")
+                return false;
+            }
+            var orderInvoiceData = {id:invoiceID,isMakeInvoice:invoiceStatus,message:$("#example-textarea").val()};
+            console.log(orderInvoiceData);
+
+        }else{
+            var orderInvoiceData = {id:id,isMakeInvoice:status};
+        }
+
+        $.ajax({
+            type:"POST",
+            url:'[[@{/admin/orderInvoice/updateIsMakeInvoice}]]',
+            contentType: "application/json;charset=UTF-8",//指定消息请求类型
+            data:JSON.stringify(orderInvoiceData),
+            dataType:"json",
+            async: false,
+            success:function(data){
+                if (data.status==200){
+                    $('#warningContent').html('操作成功!');
+                    $("#btn-warning").click();
+                    $("#edit-modal").modal('hide');
+                    location.reload();
+                    return false;
+                }else {
+                    $('#warningContent').html('操作失败!');
+                    $("#btn-warning").click();
+                    return false;
+                }
+
+            }
+        });
+
+
+    }
+
+
+</script>
+
+</body>
+</html>

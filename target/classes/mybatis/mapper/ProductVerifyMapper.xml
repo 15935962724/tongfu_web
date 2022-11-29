@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.ProductVerifyDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.ProductVerify" >
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="admin_id" property="adminId" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tongfu.entity.ProductVerify" >
+    insert into tf_product_verify (create_date, modify_date, status, 
+      admin_id, product_id, content
+      )
+    values (#{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{adminId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.ProductVerify" >
+    insert into tf_product_verify
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="adminId != null" >
+        admin_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+    <select id="getAll" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+      select
+      *
+      from tf_product_verify
+      where 1 = 1
+      <if test="productId!=null ">
+        and product_id = #{productId}
+      </if>
+      <if test="status!=null">
+        and  status = #{status}
+      </if>
+    </select>
+
+  <select id="getProductVisit" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT PS.product,M.username as username,P.`name` as pname ,M.name, COUNT(PS.`hits`) AS hits ,P.sales AS sales,PC.bname ,C.name AS cname FROM
+        (SELECT * FROM tf_product_statistics WHERE
+         1 = 1
+        <if test="startDate != null and endDate ==null " >
+          and create_date > #{startDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="startDate != null and endDate !=null " >
+          and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        ) PS ,
+        (SELECT A.`id` id, A.`name` aname, B.`id` bid, CONCAT(B.`name`, '-', A.`name`) bname FROM tf_product_category A, tf_product_category B WHERE A.`parent` = B.`id`) PC,
+        tf_member M ,tf_product P ,tf_company C
+        WHERE PS.member = M.id AND PS.product = P.`id` AND P.`product_category` = PC.id AND P.`company_id` = C.id
+        <if test="companyid!=null">
+          and P.`company_id` = #{companyid}
+        </if>
+        <if test="pName!=null and pName !=''">
+          and P.name like '%${pName}%'
+        </if>
+        <if test="pCid!=null">
+          and PC.id = #{pCid}
+        </if>
+        <if test="cName!=null and cName !=''">
+          and C.name like '%${cName}%'
+        </if>
+        <if test="companyid!=null ">
+          and P.company_id = #{companyid}
+        </if>
+           GROUP BY M.username,PS.product ORDER BY hits DESC
+  </select>
+
+
+
+
+</mapper>

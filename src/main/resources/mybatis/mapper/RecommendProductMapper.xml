@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.RecommendProductDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.RecommendProduct" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="BIGINT" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="payment_status" property="paymentStatus" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="BIGINT" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tongfu.entity.RecommendProduct" extends="BaseResultMap" >
+    <result column="introduction" property="introduction" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, title, logo, status, message, begin_date, end_date,
+    payment_status, price, is_deleted, remark, company_id, product_id, type, url, category_id
+  </sql>
+  <sql id="Blob_Column_List" >
+    introduction
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tf_recommend_product
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAll" resultType="java.util.Map">
+    SELECT RP.*,C.name cName ,PC.bname pcName FROM tf_recommend_product RP
+    LEFT JOIN tf_company C ON RP.company_id = C.id
+    LEFT JOIN (
+    SELECT A.`id` id ,A.`name` aname,B.`id` bid, CONCAT(B.`name`,'-',A.`name`) bname FROM tf_product_category A ,tf_product_category B WHERE A.`parent` = B.`id`
+    ) PC ON RP.category_id = PC.id
+    WHERE 1 = 1
+    <if test="companyId!=null">
+      AND RP.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="title!=null and title !='' ">
+      AND RP.title LIKE '%${title}%'
+    </if>
+    <if test="startDate != null and endDate != null " >
+      and RP.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="status!=null">
+      AND RP.status = #{status,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="getIsRecommendProducts" resultType="java.util.Map">
+      SELECT rp.*
+      FROM tf_recommend_product rp
+      WHERE rp.status  = 2
+      and rp.payment_status = 2
+      AND NOW() >= rp.begin_date
+      AND NOW() <![CDATA[<=]]> rp.end_date
+      <if test="categoryId!=null">
+        AND rp.category_id = #{categoryId}
+      </if>
+    <if test="companyId!=null">
+      AND rp.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type!=null">
+      AND rp.type = #{type,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_recommend_product
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.RecommendProduct" >
+    insert into tf_recommend_product (id, create_date, modify_date,
+      title, logo, status,
+      message, begin_date, end_date,
+      payment_status, price, is_deleted,
+      remark, company_id, product_id,
+      type, url, category_id,
+      introduction)
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP},
+      #{title,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, #{status,jdbcType=BIGINT},
+      #{message,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP},
+      #{paymentStatus,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL}, #{isDeleted,jdbcType=BIT},
+      #{remark,jdbcType=VARCHAR}, #{companyId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT},
+      #{type,jdbcType=BIGINT}, #{url,jdbcType=VARCHAR}, #{categoryId,jdbcType=BIGINT},
+      #{introduction,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.RecommendProduct" >
+    insert into tf_recommend_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="beginDate != null" >
+        begin_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="paymentStatus != null" >
+        payment_status,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="introduction != null" >
+        introduction,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIGINT},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentStatus != null" >
+        #{paymentStatus,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=BIGINT},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="introduction != null" >
+        #{introduction,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.RecommendProduct" >
+    update tf_recommend_product
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIGINT},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentStatus != null" >
+        payment_status = #{paymentStatus,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=BIGINT},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="introduction != null" >
+        introduction = #{introduction,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tongfu.entity.RecommendProduct" >
+    update tf_recommend_product
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      title = #{title,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIGINT},
+      message = #{message,jdbcType=VARCHAR},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      payment_status = #{paymentStatus,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      remark = #{remark,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=BIGINT},
+      product_id = #{productId,jdbcType=BIGINT},
+      type = #{type,jdbcType=BIGINT},
+      url = #{url,jdbcType=VARCHAR},
+      category_id = #{categoryId,jdbcType=BIGINT},
+      introduction = #{introduction,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.RecommendProduct" >
+    update tf_recommend_product
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      title = #{title,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIGINT},
+      message = #{message,jdbcType=VARCHAR},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      payment_status = #{paymentStatus,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      remark = #{remark,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=BIGINT},
+      product_id = #{productId,jdbcType=BIGINT},
+      type = #{type,jdbcType=BIGINT},
+      url = #{url,jdbcType=VARCHAR},
+      category_id = #{categoryId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

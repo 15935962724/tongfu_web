@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongfu.dao.WorkshopDao">
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Workshop">
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="publisher" property="publisher" jdbcType="VARCHAR" />
+    <result column="holding_end_time" property="holdingEndTime" jdbcType="TIMESTAMP" />
+    <result column="holding_time" property="holdingTime" jdbcType="TIMESTAMP" />
+    <result column="is_carefully" property="isCarefully" jdbcType="BIT" />
+    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="message" jdbcType="VARCHAR" property="message" />
+    <result column="introducer" jdbcType="LONGVARCHAR" property="introducer" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, modify_date, logo, title, publisher, holding_end_time, holding_time,
+    is_carefully, keyword, type, address, url
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tf_workshop
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAll" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tf_workshop
+    WHERE 1 = 1
+    <if test="title != null and title!='' ">
+      AND title like '%${title}%'
+    </if>
+    <if test="startDate != null and endDate !=null ">
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="holdingstartDate != null and holdingendDate !=null ">
+      and holding_time BETWEEN #{holdingstartDate,jdbcType=TIMESTAMP}  AND #{holdingendDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="companyId != null">
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="isCarefully != null">
+      AND is_carefully = #{isCarefully,jdbcType=BIT}
+    </if>
+
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tf_workshop
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Workshop">
+    insert into tf_workshop (id, create_date, modify_date,
+      logo, title, publisher,
+      holding_end_time, holding_time, is_carefully,
+      keyword, type, address,
+      url, introducer, content
+      )
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP},
+      #{logo,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{publisher,jdbcType=VARCHAR},
+      #{holdingEndTime,jdbcType=TIMESTAMP}, #{holdingTime,jdbcType=TIMESTAMP}, #{isCarefully,jdbcType=BIT},
+      #{keyword,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR},
+      #{url,jdbcType=VARCHAR}, #{introducer,jdbcType=LONGVARCHAR}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Workshop">
+    insert into tf_workshop
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="logo != null">
+        logo,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="publisher != null">
+        publisher,
+      </if>
+      <if test="holdingEndTime != null">
+        holding_end_time,
+      </if>
+      <if test="holdingTime != null">
+        holding_time,
+      </if>
+      <if test="isCarefully != null">
+        is_carefully,
+      </if>
+      <if test="keyword != null">
+        keyword,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="introducer != null">
+        introducer,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logo != null">
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null">
+        #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="holdingEndTime != null">
+        #{holdingEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="holdingTime != null">
+        #{holdingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCarefully != null">
+        #{isCarefully,jdbcType=BIT},
+      </if>
+      <if test="keyword != null">
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="introducer != null">
+        #{introducer,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Workshop">
+    update tf_workshop
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logo != null">
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null">
+        publisher = #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="holdingEndTime != null">
+        holding_end_time = #{holdingEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="holdingTime != null">
+        holding_time = #{holdingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCarefully != null">
+        is_carefully = #{isCarefully,jdbcType=BIT},
+      </if>
+      <if test="keyword != null">
+        keyword = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="introducer != null">
+        introducer = #{introducer,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tongfu.entity.Workshop">
+    update tf_workshop
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      logo = #{logo,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=VARCHAR},
+      holding_end_time = #{holdingEndTime,jdbcType=TIMESTAMP},
+      holding_time = #{holdingTime,jdbcType=TIMESTAMP},
+      is_carefully = #{isCarefully,jdbcType=BIT},
+      keyword = #{keyword,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      introducer = #{introducer,jdbcType=LONGVARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Workshop">
+    update tf_workshop
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      logo = #{logo,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=VARCHAR},
+      holding_end_time = #{holdingEndTime,jdbcType=TIMESTAMP},
+      holding_time = #{holdingTime,jdbcType=TIMESTAMP},
+      is_carefully = #{isCarefully,jdbcType=BIT},
+      keyword = #{keyword,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+  <meta charset="utf-8" />
+  <title>补货</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+  <!-- third party css -->
+  <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+  <!-- third party css end -->
+  <!-- App css -->
+  <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <!-- Start Content-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{web/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+        <!-- end page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <label class="mr-2">总共 12条数据</label>
+                <div class="table-responsive">
+                  <table class="table table-centered mb-0">
+                    <thead class="thead-light">
+                    <tr class="text-lg-center">
+                      <th>产品名称</th>
+                      <th>售卖方式</th>
+                      <th>销售价</th>
+                      <th>剩余库存</th>
+                      <th style="width: 125px;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="productStock:${list}" class="text-lg-center">
+                      <td th:text="${productStock.pName}"></td>
+                      <td th:style="${productStock.countCode<5?'color:red;':''}" th:text="${productStock.puName}"></td>
+                      <td th:text="${productStock.price}"></td>
+                      <td th:text="${productStock.countCode}"></td>
+                      <td>
+                        <a href="javaScript:void (0);" th:id="${productStock.id}" class="replenishment" >[补货]</a>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col -->
+        </div>
+        <!-- end row-->
+        <input type="file" style="display: none" id="replenishmentFile"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" filetype="TombAlbums" >
+      </div> <!-- content -->
+
+      <!--警告弹窗-->
+      <th:block th:replace="~{web/incloud/status::warning}"></th:block>
+      <!-- Footer Start -->
+      <div th:replace="~{web/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+
+  </div> <!-- end wrapper-->
+
+  <!-- ============================================================== -->
+  <!-- End Page content -->
+  <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+<!-- third party js -->
+<script src="assets/js/vendor/jquery.dataTables.min.js" th:src="@{/assets/js/vendor/jquery.dataTables.min.js}"></script>
+<script src="assets/js/vendor/dataTables.bootstrap4.js" th:src="@{/assets/js/vendor/dataTables.bootstrap4.js}"></script>
+<script src="assets/js/vendor/dataTables.responsive.min.js" th:src="@{/assets/js/vendor/dataTables.responsive.min.js}"></script>
+<script src="assets/js/vendor/responsive.bootstrap4.min.js" th:src="@{/assets/js/vendor/responsive.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/dataTables.buttons.min.js" th:src="@{/assets/js/vendor/dataTables.buttons.min.js}"></script>
+<script src="assets/js/vendor/buttons.bootstrap4.min.js" th:src="@{/assets/js/vendor/buttons.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/buttons.html5.min.js" th:src="@{/assets/js/vendor/buttons.html5.min.js}"></script>
+<script src="assets/js/vendor/buttons.flash.min.js" th:src="@{/assets/js/vendor/buttons.flash.min.js}"></script>
+<script src="assets/js/vendor/buttons.print.min.js" th:src="@{/assets/js/vendor/buttons.print.min.js}"></script>
+<script src="assets/js/vendor/dataTables.keyTable.min.js" th:src="@{/assets/js/vendor/dataTables.keyTable.min.js}"></script>
+<script src="assets/js/vendor/dataTables.select.min.js" th:src="@{/assets/js/vendor/dataTables.select.min.js}"></script>
+<!-- third party js ends -->
+<!-- demo app -->
+<script src="assets/js/pages/demo.datatable-init.js" th:src="@{/assets/js/pages/demo.datatable-init.js}"></script>
+<!-- end demo js-->
+<script th:src="@{/assets/js/list.js}"></script>
+
+<script>
+
+  // 单击分类调用
+  $(".replenishment").on("click",function(){
+    var id = $(this).attr("id");
+
+    // 触发上传文件按钮
+    $('#replenishmentFile').trigger("click");
+
+    var wb;//读取完成的数据
+    var rABS = false; //是否将文件读取为二进制字符串
+
+    $('#replenishmentFile').change(function(){
+      var formData = new FormData();//这里需要实例化一个FormData来进行文件上传
+      formData.append("file",$('#replenishmentFile')[0].files[0]);
+      formData.append("id",id);
+      $.ajax({
+        type : "post",
+        url : "[[@{/web/product/replenishment}]]",
+        data : formData,
+        dataType:"json",
+        processData : false,
+        contentType : false,
+        success : function(data){
+          // alert(data)
+          if (data.status==200) {
+              window.location.reload();
+          }else {
+            $('#warningContent').html(data.msg);
+            $("#btn-warning").click();
+            return;
+          }
+        }
+
+
+      });
+
+
+
+
+    });
+
+
+
+  });
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+  <head>
+    <title>头部</title>
+  </head>
+  <style>
+
+    #header{width:100%;margin:auto;background:url(bag.png) repeat-x left bottom;display:block;}
+
+  </style>
+  <body>
+
+      <nav th:fragment="top">
+        <div id="header" style="width:100%;margin:auto;display:block;background: url('[[@{/}]]'+'/assets/img/bag.jpg') repeat-x left bottom;">
+          <div class="k_cn" style="width: 100%;padding: 0px 5%;margin: auto;height: 27px;line-height: 27px;background: #0072cd;">
+            <li style="width:125px;float:right;text-align:right;font-size:14px;color:#fff; list-style: none;">
+              <a href="" style="color:#fff;margin:0px 10px; text-decoration:none;">
+                <img th:src="@{/assets/img/guoqi.jpg}" style="margin-right: 10px;"/>CN
+              </a>
+                <img src="jiant.png" th:src="@{/assets/img/jiant.png}"/>     <a style="color:azure" th:href="@{/webLognout}">[退出]</a>
+            </li>
+          </div>
+          <div class="k_nav" style="width:100%;display:block;background:url(assets//img//logoback.jpg) no-repeat right top;padding:20px 5%;">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td valign="top" id="logo" style="width:300px;float:left;"><a th:href="@{/web/main}">
+                    <img style="height: 75px;" th:src="@{${session.company.logo!=null&&!#strings.isEmpty(session.company.logo)?session.company.logo:'/assets/img/logo.png'}}"/>
+                </a>
+                </td>
+                <td><p style="font-size:32px;color:#006ab7;text-align:center;font-weight:bolder;line-height:14px;">欢迎登录[供应商]管理系统</p></td>
+                <td class="k_logo" style="width:300px;float:right;text-align:right;">
+                  <a href="#">
+                      <img style="height:80px; " src="gys_logo.png" th:src="@{/assets/img/gys_logo.png}"/>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3" class="k_deng" style="width:100%;height:30px;line-height:30px;font-size:14px;color:#333;text-align:center;    font-weight: 600;">[[${#dates.format(new java.util.Date().getTime(), 'yyyy年MM月dd日')}]]　　　您的身份：<span style="color: red"><shiro:principal  type="com.tongfu.entity.Admin" property="username" /></span>　　最近登录时间：[[${#dates.format(session.loginDate, 'yyyy年MM月dd日 HH:mm')}]]</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div style="background-color: #0072cd; height: 3px;"></div>
+      </nav>
+
+  </body>
+</html>

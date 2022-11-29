@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.CompanyStatisticsMapper" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.CompanyStatistics" >
+    <result column="member" property="member" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tongfu.entity.CompanyStatistics" >
+    insert into tf_company_statistics (member, create_date, company_id
+      )
+    values (#{member,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{companyId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.CompanyStatistics" >
+    insert into tf_company_statistics
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="member != null" >
+        member,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="member != null" >
+        #{member,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getThisWeekCompanyFollows" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT B.date ,IFNULL(C.countCompany,0) AS countCompany FROM  (
+    SELECT @a :=@a + 1 AS `index`, DATE(ADDDATE(CURRENT_DATE, INTERVAL @a DAY)) AS `date`
+    FROM mysql.help_topic,(SELECT @a := 0) temp
+    WHERE @a &lt; 6 - WEEKDAY(CURRENT_DATE)
+    UNION
+    SELECT @s :=@s - 1 AS `index`, DATE(DATE_SUB(CURRENT_DATE, INTERVAL @s DAY)) AS `date`
+    FROM mysql.help_topic,(SELECT @s := WEEKDAY(CURRENT_DATE) + 1) temp
+    WHERE @s > 0
+    ORDER BY `date`) B LEFT JOIN (
+    SELECT DATE_FORMAT(A.create_date,'%Y-%m-%d') AS 'date', COUNT(A.member) AS countCompany FROM   tf_company_statistics A  WHERE 1 = 1
+    <if test="companyId != null" >
+      AND A.company_id = #{companyId}
+    </if>
+    GROUP BY  DATE_FORMAT(A.create_date,'%Y-%m-%d')
+    ) C  ON B.date = C.date ORDER BY B.date
+  </select>
+
+
+  <select id="getLastWeekCompanyFollows" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+
+
+
+
+
+SELECT B.timeDay, IFNULL(C.countCompany,0) AS countCompany  FROM  (
+    SELECT
+    DATE_FORMAT(lastWeek.`timeDay`,'%Y-%m-%d') AS'timeDay'
+    FROM (
+    SELECT DATE_SUB(NOW(),INTERVAL 13 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 12 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 11 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 10 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 9 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 8 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 7 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 6 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 5 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 4 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 3 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 2 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 1 DAY) AS'timeDay'
+    ) AS lastWeek
+    WHERE YEARWEEK(lastWeek.`timeDay`,1) = YEARWEEK(NOW(),1)-1) B LEFT JOIN  (
+    SELECT DATE_FORMAT(A.create_date,'%Y-%m-%d') AS 'date', COUNT(A.member) AS countCompany FROM   tf_company_statistics A  WHERE 1 = 1
+    <if test="companyId != null" >
+      AND A.company_id = #{companyId}
+    </if>
+     GROUP BY  DATE_FORMAT(A.create_date,'%Y-%m-%d')
+    ) C  ON B.timeDay = C.date
+
+  </select>
+
+
+
+
+
+
+</mapper>

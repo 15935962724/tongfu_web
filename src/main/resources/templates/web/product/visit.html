@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>商品统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+    <style>
+        .yearEdit{
+            position: absolute;
+            right: 14px;
+            top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .yearEdit span{
+            margin: 0 10px;
+            font-size: 20px;
+            color: #333;
+            cursor: pointer;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{/web/incloud/top::top}"></div>
+<!-- end Topbar -->
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+        <div class="content-page">
+            <div class="content">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <!--<ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Apex</a></li>
+                                    <li class="breadcrumb-item active">Pie Charts</li>
+                                </ol>-->
+                            </div>
+                            <h4 class="page-title">统计</h4>
+                        </div> <!-- end page-title-box -->
+                    </div> <!-- end col-->
+                </div>
+                <!-- end page title -->
+
+                <div class="row">
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">分类统计</h4>
+                                <div id="simple-pie" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">产品访问量统计</h4>
+                                <div id="simple-donut" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">地区统计</h4>
+                                <div id="monochrome-pie" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                </div>
+                <!-- end row-->
+                <div class="row">
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-4">销量统计</h4>
+                                <div id="gradient-donut" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">产品申请演示</h4>
+                                <div class="yearEdit">
+                                    <span onclick="yearReduce()"><<</span>
+                                    <span id="yearTime"></span>
+                                    <span onclick="yearPlus()">>></span>
+                                </div>
+                                <div id="companySalesStatisics" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                </div>
+                <!-- end row-->
+                <div class="row">
+
+
+                    <!--<div class="col-xl-4">-->
+                        <!--<div class="card">-->
+                            <!--<div class="card-body"  style="height: 451px;">-->
+                                <!--<h4 class="header-title">产品订单数量占比</h4>-->
+                                <!--<input class="datePicker" id="productOrderProportionInput" />-->
+                                <!--<div id="productOrderProportion" class="apex-charts"></div>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash; end card body&ndash;&gt;-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash; end card &ndash;&gt;-->
+                    <!--</div>-->
+                    <!-- end col-->
+                </div>
+
+            </div> <!-- content -->
+
+            <!-- Footer Start -->
+            <div th:replace="~{web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+    </div> <!-- end wrapper-->
+
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<!-- third party js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+<!-- third party end -->
+<!-- demo:js -->
+<!--<script  th:src="@{/assets/js/pages/demo.apex-pie.js}"></script>-->
+
+
+<script th:inline="javascript" type="text/javascript">
+
+    var date=new Date;
+    var y = date.getFullYear();
+    $("#yearTime").text(y);
+    var companySalesColumn;//产品申请演示统计
+
+    //页面加载就调用
+    $(function(){
+        var productCategoryStatistics = [[${productCategoryStatistics}]];
+        var series = [];
+        var labels = [];
+        var colors = [];
+        for (var i = 0;i<productCategoryStatistics.length;i++){
+            series.push(productCategoryStatistics[i].hist);
+            labels.push(productCategoryStatistics[i].bname);
+            colors.push(randomColor());
+        }
+        // alert(productProvinceStatistics.length)
+        // alert(series)
+        var options = {
+            chart: {
+                height: 400,
+                type: "donut",
+            },
+            plotOptions: {
+                pie: {
+                    size: 100
+                }
+            },
+            // series: [44, 55, 41, 17, 15 ],
+            // labels: ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"],
+            // colors: ["#727cf5", "#6c757d", "#0acf97", "#fa5c7c", "#e3eaef"],
+            series: series,
+            labels: labels,
+            colors: colors,
+            legend: {
+                show: !0,
+                width: 160,
+                height: 340,
+                position: "left",
+                horizontalAlign: "left",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: -20,
+                offsetY: 0
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 400}, legend: {show: !1}}}]
+        };
+        (chart = new ApexCharts(document.querySelector("#simple-pie"), options)).render();
+        var productStatistics = [[${productStatistics}]];
+        series = [];
+        labels = [];
+        colors = [];
+
+        for (var i = 0;i<productStatistics.length;i++){
+            series.push(productStatistics[i].hist);
+            labels.push(productStatistics[i].name);
+            colors.push(randomColor());
+        }
+
+        options = {
+            chart: {
+                height: 400,
+                type: "donut",
+            },
+            plotOptions: {
+                pie: {
+                    size: 100
+                }
+            },
+            // series: [44, 55, 41, 17, 15],
+            // labels: ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"],
+            // colors: ["#39afd1", "#ffbc00", "#313a46", "#fa5c7c", "#0acf97"],
+            series: series,
+            labels: labels,
+            colors: colors,
+            legend: {
+                show: !0,
+                width: 160,
+                height: 340,
+                position: "left",
+                horizontalAlign: "left",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: -20,
+                offsetY: 0
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 400}, legend: {show: !1}}}]
+        };
+        (chart = new ApexCharts(document.querySelector("#simple-donut"), options)).render();
+        var productProvinceStatistics = [[${productProvinceStatistics}]];
+        series = [];
+        labels = [];
+        colors = [];
+        for (var i = 0;i<productProvinceStatistics.length;i++){
+            series.push(productProvinceStatistics[i].hits);
+            labels.push(productProvinceStatistics[i].cname);
+            colors.push(randomColor());
+        }
+        // alert(labels)
+        options = {
+            chart: {
+                height: 400,
+                type: "donut",
+            },
+            plotOptions: {
+                pie: {
+                    size: 100
+                }
+            },
+            // series: [25, 15, 44, 55, 41, 17],
+            // labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            series: series,
+            labels: labels,
+            colors: colors,
+            legend: {
+                show: !0,
+                width: 160,
+                height: 340,
+                position: "left",
+                horizontalAlign: "left",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: -20,
+                offsetY: 0
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 400}, legend: {show: !1}}}]
+        };
+        (chart = new ApexCharts(document.querySelector("#monochrome-pie"), options)).render();
+
+        var productSalesStatistics = [[${productSalesStatistics}]];
+        series = [];
+        labels = [];
+        colors = [];
+        for (var i = 0;i<productSalesStatistics.length;i++){
+            series.push(productSalesStatistics[i].sales);
+            labels.push(productSalesStatistics[i].name);
+            colors.push(randomColor());
+        }
+        options = {
+            chart: {
+                height: 400,
+                type: "donut",
+            },
+            plotOptions: {
+                pie: {
+                    size: 100
+                }
+            },
+            // series: [44, 55, 41, 17, 15],
+            // labels: ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"],
+            // colors: ["#727cf5", "#6c757d", "#0acf97", "#fa5c7c", "#e3eaef"],
+            series: series,
+            labels: labels,
+            colors: colors,
+            legend: {
+                show: !0,
+                width: 160,
+                height: 340,
+                position: "left",
+                horizontalAlign: "left",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: -20,
+                offsetY: 0
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 400}, legend: {show: !1}}}],
+            fill: {type: "gradient"}
+        };
+        (chart = new ApexCharts(document.querySelector("#gradient-donut"), options)).render();
+
+
+        // 申请演示统计
+        var demonstrationStatisticStatisics = [[${demonstrationStatisticStatisics}]];
+        var companySalesColors = [];
+        var companySalesData = [];
+        var companySalesCategories = [];
+
+        for (var i = 0;i<demonstrationStatisticStatisics.length;i++){
+            companySalesColors.push(randomColor());
+            companySalesData.push(demonstrationStatisticStatisics[i].countNum);
+            companySalesCategories.push(demonstrationStatisticStatisics[i].mon.split('-')[1]);
+        }
+        var companySalesOptions = {
+            chart: {
+                height: 380,
+                type: "bar",
+                toolbar: {
+                    show: false
+                }
+            },
+            colors: companySalesColors,
+            plotOptions: {bar: {columnWidth: "45%", distributed: !0}},
+            dataLabels: {enabled: !1},
+            series: [{"name": "申请演示", "data": companySalesData}],
+            xaxis: {
+                categories: companySalesCategories,
+                labels: {style: {colors: companySalesColors, fontSize: "14px"}}
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+            },
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        companySalesColumn = new ApexCharts(document.querySelector("#companySalesStatisics"), companySalesOptions);
+        companySalesColumn.render();
+
+        function appendData() {
+            var e = chart.w.globals.series.map(function () {
+                return Math.floor(100 * Math.random()) + 1
+            });
+            return e.push(Math.floor(100 * Math.random()) + 1), e
+        }
+
+        function removeData() {
+            var e = chart.w.globals.series.map(function () {
+                return Math.floor(100 * Math.random()) + 1
+            });
+            return e.pop(), e
+        }
+
+        function randomize() {
+            return chart.w.globals.series.map(function () {
+                return Math.floor(100 * Math.random()) + 1
+            })
+        }
+
+        function reset() {
+            return options.series
+        }
+
+
+
+        (chart = new ApexCharts(document.querySelector("#update-donut"), options)).render()
+            document.querySelector("#randomize").addEventListener("click", function () {
+            chart.updateSeries(randomize())
+        }), document.querySelector("#add").addEventListener("click", function () {
+            chart.updateSeries(appendData())
+        }), document.querySelector("#remove").addEventListener("click", function () {
+            chart.updateSeries(removeData())
+        }), document.querySelector("#reset").addEventListener("click", function () {
+            chart.updateSeries(reset())
+        });
+
+    });
+
+    function yearReduce() {
+        var textYear = parseInt($("#yearTime").text());
+        if(textYear > 2015){
+            textYear--;
+            $("#yearTime").text(textYear);
+            amountOrderStatisics(textYear);
+        }
+    }
+    function yearPlus() {
+        var textYear = parseInt($("#yearTime").text());
+        if(textYear < y){
+            textYear++;
+            $("#yearTime").text(textYear);
+            amountOrderStatisics(textYear);
+        }
+    }
+
+
+
+    /*随机颜色*/
+    function randomColor() {
+        var color = "";
+        for (var i = 0; i < 6; i++) {
+            color += (Math.random() * 16 | 0).toString(16);
+        }
+        return "#" + color;
+    }
+    //产品申请演示统计
+    function amountOrderStatisics(year) {
+        var systemStatisicsData ;
+        var companySalesColors = [];
+        var companySalesData = [];
+        var companySalesCategories = [];
+        $.ajax({
+            type:"POST",
+            url:[[@{/web/product/demonstrationStatisticStatisics}]],
+            data:{year:year},
+            dataType:"json",
+                async: false,
+                success:function (data) {
+                console.log(data.data);
+                systemStatisicsData =  data.data;
+            }
+         });
+        for (var i = 0;i<systemStatisicsData.length;i++){
+            companySalesColors.push(randomColor());
+            companySalesData.push(systemStatisicsData[i].countNum);
+            companySalesCategories.push(systemStatisicsData[i].mon.split('-')[1]);
+        }
+        companySalesColumn.updateOptions({
+            series: [{"name": "申请演示", "data": companySalesData}],
+            labels: companySalesData,
+            colors: companySalesColors,
+        })
+    }
+
+
+</script>
+
+</body>
+</html>

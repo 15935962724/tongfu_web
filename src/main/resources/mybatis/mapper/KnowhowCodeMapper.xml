@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.KnowhowCodeDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.KnowhowCode" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="face_value" property="faceValue" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="know_how_id" property="knowHowId" jdbcType="BIGINT" />
+    <result column="is_sell" property="isSell" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, face_value, price, start_date, end_date, type, know_how_id, is_sell
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tf_knowhow_code
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAll" parameterType="java.util.HashMap" resultType="com.tongfu.entity.KnowhowCode">
+    select
+    <include refid="Base_Column_List" />
+    from tf_knowhow_code
+    where 1 = 1
+    <if test="knowHowId!=null ">
+      and know_how_id = #{knowHowId,jdbcType=BIGINT}
+    </if>
+    <if test="code!=null and code !=''">
+      and code like '%${code}%'
+    </if>
+    <if test="type!=null ">
+      and type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="isSell==1 ">
+      and is_sell = true
+    </if>
+    <if test="isSell==2 ">
+      and is_sell = false
+    </if>
+    <if test="knowHowId!=null ">
+      and know_how_id = #{knowHowId,jdbcType=BIGINT}
+    </if>
+
+  </select>
+  <select id="getAllMap" parameterType="java.util.HashMap" resultType="java.util.Map">
+    select
+    id, code, face_value, price,
+    DATE_FORMAT(start_date, '%Y-%m-%d %H:%i:%s') start_date,DATE_FORMAT(end_date, '%Y-%m-%d %H:%i:%s') end_date,
+    type, know_how_id,  IF(is_sell,'是','否') is_sell
+    from tf_knowhow_code
+    where 1 = 1
+    <if test="knowHowId!=null ">
+      and know_how_id = #{knowHowId,jdbcType=BIGINT}
+    </if>
+    <if test="code!=null and code !='' ">
+      and code like '%${code}%'
+    </if>
+    <if test="type!=null ">
+      and type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="isSell==1 ">
+      and is_sell = true
+    </if>
+    <if test="isSell==2 ">
+      and is_sell = false
+    </if>
+    <if test="knowHowId!=null ">
+      and know_how_id = #{knowHowId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_knowhow_code
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.KnowhowCode" >
+    insert into tf_knowhow_code (id, code, face_value,
+      price, start_date, end_date,
+      type, know_how_id, is_sell)
+    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, #{faceValue,jdbcType=DECIMAL},
+      #{price,jdbcType=DECIMAL}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP},
+      #{type,jdbcType=INTEGER}, #{knowHowId,jdbcType=BIGINT}, #{isSell,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.KnowhowCode" >
+    insert into tf_knowhow_code
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="faceValue != null" >
+        face_value,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="knowHowId != null" >
+        know_how_id,
+      </if>
+      <if test="isSell != null" >
+        is_sell,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="faceValue != null" >
+        #{faceValue,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="knowHowId != null" >
+        #{knowHowId,jdbcType=BIGINT},
+      </if>
+      <if test="isSell != null" >
+        #{isSell,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+
+
+  <insert id="insertMap" parameterType="java.util.Map">
+
+    insert into tf_knowhow_code ( code, face_value,
+    price, start_date, end_date,
+    type, know_how_id, is_sell)
+    values
+    <foreach collection="codes" item="item" index="index" separator=",">
+      (#{item.code,jdbcType=VARCHAR}, #{item.faceValue,jdbcType=DECIMAL},
+      #{item.price,jdbcType=DECIMAL}, #{item.startDate,jdbcType=TIMESTAMP}, #{item.endDate,jdbcType=TIMESTAMP},
+      #{item.type,jdbcType=INTEGER}, #{item.knowHowId,jdbcType=BIGINT}, #{item.isSell,jdbcType=BIT})
+    </foreach>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.KnowhowCode" >
+    update tf_knowhow_code
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="faceValue != null" >
+        face_value = #{faceValue,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="knowHowId != null" >
+        know_how_id = #{knowHowId,jdbcType=BIGINT},
+      </if>
+      <if test="isSell != null" >
+        is_sell = #{isSell,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.KnowhowCode" >
+    update tf_knowhow_code
+    set code = #{code,jdbcType=VARCHAR},
+      face_value = #{faceValue,jdbcType=DECIMAL},
+      price = #{price,jdbcType=DECIMAL},
+      start_date = #{startDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=INTEGER},
+      know_how_id = #{knowHowId,jdbcType=BIGINT},
+      is_sell = #{isSell,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

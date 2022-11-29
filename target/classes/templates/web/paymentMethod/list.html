@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>支付管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <!-- Start Content-->
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+            <div class="content">
+
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="row mb-2">
+                                    <div class="col-lg-8">
+                                        <form id="list" th:action="@{/web/paymentMethod/list}" class="form-inline">
+                                            <input type="hidden" id="pageNum" name="pageNum" th:value="${page.pageNum}" />
+                                            <input type="hidden" id="pageSize" name="pageSize" th:value="${page.pageSize}" />
+                                            <div class="form-group mb-2">
+                                                <label for="name" class="mr-2">产品名称</label>
+                                                <input type="search" class="form-control" name="name" th:value="${name}" id="name" placeholder="产品名称">
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-lg-right">
+                                            <button type="button" onclick="$('#list').submit();" id = "search" class="btn btn-light mb-2">搜索</button>
+                                             <a th:href="@{/web/paymentMethod/add}" ><button type="button" class="btn btn-danger mb-2 mr-2"><i class="mdi mdi-basket mr-1"></i>添加支付方式</button></a>
+                                        </div>
+                                    </div><!-- end col-->
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-centered mb-0">
+                                        <thead class="thead-light">
+                                        <tr class="text-lg-center">
+                                            <th>序号</th>
+                                            <th>名称</th>
+                                            <th>icon</th>
+                                            <th>是否启用</th>
+                                            <th>排序</th>
+                                            <th>创建日期</th>
+                                            <th style="width: 125px;">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="paymentMethod ,paymentMethodStart :${page.list}" class="text-lg-center">
+                                            <td th:text="${paymentMethodStart.index+1}"></td>
+                                            <td th:text="${paymentMethod.name}"></td>
+                                            <td><img th:src="@{${paymentMethod.icon}}" alt="contact-img" title="contact-img" class="rounded mr-3" height="48"></td>
+                                            <td>
+                                                    <input type="checkbox" th:id="'isEnable'+${paymentMethod.id}" name="isEnable" th:class="${paymentMethod.id}" onclick="checkboxOnclick(this)" th:checked="${paymentMethod.isEnable}" data-switch="success"/>
+                                                    <label th:for="'isEnable'+${paymentMethod.id}" data-off-label="No" data-on-label="Yes"  ></label>
+
+                                            </td>
+                                            <td th:text="${#dates.format(paymentMethod.createDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <td th:text="${paymentMethod.orders}"></td>
+                                            <td>
+
+                                                <a th:href="@{/web/paymentMethod/edit(id=${paymentMethod.id})}">[编辑]</a>
+                                                <a href="javaScript:void(0)" th:onclick="|deletePaymentMethod(${paymentMethod.id})|">[删除]</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- end card-body-->
+                        </div> <!-- end card-->
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row-->
+
+                <div th:replace="~{incloud/page::page}"></div>
+
+            </div> <!-- content -->
+
+            <!--警告弹窗-->
+            <div id="warning-alert-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-body p-4">
+                            <div class="text-center">
+                                <i class="dripicons-warning h1 text-warning"></i>
+                                <h4 class="mt-2">警告</h4>
+                                <p class="mt-3" id = "warningContent"></p>
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <button  type="button" hidden class="btn btn-warning" id = "btn-warning" data-toggle="modal" data-target="#warning-alert-modal">警告</button>
+
+            <div id="danger-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header modal-colored-header bg-danger">
+                            <h4 class="modal-title" id="danger-header-modalLabel">警告提示</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <h5 class="mt-0">删除警告</h5>
+                            <p>你确定要删除么？</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" onclick="method()">确定</button>
+                            <button type="button" class="btn btn-light" data-dismiss="modal">取消</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <button type="button" hidden class="btn btn-danger"  id = "deletePaymentMethod" data-toggle="modal" data-target="#danger-header-modal">删除</button>
+            <!-- Footer Start -->
+            <div th:replace="~{incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+
+    </div> <!-- end wrapper-->
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+
+
+
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+
+
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+<!-- third party js -->
+<script src="assets/js/vendor/jquery.dataTables.min.js" th:src="@{/assets/js/vendor/jquery.dataTables.min.js}"></script>
+<script src="assets/js/vendor/dataTables.bootstrap4.js" th:src="@{/assets/js/vendor/dataTables.bootstrap4.js}"></script>
+<script src="assets/js/vendor/dataTables.responsive.min.js" th:src="@{/assets/js/vendor/dataTables.responsive.min.js}"></script>
+<script src="assets/js/vendor/responsive.bootstrap4.min.js" th:src="@{/assets/js/vendor/responsive.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/dataTables.buttons.min.js" th:src="@{/assets/js/vendor/dataTables.buttons.min.js}"></script>
+<script src="assets/js/vendor/buttons.bootstrap4.min.js" th:src="@{/assets/js/vendor/buttons.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/buttons.html5.min.js" th:src="@{/assets/js/vendor/buttons.html5.min.js}"></script>
+<script src="assets/js/vendor/buttons.flash.min.js" th:src="@{/assets/js/vendor/buttons.flash.min.js}"></script>
+<script src="assets/js/vendor/buttons.print.min.js" th:src="@{/assets/js/vendor/buttons.print.min.js}"></script>
+<script src="assets/js/vendor/dataTables.keyTable.min.js" th:src="@{/assets/js/vendor/dataTables.keyTable.min.js}"></script>
+<script src="assets/js/vendor/dataTables.select.min.js" th:src="@{/assets/js/vendor/dataTables.select.min.js}"></script>
+<!-- third party js ends -->
+<!-- demo app -->
+<script src="assets/js/pages/demo.datatable-init.js" th:src="@{/assets/js/pages/demo.datatable-init.js}"></script>
+<!-- end demo js-->
+<script th:src="@{/assets/js/list.js}"></script>
+
+
+<script>
+
+
+    var mehtodId ;
+    //是否启用
+    function checkboxOnclick(obj) {
+        var name = obj.name;
+        var id= obj.id;
+        var value = $('#'+id).prop('checked');
+        var datas = "{ \"id\": "+id.replace(name,'')+", \""+name+"\": "+value+"}";
+        $.ajax({
+            type:"POST",
+            contentType: "application/json",
+            url:'[[@{/web/paymentMethod/updatePaymentMethod}]]',
+            data:datas,
+            // params: {
+            //     product: JSON.stringify(datas)
+            // },
+            dataType: "json",
+            async: false,
+            success:function(data){
+                console.log(data)
+                var html= data.msg;
+                console.log(html)
+                $('#warningContent').html(html);
+                $("#btn-warning").click();
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1200);
+
+                return ;
+            }
+        });
+
+    }
+
+    //删除
+    function deletePaymentMethod(id) {
+        $('#deletePaymentMethod').click();
+        mehtodId = id ;
+    }
+
+    function method() {
+
+        var datas = "{ \"id\": "+mehtodId+"}";
+        $.ajax({
+            type:"POST",
+            contentType: "application/json",
+            url:'[[@{/web/paymentMethod/deletePaymentMethod}]]',
+            data:datas,
+            dataType: "json",
+            async: false,
+            success:function(data){
+                console.log(data)
+                var html= data.msg;
+                console.log(html)
+                // $('#warningContent').html(html);
+                // $("#btn-warning").click();
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1200);
+
+                return ;
+            }
+        });
+
+    }
+
+
+
+</script>
+</body>
+</html>

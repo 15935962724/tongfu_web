@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+  <title></title>
+</head>
+<body>
+
+<nav th:fragment="left">
+  <div class="left-side-menu" style="padding-bottom: 80px">
+    <!--- Sidemenu -->
+    <ul class="metismenu side-nav">
+      <shiro:hasAnyPermissions name="company,journalism,learning,media,exhibition" >
+        <li class="side-nav-item">
+          <a href="javascript: void(0);" class="side-nav-link">
+            <i class="mdi mdi-clipboard-text-play-outline"></i>
+            <span>展位</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="side-nav-second-level" aria-expanded="false">
+            <shiro:hasPermission name="company">
+              <li>
+                <a th:href="@{/web/company/edit}">公司简介</a>
+              </li>
+            </shiro:hasPermission>
+            <shiro:hasPermission name="journalism">
+              <li >
+                <a th:href="@{/web/journalism/list}" >新闻动态</a>
+              </li>
+            </shiro:hasPermission>
+            <shiro:hasPermission name="learning">
+              <li >
+                <a th:href="@{/web/learning/list}">学术活动</a>
+              </li>
+            </shiro:hasPermission>
+            <shiro:hasPermission name="media">
+              <li>
+                <a th:href="@{/web/media/list}">媒体报道</a>
+              </li>
+            </shiro:hasPermission>
+            <shiro:hasPermission name="exhibition">
+              <li>
+                <a th:href="@{/web/exhibition/list}">会议展览</a>
+              </li>
+            </shiro:hasPermission>
+          </ul>
+        </li>
+      </shiro:hasAnyPermissions>
+
+      <!--商品-->
+      <shiro:hasAnyPermissions name="product,productMeal" >
+        <li class="side-nav-item">
+          <a href="javascript: void(0);" class="side-nav-link">
+            <i class="dripicons-meter"></i>
+            <span>商品</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="side-nav-second-level" aria-expanded="false">
+            <shiro:hasPermission name="product">
+              <li>
+                <a th:href="@{/web/product/list}">商品管理</a>
+              </li>
+            </shiro:hasPermission>
+
+
+            <li>
+              <a th:href="@{/web/product/trainPackages}">培训包</a>
+            </li>
+            <shiro:hasPermission name="productMeal">
+              <li>
+                <a th:href="@{/web/productMeal/list}">商品套餐</a>
+              </li>
+            </shiro:hasPermission>
+
+
+            <!--<shiro:hasPermission name="productVisit">-->
+            <!--<li >-->
+            <!--<a th:href="@{/web/product/visit}">访问量统计</a>-->
+            <!--</li>-->
+            <!--</shiro:hasPermission>-->
+
+
+          </ul>
+        </li>
+      </shiro:hasAnyPermissions>
+
+      <!--订单-->
+      <shiro:hasAnyPermissions name="order,orderStatistics">
+        <li class="side-nav-item">
+          <a href="javascript: void(0);" class="side-nav-link">
+            <i class="dripicons-view-apps"></i>
+            <span>订单</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="side-nav-second-level" aria-expanded="false">
+            <shiro:hasPermission name="order">
+              <li>
+                <a th:href="@{/web/order/list}">订单管理</a>
+              </li>
+            </shiro:hasPermission>
+            <li>
+              <a th:href="@{/web/order/addServiceOrderList}">增值服务订单</a>
+            </li>
+
+          </ul>
+        </li>
+      </shiro:hasAnyPermissions>
+
+      <!--病例-->
+      <shiro:hasAnyPermissions name="caseManagement,commission">
+        <li class="side-nav-item">
+          <a href="javascript: void(0);" class="side-nav-link">
+            <i class="dripicons-copy"></i>
+            <span>病例</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="side-nav-second-level" aria-expanded="false">
+            <shiro:hasPermission name="caseManagement">
+              <li>
+                <a href="pages-starter.html">病例管理</a>
+              </li>
+            </shiro:hasPermission>
+            <shiro:hasPermission name="commission">
+              <!--<li>
+                <a href="pages-profile.html">顾问佣金</a>
+              </li>-->
+            </shiro:hasPermission>
+          </ul>
+        </li>
+      </shiro:hasAnyPermissions>
+
+      <!--留言-->
+      <!--<shiro:hasAnyPermissions name="message,discuss">-->
+      <!--<li class="side-nav-item">-->
+      <!--<a href="javascript: void(0);" class="side-nav-link">-->
+      <!--<i class="dripicons-briefcase"></i>-->
+      <!--<span>留言</span>-->
+      <!--<span class="menu-arrow"></span>-->
+      <!--</a>-->
+      <!--<ul class="side-nav-second-level" aria-expanded="false">-->
+      <!--&lt;!&ndash;<shiro:hasPermission name="commission">&ndash;&gt;-->
+
+      <!--<shiro:hasPermission name="message">-->
+      <!--<li>-->
+      <!--<a href="ui-buttons.html">讨论会员</a>-->
+      <!--</li>-->
+      <!--</shiro:hasPermission>-->
+      <!--</ul>-->
+      <!--</li>-->
+      <!--</shiro:hasAnyPermissions>-->
+
+      <!--广告-->
+      <shiro:hasAnyPermissions name="ad">
+        <li class="side-nav-item">
+          <a href="javascript: void(0);" class="side-nav-link">
+            <i class="dripicons-heart"></i>
+            <span>广告</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="side-nav-second-level" aria-expanded="false">
+            <shiro:hasPermission name="ad">
+              <li>
+                <a th:href="@{/web/ad/list}">广告管理</a>
+              </li>
+            </shiro:hasPermission>
+            <li>
+              <a th:href="@{/web/recommendProduct/list}">推荐软件</a>
+            </li>
+          </ul>
+        </li>
+      </shiro:hasAnyPermissions>
+
+      <!--客服-->
+      <shiro:hasAnyPermissions name="returnGoods,message,customer">
+        <li class="side-nav-item">
+          <a href="javascript: void(0);" class="side-nav-link">
+            <i class="dripicons-document"></i>
+            <span>客服</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="side-nav-second-level" aria-expanded="false">
+            <shiro:hasPermission name="returnGoods">
+              <li>
+                <a href="form-elements.html">退换货管理</a>
+              </li>
+            </shiro:hasPermission>
+            <shiro:hasPermission name="message">
+              <li>
+                <a th:href="@{/web/message/list}">咨询管理</a>
+              </li>
+            </shiro:hasPermission>
+            <!--<shiro:hasPermission name="customer">
+              <li>
+                <a href="form-validation.html">客服管理</a>
+              </li>
+            </shiro:hasPermission>-->
+          </ul>
+        </li>
+      </shiro:hasAnyPermissions>
+
+      <!--权限-->
+      <shiro:hasAnyPermissions name="role,admin">
+        <li class="side-nav-item">
+          <a href="javascript: void(0);" class="side-nav-link">
+            <i class="dripicons-list"></i>
+            <span>权限</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="side-nav-second-level" aria-expanded="false">
+            <shiro:hasPermission name="role">
+              <li>
+                <a th:href="@{/web/company_role/list}">角色管理</a>
+              </li>
+            </shiro:hasPermission>
+            <shiro:hasPermission name="admin">
+              <li>
+                <a th:href="@{/web/admin/list}">管理员</a>
+              </li>
+            </shiro:hasPermission>
+
+            <shiro:hasPermission name="agent">
+              <li>
+                <a th:href="@{/web/agent/list}">代理商</a>
+              </li>
+            </shiro:hasPermission>
+
+          </ul>
+        </li>
+      </shiro:hasAnyPermissions>
+
+      <shiro:hasAnyPermissions name="productStatistics,orderStatistics">
+        <li class="side-nav-item">
+          <a href="javascript: void(0);" class="side-nav-link">
+            <i class="mdi mdi-chart-areaspline"></i>
+            <span>统计</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="side-nav-second-level" aria-expanded="false">
+            <li>
+              <a th:href="@{/web/articleStatistics/statistics}">文章统计</a>
+            </li>
+            <li>
+              <a th:href="@{/web/orderStatistics/statistics}">交易统计</a>
+            </li>
+            <li>
+              <a th:href="@{/web/orderSalesStatistics/statistics}">销量统计</a>
+            </li>
+            <shiro:hasPermission name="productStatistics">
+              <li >
+                <a th:href="@{/web/product/statistics}">商品统计</a>
+              </li>
+            </shiro:hasPermission>
+            <li>
+              <a th:href="@{/web/product/visit}">访问量统计</a>
+            </li>
+            <shiro:hasPermission name="orderStatistics">
+              <li>
+                <a th:href="@{/web/order/statistics}">订单统计</a>
+              </li>
+            </shiro:hasPermission>
+
+            <li>articleStatistics
+              <a th:href="@{/web/order/salesStatistics}">全国销售额统计</a>
+            </li>
+            <li>
+              <a th:href="@{/web/order/salesAnalysis}">销售分析</a>
+            </li>
+          </ul>
+        </li>
+      </shiro:hasAnyPermissions>
+
+    </ul>
+    <!-- Help Box -->
+    <div class="help-box text-center">
+      <a href="javascript: void(0);" class="float-right close-btn text-body">
+        <i class="mdi mdi-close"></i>                        </a>
+      <img src="assets/images/help-icon.svg" th:src="@{/assets/images/help-icon.svg}" height="90" alt="Helper Icon Image" />
+      <h5 class="mt-3">Unlimited Access</h5>
+      <p class="mb-3">Upgrade to plan to get access to unlimited reports</p>
+      <a href="javascript: void(0);" class="btn btn-outline-primary btn-sm">Upgrade</a>
+    </div>
+    <!-- end Help Box -->
+    <!-- End Sidebar -->
+
+    <div class="clearfix"></div>
+    <!-- Sidebar -left -->
+  </div>
+</nav>
+</body>
+</html>

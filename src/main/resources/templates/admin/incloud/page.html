@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title></title>
+  <script src="../../../static/assets/js/list.js"></script>
+</head>
+<body>
+<nav th:fragment="page">
+
+  <div class="row">
+    <div class="col-sm-12 col-md-5">
+      <div class="dataTables_info" id="selection-datatable_info" role="status" aria-live="polite">
+        <input type="hidden" id="couuntPageSize" th:value="${page.pages}">
+        总共 [[${page.pages}]]页
+      </div>
+    </div>
+
+
+
+
+
+    <div class="col-sm-12 col-md-7" th:style="${page.pages<=1?'display:none':''}">
+      <ul class="pagination pagination-rounded" style="align-items: center;">
+
+        <li class="paginate_button page-item previous" th:style="${page.pageNum==1?'display:none':''}" th:onclick="'javascript:$.pageSkip(\''+${page.pageNum-1}+'\')'">
+          <a class="page-link">
+            <i class="mdi mdi-chevron-left"></i>
+          </a>
+        </li>
+
+
+        <th:block th:if="${page.pages > 10}">
+          <th:block th:if="${page.pageNum == 1}">
+            <li class="paginate_button page-item active">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pageNum}+'\')'">[[${page.pageNum}]]</a>
+            </li>
+
+            <li class="paginate_button page-item">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pageNum+1}+'\')'">[[${page.pageNum+1}]]</a>
+            </li>
+
+            <li class="paginate_button page-item">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pageNum+2}+'\')'">[[${page.pageNum+2}]]</a>
+            </li>
+
+            <li class="paginate_button page-item">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pageNum+3}+'\')'">[[${page.pageNum+3}]]</a>
+            </li>
+
+            <li>
+              ···
+            </li>
+
+
+            <li class="paginate_button page-item">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pages}+'\')'">[[${page.pages}]]</a>
+            </li>
+
+          </th:block>
+
+          <th:block th:if="${page.pageNum >1}">
+
+            <li class="paginate_button page-item" th:if="${page.pageNum >= 4}">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+1+'\')'">1</a>
+            </li>
+            <li class="paginate_button page-item" th:if="${page.pageNum-4 > 0}">
+              ···
+            </li>
+
+            <li class="paginate_button page-item" th:if="${page.pageNum-2 >= 1}">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pageNum-2}+'\')'">[[${page.pageNum-2}]]</a>
+            </li>
+
+            <li class="paginate_button page-item" th:if="${page.pageNum-1 >= 1}">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pageNum-1}+'\')'">[[${page.pageNum-1}]]</a>
+            </li>
+
+            <li class="paginate_button page-item active">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pageNum}+'\')'">[[${page.pageNum}]]</a>
+            </li>
+
+            <li class="paginate_button page-item" th:if="${page.pageNum+1 < page.pages}">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pageNum+1}+'\')'">[[${page.pageNum+1}]]</a>
+            </li>
+
+            <li class="paginate_button page-item" th:if="${page.pageNum+2 < page.pages}">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pageNum+2}+'\')'">[[${page.pageNum+2}]]</a>
+            </li>
+
+            <li th:if="${page.pageNum+4 <= page.pages}">
+              ···
+            </li>
+
+
+            <li class="paginate_button page-item" th:if="${page.pageNum != page.pages}">
+              <a class="page-link" th:href="'javascript:$.pageSkip(\''+${page.pages}+'\')'">[[${page.pages}]]</a>
+            </li>
+
+          </th:block>
+
+
+        </th:block>
+        <li th:if="${page.pages <= 10}" th:each="pg:${#numbers.sequence(1,page.pages)}" th:class="${i==page.pageNum?'paginate_button page-item active':'paginate_button page-item'}">
+          <a class="page-link" th:href="'javascript:$.pageSkip(\''+${pg}+'\')'">[[${pg}]]</a>
+        </li>
+
+        <li style="border:0px;" th:style="${page.pageNum==page.pages?'display:none':''}" th:onclick="'javascript:$.pageSkip(\''+${page.pageNum+1}+'\')'">
+          <a class="page-link">
+            <i class="mdi mdi-chevron-right"></i>
+          </a>
+        </li>
+
+
+        <li class="paginate_button page-item next" >
+          跳至
+          <input type="number" id="jumpPageNumber" class="form-control-sm" name="name" th:min="1" th:max="${page.pages}">
+          页
+          <button type="button" id="jump" class="btn btn-light">跳转</button>
+        </li>
+
+      </ul>
+
+
+    </div>
+
+
+
+
+  </div>
+
+</nav>
+</body>
+</html>

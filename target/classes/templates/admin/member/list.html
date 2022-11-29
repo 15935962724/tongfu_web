@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" >
+<head>
+    <meta charset="utf-8" />
+    <title>会员管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{admin/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+        <div class="content-page">
+            <div class="content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-lg-10">
+                                        <form id="list" th:action="@{/admin/member/list}" class="form-inline">
+                                            <input type="hidden" id="pageNum" name="pageNum" th:value="${page.pageNum}" />
+                                            <input type="hidden" id="pageSize" name="pageSize" th:value="${page.pageSize}" />
+                                            <div class="form-group mb-2">
+                                                <label for="name" class="mr-2">姓名</label>
+                                                <input type="search" class="form-control" name="name" th:value="${name}" id="name" placeholder="姓名">
+                                            </div>
+                                            <div class="form-group mx-sm-3 mb-2">
+                                                <label for="username" class="mr-2">账号</label>
+                                                <input type="search" class="form-control" name="username" th:value="${username}" id="username" placeholder="账号">
+                                            </div>
+                                            <div class="form-group mx-sm-3 mb-2">
+                                                <label for="phone" class="mr-2">电话</label>
+                                                <input type="search" class="form-control" name="phone" th:value="${phone}" id="phone" placeholder="电话">
+                                            </div>
+                                            <div class="form-group mx-sm-3 mb-2">
+                                                <label for="email" class="mr-2">邮箱</label>
+                                                <input type="search" class="form-control" name="email" th:value="${email}" id="email" placeholder="邮箱">
+                                            </div>
+
+                                            <div class="form-group mx-sm-3 mb-2">
+                                                <label class="mr-2">类型</label>
+                                                <select class="custom-select" name="type">
+                                                    <option value="">全部</option>
+                                                    <option th:selected="${type==0}" value="0" >个人</option>
+                                                    <option th:selected="${type==1}" value="1" >企业</option>
+                                                    <option th:selected="${type==2}" value="2" >顾问</option>
+                                                    <option th:selected="${type==3}" value="3" >3D打印商</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <div class="text-lg-right">
+                                            <button type="button" onclick="$('#list').submit();" id = "search" class="btn btn-light mb-2">搜索</button>
+<!--                                            <a th:href="@{/admin/member/add}" ><button type="button" class="btn btn-danger mb-2 mr-2"><i class="mdi mdi-basket mr-1"></i>添加</button></a>-->
+                                        </div>
+                                    </div><!-- end col-->
+                                </div>
+                                <label class="mr-2">总共[[${page.total}]]条数据</label>
+                                <div class="table-responsive">
+                                    <table class="table table-centered mb-0">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>账号</th>
+                                            <th>手机号</th>
+                                            <th>邮箱</th>
+                                            <th>姓名</th>
+                                            <th>注册ip</th>
+                                            <th>会员类型</th>
+                                            <th>积分</th>
+                                            <th>是否锁定</th>
+                                            <th>注册日期</th>
+                                            <th style="width: 210px;">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="member,memberStart :${page.list}">
+                                            <td th:text="${memberStart.index+1}"></td>
+                                            <td th:text="${member.username}"></td>
+                                            <td th:text="${member.phone==null?'-':member.phone}"></td>
+                                            <td th:text="${member.email}"></td>
+                                            <td th:text="${member.name==null?'-':member.name}"></td>
+                                            <td th:text="${member.registerIp}"></td>
+                                            <td>
+                                                <th:block th:if="${member.type == 0}">
+                                                    个人
+                                                </th:block>
+                                                <th:block th:if="${member.type == 1}">
+                                                    企业
+                                                </th:block>
+                                                <th:block th:if="${member.type == 2}">
+                                                    顾问
+                                                </th:block>
+                                                <th:block th:if="${member.type == 3}">
+                                                    3D打印商
+                                                </th:block>
+
+                                            </td>
+                                            <td th:text="${member.point}"></td>
+                                            <td th:text="${member.isLocked?'是':'否'}"></td>
+                                            <td  th:text="${#dates.format(member.createDate,'yyyy-MM-dd')}"></td>
+                                            <td>
+
+                                                <th:block th:if="${member.isLocked}">
+                                                    <a href="javaScript:void(0)" th:onclick="|relieve(${member.id},false)|" style="color: green">[解除锁定]</a>
+                                                </th:block>
+                                                <th:block th:if="${!member.isLocked}">
+                                                    <a href="javaScript:void(0)" th:onclick="|relieve(${member.id},true)|" style="color: red">[锁定]</a>
+                                                </th:block>
+                                                <a th:href="@{/admin/member/edit(id=${member.id})}">[编辑]</a>
+<!--                                                <a href="javaScript:void(0)" th:onclick="|updatePassword(${member.id})|" style="color: grey">[重置密码]</a>-->
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- end card-body-->
+                        </div> <!-- end card-->
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row-->
+                <div th:replace="~{admin/incloud/page::page}"></div>
+            </div> <!-- content -->
+            <!-- Footer Start -->
+            <div th:replace="~{admin/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+    </div> <!-- end wrapper-->
+
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+
+<!--警告弹窗-->
+<th:block th:replace="~{admin/incloud/status::warning}"></th:block>
+
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+<!-- third party js -->
+<script src="assets/js/vendor/jquery.dataTables.min.js" th:src="@{/assets/js/vendor/jquery.dataTables.min.js}"></script>
+<script src="assets/js/vendor/dataTables.bootstrap4.js" th:src="@{/assets/js/vendor/dataTables.bootstrap4.js}"></script>
+<script src="assets/js/vendor/dataTables.responsive.min.js" th:src="@{/assets/js/vendor/dataTables.responsive.min.js}"></script>
+<script src="assets/js/vendor/responsive.bootstrap4.min.js" th:src="@{/assets/js/vendor/responsive.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/dataTables.buttons.min.js" th:src="@{/assets/js/vendor/dataTables.buttons.min.js}"></script>
+<script src="assets/js/vendor/buttons.bootstrap4.min.js" th:src="@{/assets/js/vendor/buttons.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/buttons.html5.min.js" th:src="@{/assets/js/vendor/buttons.html5.min.js}"></script>
+<script src="assets/js/vendor/buttons.flash.min.js" th:src="@{/assets/js/vendor/buttons.flash.min.js}"></script>
+<script src="assets/js/vendor/buttons.print.min.js" th:src="@{/assets/js/vendor/buttons.print.min.js}"></script>
+<script src="assets/js/vendor/dataTables.keyTable.min.js" th:src="@{/assets/js/vendor/dataTables.keyTable.min.js}"></script>
+<script src="assets/js/vendor/dataTables.select.min.js" th:src="@{/assets/js/vendor/dataTables.select.min.js}"></script>
+<!-- third party js ends -->
+<!-- demo app -->
+<script src="assets/js/pages/demo.datatable-init.js" th:src="@{/assets/js/pages/demo.datatable-init.js}"></script>
+<!-- end demo js-->
+<script th:src="@{/assets/js/list.js}"></script>
+
+<script>
+    function relieve(id,isLocked) {
+        $.ajax({
+            type:"GET",
+            url:'[[@{/admin/member/relieve}]]',
+            data:{id:id,isLocked:isLocked},
+            dataType:"json",
+            async: false,
+            success:function(data){
+                if (data){
+                    $('#warningContent').html('操作成功');
+                    $("#btn-warning").click();
+                }else{
+                    $('#warningContent').html('操作失败');
+                    $("#btn-warning").click();
+                }
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1200);
+
+
+            }
+        });
+    }
+
+
+
+</script>
+
+
+</body>
+</html>

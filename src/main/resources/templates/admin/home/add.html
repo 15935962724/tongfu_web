@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>分类管理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+
+  <!-- App css -->
+  <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+  <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+
+  <script th:src="@{/assets/js/Msg.js}"></script>
+</head>
+<script type="text/javascript" th:inline="javascript">
+
+  //提交校验用户名
+  function checkip() {
+
+    var username = $('#username').val()
+    var email = $('#email').val()
+    var fals = true;
+    $.ajax({
+      type:"GET",
+      url:'[[@{/web/admin/check_username}]]',
+      data:{username:username},
+      dataType:"json",
+      async: false,
+      success:function(data){
+       if (data){
+         alert("该用户名已存在");
+         fals = false;
+       }
+
+      }
+  });
+
+    // var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+    // if(!reg.test(email))
+    // {
+    //   alert("邮箱格式不对");
+    //   fals = false;
+    // }
+
+    return fals;
+  }
+
+</script>
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-lg-6" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-3">添加管理员</h4>
+
+                <form class="needs-validation" novalidate onsubmit="return checkip()"  method="post" th:action="@{/web/admin/save}">
+
+                  <div class="form-group mb-3">
+                    <label for="username">账号</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="username" required>
+                    <div class="invalid-feedback">
+                      请输入账号
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="name">姓名</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="name" required>
+                    <div class="invalid-feedback">
+                      请输入姓名
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="email">邮箱</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="email" required>
+                    <div class="invalid-feedback">
+                      请输入正确邮箱
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="inputState" class="col-form-label">部门</label>
+                    <select id="inputState" name="department" class="form-control">
+                      <option value="技术部">技术部</option>
+                      <option value="财务部">财务部</option>
+                      <option value="人事部">人事部</option>
+                      <option value="公关部">公关部</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="roleId" class="col-form-label">角色</label>
+                    <select id="roleId" name="roleId" class="form-control">
+                      <option th:each="role:${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                    </select>
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary">返回</button>
+                  </div>
+                </form>
+
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+      </div>
+       <!-- content -->
+
+      <!-- Footer Start -->
+      <div th:replace="~{incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+
+  </div> <!-- end wrapper-->
+
+  <!-- ============================================================== -->
+  <!-- End Page content -->
+  <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+
+<!-- Right Sidebar -->
+<div class="right-bar">
+
+  <div class="rightbar-title">
+    <a href="javascript:void(0);" class="right-bar-toggle float-right">
+      <i class="dripicons-cross noti-icon"></i>
+    </a>
+    <h5 class="m-0">Settings</h5>
+  </div>
+
+  <div class="slimscroll-menu rightbar-content">
+
+    <!-- Settings -->
+    <hr class="mt-0" />
+    <h5 class="pl-3">Basic Settings</h5>
+    <hr class="mb-0" />
+
+    <div class="p-3">
+      <div class="custom-control custom-checkbox mb-2">
+        <input type="checkbox" class="custom-control-input" id="notifications-check" checked>
+        <label class="custom-control-label" for="notifications-check">Notifications</label>
+      </div>
+
+      <div class="custom-control custom-checkbox mb-2">
+        <input type="checkbox" class="custom-control-input" id="api-access-check">
+        <label class="custom-control-label" for="api-access-check">API Access</label>
+      </div>
+
+      <div class="custom-control custom-checkbox mb-2">
+        <input type="checkbox" class="custom-control-input" id="auto-updates-check" checked>
+        <label class="custom-control-label" for="auto-updates-check">Auto Updates</label>
+      </div>
+
+      <div class="custom-control custom-checkbox mb-2">
+        <input type="checkbox" class="custom-control-input" id="online-status-check" checked>
+        <label class="custom-control-label" for="online-status-check">Online Status</label>
+      </div>
+
+      <div class="custom-control custom-checkbox mb-2">
+        <input type="checkbox" class="custom-control-input" id="auto-payout-check">
+        <label class="custom-control-label" for="auto-payout-check">Auto Payout</label>
+      </div>
+
+    </div>
+
+
+    <!-- Timeline -->
+    <hr class="mt-0" />
+    <h5 class="pl-3">Recent Activity</h5>
+    <hr class="mb-0" />
+    <div class="pl-2 pr-2">
+      <div class="timeline-alt">
+        <div class="timeline-item">
+          <i class="mdi mdi-upload bg-info-lighten text-info timeline-icon"></i>
+          <div class="timeline-item-info">
+            <a href="#" class="text-info font-weight-bold mb-1 d-block">You sold an item</a>
+            <small>Paul Burgess just purchased “Hyper - Admin Dashboard”!</small>
+            <p class="mb-0 pb-2">
+              <small class="text-muted">5 minutes ago</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <i class="mdi mdi-airplane bg-primary-lighten text-primary timeline-icon"></i>
+          <div class="timeline-item-info">
+            <a href="#" class="text-primary font-weight-bold mb-1 d-block">Product on the Bootstrap Market</a>
+            <small>Dave Gamache added
+              <span class="font-weight-bold">Admin Dashboard</span>
+            </small>
+            <p class="mb-0 pb-2">
+              <small class="text-muted">30 minutes ago</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <i class="mdi mdi-microphone bg-info-lighten text-info timeline-icon"></i>
+          <div class="timeline-item-info">
+            <a href="#" class="text-info font-weight-bold mb-1 d-block">Robert Delaney</a>
+            <small>Send you message
+              <span class="font-weight-bold">"Are you there?"</span>
+            </small>
+            <p class="mb-0 pb-2">
+              <small class="text-muted">2 hours ago</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <i class="mdi mdi-upload bg-primary-lighten text-primary timeline-icon"></i>
+          <div class="timeline-item-info">
+            <a href="#" class="text-primary font-weight-bold mb-1 d-block">Audrey Tobey</a>
+            <small>Uploaded a photo
+              <span class="font-weight-bold">"Error.jpg"</span>
+            </small>
+            <p class="mb-0 pb-2">
+              <small class="text-muted">14 hours ago</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <i class="mdi mdi-upload bg-info-lighten text-info timeline-icon"></i>
+          <div class="timeline-item-info">
+            <a href="#" class="text-info font-weight-bold mb-1 d-block">You sold an item</a>
+            <small>Paul Burgess just purchased “Hyper - Admin Dashboard”!</small>
+            <p class="mb-0 pb-2">
+              <small class="text-muted">1 day ago</small>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+
+
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+
+</body>
+
+</html>

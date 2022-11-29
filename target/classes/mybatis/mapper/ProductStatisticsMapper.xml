@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.ProductStatisticsDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.ProductStatistics" >
+    <result column="product" property="product" jdbcType="BIGINT" />
+    <result column="member" property="member" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="iplat" property="iplat" jdbcType="VARCHAR" />
+    <result column="iplng" property="iplng" jdbcType="VARCHAR" />
+    <result column="nation" property="nation" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="adcode" property="adcode" jdbcType="VARCHAR" />
+    <result column="hits" property="hits" jdbcType="BIGINT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tongfu.entity.ProductStatistics" >
+    insert into tf_product_statistics (product, member, create_date, 
+      ip, iplat, iplng, nation, 
+      province, city, district, 
+      adcode, hits, company_id
+      )
+    values (#{product,jdbcType=BIGINT}, #{member,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{ip,jdbcType=VARCHAR}, #{iplat,jdbcType=VARCHAR}, #{iplng,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR}, 
+      #{adcode,jdbcType=VARCHAR}, #{hits,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.ProductStatistics" >
+    insert into tf_product_statistics
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="product != null" >
+        product,
+      </if>
+      <if test="member != null" >
+        member,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="iplat != null" >
+        iplat,
+      </if>
+      <if test="iplng != null" >
+        iplng,
+      </if>
+      <if test="nation != null" >
+        nation,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="adcode != null" >
+        adcode,
+      </if>
+      <if test="hits != null" >
+        hits,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="product != null" >
+        #{product,jdbcType=BIGINT},
+      </if>
+      <if test="member != null" >
+        #{member,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="iplat != null" >
+        #{iplat,jdbcType=VARCHAR},
+      </if>
+      <if test="iplng != null" >
+        #{iplng,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="adcode != null" >
+        #{adcode,jdbcType=VARCHAR},
+      </if>
+      <if test="hits != null" >
+        #{hits,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <!--本月或上月 0代表本月 1代表上月-->
+  <select id="getMonthCountProduct" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+      SELECT COUNT(1) FROM tf_product_statistics
+      WHERE
+    <if test="month != null" >
+      PERIOD_DIFF( DATE_FORMAT( NOW( ) , '%Y%m' ) , DATE_FORMAT( create_date, '%Y%m' ) ) =#{month,jdbcType=BIGINT}
+    </if>
+    <if test="companyId != null" >
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--本周或上周0代表本周 1 代表上周-->
+  <select id="getWeekCountProduct" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+      SELECT COUNT(1) FROM tf_product_statistics
+      WHERE
+      <if test="week != null" >
+        YEARWEEK(DATE_FORMAT(create_date,'%Y-%m-%d'),1) = YEARWEEK(NOW(),#{week,jdbcType=BIGINT})
+      </if>
+      <if test="companyId != null" >
+        AND company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+  </select>
+
+  <!--今天或昨天 1代表昨天  0代表今天-->
+  <select id="getDayCountProduct" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+      SELECT COUNT(1) FROM tf_product_statistics
+      WHERE 1 = 1
+    <if test="day != null" >
+      AND TO_DAYS(NOW()) - TO_DAYS(create_date) = #{day,jdbcType=BIGINT}
+    </if>
+    <if test="companyId != null" >
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--按商品统计-->
+  <select id="getProductStatisics" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT  P.name ,SUM(Ps.hits) AS hist,A.sHist AS sHist ,CONCAT( ROUND((SUM(Ps.hits)/A.sHist)*100,2),'%')  AS proportion FROM tf_product P, tf_product_statistics Ps,(
+    SELECT A.`id` id ,A.`name` aname,B.`id` bid, CONCAT(B.`name`,'-',A.`name`) bname FROM tf_product_category A ,tf_product_category B WHERE A.`parent` = B.`id`
+    ) C ,
+    (SELECT SUM(hits) AS sHist FROM tf_product_statistics) A
+     WHERE P.`product_category` = C.id AND P.id = Ps.product
+    <if test="companyId != null" >
+      AND P.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+     GROUP BY NAME
+  </select>
+
+  <!--按分类统计-->
+  <select id="getProductCategoryStatistics" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT  C.bname ,SUM(Ps.hits) AS hist,A.sHist AS sHist ,CONCAT( ROUND((SUM(Ps.hits)/A.sHist)*100,2),'%')  AS proportion FROM tf_product P, tf_product_statistics Ps,(
+    SELECT A.`id` id ,A.`name` aname,B.`id` bid, CONCAT(B.`name`,'>',A.`name`) bname FROM tf_product_category A ,tf_product_category B WHERE A.`parent` = B.`id`
+    ) C ,
+    (SELECT SUM(hits) AS sHist FROM tf_product_statistics) A
+     WHERE P.`product_category` = C.id AND P.id = Ps.product
+    <if test="companyId != null" >
+      AND P.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+     GROUP BY bname
+  </select>
+
+  <!--按供应商统计-->
+  <select id="getProductCompanyStatistics" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT C.name AS cname ,SUM( Ps.hits) AS hits ,A.sHits, CONCAT( ROUND((SUM(Ps.hits)/A.sHits)*100,2),'%')  AS proportion FROM tf_product P, tf_product_statistics Ps,tf_company C ,
+    (SELECT SUM(hits) AS sHits FROM tf_product_statistics) A
+    WHERE  P.id = Ps.product AND P.company_id = C.id GROUP BY cname
+  </select>
+
+  <!--按城市统计-->
+  <select id="getProductProvinceStatistics" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT Ps.province AS cname ,SUM( Ps.hits) AS hits ,A.sHits, CONCAT( ROUND((SUM(Ps.hits)/A.sHits)*100,2),'%')  AS proportion FROM tf_product P, tf_product_statistics Ps,
+    (SELECT SUM(hits) AS sHits FROM tf_product_statistics) A
+    WHERE P.id = Ps.product
+    <if test="companyId != null" >
+      AND P.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+     GROUP BY cname
+  </select>
+
+  <!--访问量柱状图-->
+  <select id="getProductstatisicHistogram" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT DATE_FORMAT(create_date,'%Y-%m') AS TIME,COUNT(1) AS satistics FROM tf_product_statistics
+    WHERE
+    1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    GROUP BY TIME ORDER BY TIME  DESC LIMIT 12
+  </select>
+
+
+  <!--管理员首页地图-->
+  <select id="getProductstatisicMap" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT CONCAT(iplat,',',iplng)latLng , CONCAT(province,' ',city) name FROM  tf_product_statistics
+  </select>
+
+
+  <!--管理员首页地图统计-->
+  <select id="getIndexProductstatisicMap" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT * ,CONCAT( ROUND((SUM(A.province_hits)/B.count_hits)*100,2),'%') AS proportion FROM (
+    SELECT province,SUM(hits) AS province_hits  FROM `tf_product_statistics`   GROUP BY province ORDER BY SUM(hits) DESC
+    )A, (SELECT SUM(hits) AS count_hits FROM `tf_product_statistics`) B GROUP BY A.province ORDER BY A.province_hits DESC
+  </select>
+
+  <select id="getThisWeek" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT B.date ,IFNULL(C.countProduct,0) AS countProduct FROM  (
+    SELECT @a :=@a + 1 AS `index`, DATE(ADDDATE(CURRENT_DATE, INTERVAL @a DAY)) AS `date`
+    FROM mysql.help_topic,(SELECT @a := 0) temp
+    WHERE @a &lt; 6 - WEEKDAY(CURRENT_DATE)
+    UNION
+    SELECT @s :=@s - 1 AS `index`, DATE(DATE_SUB(CURRENT_DATE, INTERVAL @s DAY)) AS `date`
+    FROM mysql.help_topic,(SELECT @s := WEEKDAY(CURRENT_DATE) + 1) temp
+    WHERE @s > 0
+    ORDER BY `date`) B LEFT JOIN (
+    SELECT DATE_FORMAT(A.create_date,'%Y-%m-%d') AS 'date', COUNT(A.product) AS countProduct FROM   tf_product_statistics A  WHERE 1 = 1
+
+    <if test="companyId != null" >
+      AND A.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+     GROUP BY  DATE_FORMAT(A.create_date,'%Y-%m-%d')
+    ) C  ON B.date = C.date ORDER BY B.date
+  </select>
+
+  <select id="getLastWeek" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+        SELECT B.timeDay, IFNULL(C.countProduct,0) AS countProduct  FROM  (
+        SELECT
+        DATE_FORMAT(lastWeek.`timeDay`,'%Y-%m-%d') AS'timeDay'
+        FROM (
+        SELECT DATE_SUB(NOW(),INTERVAL 13 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 12 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 11 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 10 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 9 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 8 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 7 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 6 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 5 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 4 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 3 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 2 DAY) AS'timeDay'
+        UNION ALL
+        SELECT DATE_SUB(NOW(),INTERVAL 1 DAY) AS'timeDay'
+        ) AS lastWeek
+        WHERE YEARWEEK(lastWeek.`timeDay`,1) = YEARWEEK(NOW(),1)-1) B LEFT JOIN  (
+        SELECT DATE_FORMAT(A.create_date,'%Y-%m-%d') AS 'date', COUNT(A.product) AS countProduct FROM   tf_product_statistics A   WHERE 1 = 1
+        <if test="companyId != null" >
+          AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+         GROUP BY  DATE_FORMAT(A.create_date,'%Y-%m-%d')
+        ) C  ON B.timeDay = C.date ORDER BY B.timeDay
+  </select>
+
+  <select id="getAll" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT COALESCE(M.name,'-') AS mname , M.username,P.`name`, PS.`ip`,PS.`nation`,PS.`province` FROM tf_product_statistics PS ,
+    tf_product P, tf_member M
+    WHERE PS.`product` = P.`id` AND PS.`member` = M.id
+    <if test="productId != null" >
+      AND PS.`product` = #{productId,jdbcType=BIGINT}
+    </if>
+    <if test="companyId != null" >
+      AND PS.`company_id` = #{companyId,jdbcType=BIGINT}
+    </if>
+  </select>
+    <select id="getProductStatisic"  parameterType="java.util.HashMap"  resultType="java.util.HashMap" >
+              SELECT A.mon, IFNULL(B.countProductVisits,0) countProductVisits FROM (
+              SELECT 1 AS mon
+              UNION SELECT 2
+              UNION SELECT 3
+              UNION SELECT 4
+              UNION SELECT 5
+              UNION SELECT 6
+              UNION SELECT 7
+              UNION SELECT 8
+              UNION SELECT 9
+              UNION SELECT 10
+              UNION SELECT 11
+              UNION SELECT 12
+              ) A LEFT JOIN (
+              SELECT COUNT(1) countProductVisits ,DATE_FORMAT(create_date,'%m') AS MONTH FROM `tf_product_statistics` WHERE 1 = 1
+              <if test="productId != null" >
+                AND product = #{productId,jdbcType=BIGINT}
+              </if>
+              <if test="companyId != null" >
+                AND company_id = #{companyId,jdbcType=BIGINT}
+              </if>
+              <if test="year != null" >
+                AND DATE_FORMAT(create_date,'%Y') = #{year}
+              </if>
+              GROUP BY DATE_FORMAT(create_date,'%y-%m')
+              ) B ON A.mon = B.month  ORDER BY A.mon
+    </select>
+
+    <select id="getProductStatisicProportion" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+        SELECT P.`name` ,COUNT(1) AS countProductVisits FROM tf_product P LEFT JOIN tf_product_statistics PS ON P.`id` = PS.`product`
+        WHERE 1 = 1
+        <if test="companyId != null" >
+          AND P.company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="startDate != null and endDate !=null " >
+          AND PS.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        GROUP BY P.`name`
+    </select>
+
+    <select id="getProductStatisicDemonstration" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+
+        SELECT * FROM (
+        SELECT COUNT(1) AS countProduct FROM tf_product_statistics WHERE 1 = 1
+        <if test="companyId != null" >
+            AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="productId != null" >
+            AND product = #{productId,jdbcType=BIGINT}
+        </if>
+        <if test="startDate != null and endDate !=null " >
+            AND create_date BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        ) A ,(
+        SELECT COUNT(1) AS countProductDemonstration FROM `tf_demonstration_statistics` WHERE TYPE = 0
+        <if test="companyId != null" >
+            AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="productId != null" >
+            AND product = #{productId,jdbcType=BIGINT}
+        </if>
+        <if test="startDate != null and endDate !=null " >
+            AND create_date BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        ) B
+    </select>
+
+
+    <select id="getProductDemonstration" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+
+        SELECT * FROM (
+        SELECT COUNT(1) AS countProductDemonstration0 FROM `tf_demonstration_statistics` WHERE TYPE = 0
+        <if test="companyId != null" >
+            AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="productId != null" >
+            AND product = #{productId,jdbcType=BIGINT}
+        </if>
+        <if test="startDate != null and endDate !=null " >
+            AND create_date BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        ) A ,(
+        SELECT COUNT(1) AS countProductDemonstration1 FROM `tf_demonstration_statistics` WHERE TYPE = 1
+        <if test="companyId != null" >
+            AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="productId != null" >
+            AND product = #{productId,jdbcType=BIGINT}
+        </if>
+        <if test="startDate != null and endDate !=null " >
+            AND create_date BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        ) B
+    </select>
+
+    <select id="getProductStatisicOrder" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+        SELECT * FROM (
+        SELECT COUNT(1) AS countProductDemonstration0 FROM `tf_demonstration_statistics` WHERE TYPE = 0
+        <if test="companyId != null" >
+            AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="startDate != null and endDate !=null " >
+            AND create_date BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        ) A ,(
+        SELECT COUNT(1) AS countOrder FROM `tf_order`  WHERE 1 = 1
+        <if test="companyId != null" >
+            AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="startDate != null and endDate !=null " >
+            AND create_date BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        ) B
+    </select>
+
+    <select id="getProductStatisicCompany" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+        SELECT * FROM (
+        SELECT COUNT(1) AS countProduct FROM tf_product_statistics WHERE 1 = 1
+        <if test="companyId != null" >
+            AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="startDate != null and endDate !=null " >
+            AND create_date BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        ) A ,(
+        SELECT COUNT(1) AS countCompany FROM tf_company_statistics WHERE 1 = 1
+        <if test="companyId != null" >
+            AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="startDate != null and endDate !=null " >
+            AND create_date BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        ) B
+    </select>
+
+
+
+
+</mapper>
+
+
+
+

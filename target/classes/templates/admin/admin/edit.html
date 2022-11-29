@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>编辑管理员</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+
+  <!-- App css -->
+  <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+  <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+
+  <script th:src="@{/assets/js/Msg.js}"></script>
+</head>
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{admin/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-lg-6" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-3">添加管理员</h4>
+
+                <form class="needs-validation" novalidate onsubmit="return checkFrom()"  method="post" th:action="@{/admin/admin/update}">
+                  <input type="hidden" name="id" th:value="${admin.id}" />
+                  <div class="form-group mb-3">
+                    <label for="username">账号</label>
+                    <input type="text" class="form-control" id="username" name="username" readonly th:value="${admin.username}" required>
+                    <div class="invalid-feedback">
+                      请输入账号
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="username">密码</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="******" >
+                    <div class="invalid-feedback">
+                      请输入密码
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="name">姓名</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="name" th:value="${admin.name}"  required>
+                    <div class="invalid-feedback">
+                      请输入姓名
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="email">邮箱</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="email" th:value="${admin.email}" required>
+                    <div class="invalid-feedback">
+                      请输入正确邮箱
+                    </div>
+                  </div>
+                  <th:block th:if="${admin.companyId == null}">
+                    <div class="form-group mb-3">
+                      <label for="roleId" class="col-form-label">角色</label>
+                      <select id="roleId" name="roleId" class="form-control">
+                        <option th:each="role:${roles}" th:selected="${adminRole.roles==role.id}" th:value="${role.id}" th:text="${role.name}"></option>
+                      </select>
+                    </div>
+                  </th:block>
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary"  onClick="javascript :history.back(-1);">返回</button>
+                  </div>
+                </form>
+
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+      </div>
+       <!-- content -->
+
+      <!-- Footer Start -->
+      <div th:replace="~{admin/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+
+  </div> <!-- end wrapper-->
+
+</div>
+<!-- END Container -->
+
+<div class="rightbar-overlay"></div>
+<!--警告弹窗-->
+<div id="warning-alert-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body p-4">
+        <div class="text-center">
+          <i class="dripicons-warning h1 text-warning"></i>
+          <h4 class="mt-2">警告</h4>
+          <p class="mt-3" id = "warningContent"></p>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+<button  type="button" hidden class="btn btn-warning" id = "btn-warning" data-toggle="modal" data-target="#warning-alert-modal">警告</button>
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+</body>
+
+</html>

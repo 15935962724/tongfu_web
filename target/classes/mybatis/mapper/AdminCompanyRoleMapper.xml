@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.AdminCompanyRoleDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.AdminCompanyRole" >
+    <result column="admins" property="admins" jdbcType="BIGINT" />
+    <result column="company_role" property="companyRole" jdbcType="BIGINT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tongfu.entity.AdminCompanyRole" >
+    insert into tf_admin_company_role (admins, company_role)
+    values (#{admins,jdbcType=BIGINT}, #{companyRole,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.AdminCompanyRole" >
+    insert into tf_admin_company_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="admins != null" >
+        admins,
+      </if>
+      <if test="companyRole != null" >
+        company_role,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="admins != null" >
+        #{admins,jdbcType=BIGINT},
+      </if>
+      <if test="companyRole != null" >
+        #{companyRole,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <delete id="deleteByPrimaryAdminId">
+    delete from tf_admin_company_role where admins = #{adminId}
+  </delete>
+  <select id="getAll" resultType="com.tongfu.entity.AdminCompanyRole">
+      SELECT * from tf_admin_company_role where 1 = 1
+      <if test="adminId != null" >
+        and admins = #{adminId}
+      </if>
+      <if test="companyRoleId != null" >
+        and company_role = #{companyRoleId}
+      </if>
+    </select>
+</mapper>

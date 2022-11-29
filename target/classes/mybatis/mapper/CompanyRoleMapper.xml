@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.CompanyRoleDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.CompanyRole" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="is_system" property="isSystem" jdbcType="BIT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, description, is_system, name, company_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tf_company_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getCompanyRoleName" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT cr.`name` FROM tf_admin a ,tf_admin_company_role acr ,tf_company c ,tf_company_role  cr WHERE
+    a.`id` = acr.`admins` AND c.`id` = cr.`company_id` AND acr.`company_role` = cr.`id` AND
+    a.username = #{username,jdbcType=VARCHAR};
+  </select>
+
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+     select
+      <include refid="Base_Column_List" />
+     FROM tf_company_role
+    where 1 = 1
+    <if test="companyId!=null">
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="name!=null and name !=''">
+      and name like '%${name}%'
+    </if>
+  </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_company_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.CompanyRole" >
+    insert into tf_company_role (id, create_date, modify_date, 
+      description, is_system, name, 
+      company_id)
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{description,jdbcType=VARCHAR}, #{isSystem,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, 
+      #{companyId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.CompanyRole"  useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+    insert into tf_company_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="isSystem != null" >
+        is_system,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isSystem != null" >
+        #{isSystem,jdbcType=BIT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.CompanyRole" >
+    update tf_company_role
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isSystem != null" >
+        is_system = #{isSystem,jdbcType=BIT},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.CompanyRole" >
+    update tf_company_role
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR},
+      is_system = #{isSystem,jdbcType=BIT},
+      name = #{name,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

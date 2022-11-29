@@ -1,0 +1,18 @@
+server:
+  port: 8082
+spring:
+  profiles:
+    active: dev #默认激活dev环境
+      
+---
+server:
+  port: 8083
+spring:
+  profiles: dev
+
+---
+server:
+  port: 8084
+spring:
+  profiles: prod
+

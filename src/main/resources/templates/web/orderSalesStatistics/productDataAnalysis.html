@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" >
+<head>
+    <meta charset="utf-8" />
+    <title>品牌数据统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/newCss.css" th:href="@{/assets/css/newCss.css}"  rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+
+            <div class="content">
+
+
+
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    产品访问量分析
+                                </div>
+                                <div class="dateYear">
+                                    <select id="TrafficAnalysisSelect" class="form-control select" data-toggle="select">
+                                        <option value="">全部商品</option>
+                                        <option th:each="list:${products}" th:value="${list.id}">[[${list.name}]]</option>
+                                    </select>
+                                    <img src="../../assets/img/datePicker.png" width="20">
+                                    <input id="TrafficAnalysisDate" type="text" data-provide="datepicker" data-date-min-view-mode="2" data-date-format="yyyy">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="TrafficAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    产品访问量占比
+                                </div>
+                                <div class="date" data-toggle="date-picker" id="ProportionVisitsDate"><img src="../../assets/img/datePicker.png" width="20"></div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="ProportionVisits" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    产品申请演示分析
+                                </div>
+                                <div class="dateYear">
+                                    <select id="demonstrationAnalysisSelect" class="form-control select" data-toggle="select">
+                                        <option value="">全部商品</option>
+                                        <option th:each="list:${products}" th:value="${list.id}">[[${list.name}]]</option>
+                                    </select>
+                                    <img src="../../assets/img/datePicker.png" width="20">
+                                    <input id="demonstrationAnalysisDate" type="text" data-provide="datepicker" data-date-min-view-mode="2" data-date-format="yyyy">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="demonstrationAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    产品申请试用分析
+                                </div>
+                                <div class="dateYear">
+                                    <select id="ApplyAnalysisSelect" class="form-control select" data-toggle="select">
+                                        <option value="">全部商品</option>
+                                        <option th:each="list:${products}" th:value="${list.id}">[[${list.name}]]</option>
+                                    </select>
+                                    <img src="../../assets/img/datePicker.png" width="20">
+                                    <input id="ApplyAnalysisDate" type="text" data-provide="datepicker" data-date-min-view-mode="2" data-date-format="yyyy">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="ApplyAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    产品下载分析
+                                </div>
+                                <div class="dateYear">
+                                    <select id="DownloadAnalysisSelect" class="form-control select" data-toggle="select">
+                                        <option value="">全部商品</option>
+                                        <option th:each="list:${products}" th:value="${list.id}">[[${list.name}]]</option>
+                                    </select>
+                                    <img src="../../assets/img/datePicker.png" width="20">
+                                    <input id="DownloadAnalysisDate" type="text" data-provide="datepicker" data-date-min-view-mode="2" data-date-format="yyyy">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="DownloadAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    产品销售数量分析
+                                </div>
+                                <div class="dateYear">
+                                    <select id="SalesAnalysisSelect" class="form-control select" data-toggle="select">
+                                        <option value="">全部商品</option>
+                                        <option th:each="list:${products}" th:value="${list.id}">[[${list.name}]]</option>
+                                    </select>
+                                    <img src="../../assets/img/datePicker.png" width="20">
+                                    <input id="SalesAnalysisDate" type="text" data-provide="datepicker" data-date-min-view-mode="2" data-date-format="yyyy">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="SalesAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    产品购买方式分析
+                                </div>
+
+                                <div class="date" data-toggle="date-picker" id="PurchaseAnalysisDate"><img src="../../assets/img/datePicker.png" width="20"></div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="PurchaseAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+            </div>
+
+            <!-- Footer Start -->
+            <div th:replace="~{web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+    </div> <!-- end wrapper-->
+
+</div>
+</body>
+</html>
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+<script th:src="@{/assets/js/vendor/jquery-jvectormap-1.2.2.min.js}"></script>
+<script th:src="@{/assets/js/vendor/jquery-jvectormap-cn-mill.js}"></script>
+<script th:inline="javascript" type="text/javascript">
+    //产品访问量分析
+    var productStatisic = [[${productStatisic}]];//产品访问量分析
+    console.log("产品访问量分析");
+    console.log(productStatisic);
+    var TrafficAnalysisData = [];
+    for(var i = 0; i < productStatisic.length; i++){
+        TrafficAnalysisData.push(productStatisic[i].countProductVisits);
+    }
+    var TrafficAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "bar",
+            toolbar: {
+                show: !1
+            }
+        },
+        plogOptions: {
+            bar: {
+                horizontal: !1,
+                endingShape: "rounded",
+                columnWidth: "55%"
+            }
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        stroke: {
+            show: !0,
+            width: 2,
+            colors: ["transparent"]
+        },
+        colors: ["#727cf5", "#0acf97", "#fa5c7c"],
+        series: [{
+            name: "访问量",
+            data: TrafficAnalysisData
+        }],
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        legend: {
+            offsetY: -10
+        },
+        fill: {
+            opacity: 1
+        },
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "次"
+                }
+            }
+        }
+    };
+    var TrafficAnalysisApex = new ApexCharts(document.querySelector("#TrafficAnalysis"), TrafficAnalysisOptions);
+    TrafficAnalysisApex.render();
+
+    //产品访问量占比
+    var productStatisicProportion = [[${productStatisicProportion}]];//产品访问量占比
+    console.log("产品访问量占比");
+    console.log(productStatisicProportion);
+    var ProportionVisitsData = [];
+    var ProportionVisitsLabels = [];
+    for(var i = 0; i < productStatisicProportion.length; i++){
+        ProportionVisitsData.push(productStatisicProportion[i].countProductVisits);
+        ProportionVisitsLabels.push(productStatisicProportion[i].name);
+    }
+    var ProportionVisitsOptions = {
+        chart: {
+            height: 350,
+            type: "donut"
+        },
+        series: ProportionVisitsData,
+        legend: {
+            show: false,
+            position: "bottom",
+            horizontalAlign: "center",
+            verticalAlign: "middle",
+            floating: !1,
+            fontSize: "14px",
+            offsetX: 0,
+            offsetY: -10
+        },
+        // tooltip: {
+        //     custom: function(e) {
+        //         return '<div class="arrow_box">' +
+        //             '<span>' + pieRankingLabels[e.seriesIndex] + '：'+ pieRankingSeries[e.seriesIndex] +'单</span>' +
+        //             '</div>'
+        //     }
+        // },
+        labels: ProportionVisitsLabels,
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    height: 240
+                },
+                legend: {
+                    show: !1
+                }
+            }
+        }],
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "次"
+                }
+            }
+        }
+    };
+    var ProportionVisitsApex = new ApexCharts(document.querySelector("#ProportionVisits"), ProportionVisitsOptions);
+    ProportionVisitsApex.render();
+
+
+    //产品申请演示分析
+    var demonstrationStatisics0 = [[${demonstrationStatisics0}]];//产品申请演示分析
+    console.log("产品申请演示分析");
+    console.log(demonstrationStatisics0);
+    var demonstrationAnalysisData = [];
+    for(var i = 0; i < demonstrationStatisics0.length; i++){
+        demonstrationAnalysisData.push(demonstrationStatisics0[i].countDemonstrationStatistics);
+    }
+    var demonstrationAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "bar",
+            toolbar: {
+                show: !1
+            }
+        },
+        plogOptions: {
+            bar: {
+                horizontal: !1,
+                endingShape: "rounded",
+                columnWidth: "55%"
+            }
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        stroke: {
+            show: !0,
+            width: 2,
+            colors: ["transparent"]
+        },
+        colors: ["#727cf5", "#0acf97", "#fa5c7c"],
+        series: [{
+            name: "申请数",
+            data: demonstrationAnalysisData
+        }],
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        legend: {
+            offsetY: -10
+        },
+        fill: {
+            opacity: 1
+        },
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "次"
+                }
+            }
+        }
+    };
+    var demonstrationAnalysisApex = new ApexCharts(document.querySelector("#demonstrationAnalysis"), demonstrationAnalysisOptions);
+    demonstrationAnalysisApex.render();
+
+    //产品申请试用分析
+    var demonstrationStatisics1 =  [[${demonstrationStatisics1}]];//产品申请试用分析
+    console.log("产品申请试用分析");
+    console.log(demonstrationStatisics1);
+    var ApplyAnalysisData = [];
+    for(var i = 0; i < demonstrationStatisics1.length; i++){
+        ApplyAnalysisData.push(demonstrationStatisics1[i].countDemonstrationStatistics);
+    }
+    var ApplyAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "bar",
+            toolbar: {
+                show: !1
+            }
+        },
+        plogOptions: {
+            bar: {
+                horizontal: !1,
+                endingShape: "rounded",
+                columnWidth: "55%"
+            }
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        stroke: {
+            show: !0,
+            width: 2,
+            colors: ["transparent"]
+        },
+        colors: ["#727cf5", "#0acf97", "#fa5c7c"],
+        series: [{
+            name: "试用数",
+            data: ApplyAnalysisData
+        }],
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        legend: {
+            offsetY: -10
+        },
+        fill: {
+            opacity: 1
+        },
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "次"
+                }
+            }
+        }
+    };
+    var ApplyAnalysisApex = new ApexCharts(document.querySelector("#ApplyAnalysis"), ApplyAnalysisOptions);
+    ApplyAnalysisApex.render();
+
+
+    var demonstrationStatisics2 = [[${demonstrationStatisics2}]];//产品下载分析
+    console.log("产品下载分析");
+    console.log(demonstrationStatisics2);
+    var DownloadAnalysisData = [];
+    for(var i = 0; i < demonstrationStatisics2.length; i++){
+        DownloadAnalysisData.push(demonstrationStatisics2[i].countDemonstrationStatistics);
+    }
+    var DownloadAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "bar",
+            toolbar: {
+                show: !1
+            }
+        },
+        plogOptions: {
+            bar: {
+                horizontal: !1,
+                endingShape: "rounded",
+                columnWidth: "55%"
+            }
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        stroke: {
+            show: !0,
+            width: 2,
+            colors: ["transparent"]
+        },
+        colors: ["#727cf5", "#0acf97", "#fa5c7c"],
+        series: [{
+            name: "下载量",
+            data: DownloadAnalysisData
+        }],
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        legend: {
+            offsetY: -10
+        },
+        fill: {
+            opacity: 1
+        },
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "次"
+                }
+            }
+        }
+    };
+    var DownloadAnalysisApex = new ApexCharts(document.querySelector("#DownloadAnalysis"), DownloadAnalysisOptions);
+    DownloadAnalysisApex.render();
+
+
+    //产品销售数量分析
+    var countProductStatistics =  [[${countProductStatistics}]];//产品销量数量分析
+    console.log("产品销量数量分析");
+    console.log(countProductStatistics);
+    var SalesAnalysisData = [];
+    for(var i = 0; i < countProductStatistics.length; i++){
+        SalesAnalysisData.push(countProductStatistics[i].countProductStatistics);
+    }
+    var SalesAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "bar",
+            toolbar: {
+                show: !1
+            }
+        },
+        plogOptions: {
+            bar: {
+                horizontal: !1,
+                endingShape: "rounded",
+                columnWidth: "55%"
+            }
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        stroke: {
+            show: !0,
+            width: 2,
+            colors: ["transparent"]
+        },
+        colors: ["#727cf5", "#0acf97", "#fa5c7c"],
+        series: [{
+            name: "销售额",
+            data: SalesAnalysisData
+        }],
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        legend: {
+            offsetY: -10
+        },
+        fill: {
+            opacity: 1
+        },
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return "&yen; " + o + "元"
+                }
+            }
+        }
+    };
+    var SalesAnalysisApex = new ApexCharts(document.querySelector("#SalesAnalysis"), SalesAnalysisOptions);
+    SalesAnalysisApex.render();
+
+    //产品购买方式分析
+    var countProductPruchaseNames = [[${countProductPruchaseNames}]];//产品购买方式分析
+    console.log("产品购买方式分析");
+    console.log(countProductPruchaseNames);
+    var PurchaseAnalysisData = [];
+    var PurchaseAnalysisLabels = [];
+    for(var i = 0; i < countProductPruchaseNames.length; i++){
+        PurchaseAnalysisData.push(countProductPruchaseNames[i].countProductPruchaseNames);
+        PurchaseAnalysisLabels.push(countProductPruchaseNames[i].purchase_name);
+    }
+    var PurchaseAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "donut"
+        },
+        series: PurchaseAnalysisData,
+        legend: {
+            show: !0,
+            position: "bottom",
+            horizontalAlign: "center",
+            verticalAlign: "middle",
+            floating: !1,
+            fontSize: "14px",
+            offsetX: 0,
+            offsetY: -10
+        },
+        labels: PurchaseAnalysisLabels,
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    height: 240
+                },
+                legend: {
+                    show: !1
+                }
+            }
+        }],
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "次"
+                }
+            }
+        }
+    };
+    var PurchaseAnalysisApex = new ApexCharts(document.querySelector("#PurchaseAnalysis"), PurchaseAnalysisOptions);
+    PurchaseAnalysisApex.render();
+
+
+    //产品访问量分析
+    $("#TrafficAnalysisDate").change(function () {
+        getYearData($(this).val(),$(this).siblings(".select").val(),1,'','');
+        $(".datepicker").remove();
+    });
+    $("#TrafficAnalysisSelect").change(function () {
+        getYearData($("#TrafficAnalysisDate").val(),$(this).val(),1,'','');
+        $(".datepicker").remove();
+    });
+
+
+    //产品访问量占比
+    $('#ProportionVisitsDate').on('apply.daterangepicker', function(ev, picker) {
+        getYearData('','',2,picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'));
+    });
+
+
+    //产品申请演示分析
+    $("#demonstrationAnalysisDate").change(function () {
+        getYearData($(this).val(),$(this).siblings(".select").val(),3,'','');
+        $(".datepicker").remove();
+    });
+    $("#demonstrationAnalysisSelect").change(function () {
+        getYearData($("#demonstrationAnalysisDate").val(),$(this).val(),3,'','');
+        $(".datepicker").remove();
+    });
+
+
+    //产品申请试用分析
+    $("#ApplyAnalysisDate").change(function () {
+        getYearData($(this).val(),$(this).siblings(".select").val(),4,'','');
+        $(".datepicker").remove();
+    });
+    $("#ApplyAnalysisSelect").change(function () {
+        getYearData($("#ApplyAnalysisDate").val(),$(this).val(),4,'','');
+        $(".datepicker").remove();
+    });
+
+
+
+    //产品下载分析
+    $("#DownloadAnalysisDate").change(function () {
+        getYearData($(this).val(),$(this).siblings(".select").val(),5,'','');
+        $(".datepicker").remove();
+    });
+    $("#DownloadAnalysisSelect").change(function () {
+        getYearData($("#DownloadAnalysisDate").val(),$(this).val(),5,'','');
+        $(".datepicker").remove();
+    });
+
+
+    //产品销售数量分析
+    $("#SalesAnalysisDate").change(function () {
+        getYearData($(this).val(),$(this).siblings(".select").val(),6,'','');
+        $(".datepicker").remove();
+    });
+    $("#SalesAnalysisSelect").change(function () {
+        getYearData($("#SalesAnalysisDate").val(),$(this).val(),6,'','');
+        $(".datepicker").remove();
+    });
+    //产品购买方式分析
+    $('#PurchaseAnalysisDate').on('apply.daterangepicker', function(ev, picker) {
+        getYearData('','',7,picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'));
+    });
+
+    //var url = '/web/orderSalesStatistics/productSalesData';//所有请求 用一个 ajax 接口  四个 参数   year  productId  startDate endDate
+    function getYearData(year,pid,type,start,end) {
+        $.ajax({
+            type:"POST",
+            url: [[@{/web/orderSalesStatistics/productSalesData}]],
+            data:{
+                year: year,
+                productId: pid,
+                type: type,
+                startDate: start,
+                endDate: end
+            },
+            dataType:"json",
+            async: false,
+            success:function(data) {
+                console.log(data);
+                if(type == 1){
+                    var data = data.data.productStatisic;
+                    var list = [];
+                    for(var i = 0; i < data.length; i++){
+                        list.push(data[i].countProductVisits);
+                    }
+                    TrafficAnalysisApex.updateOptions({
+                        series: [{
+                            name: "访问量",
+                            data: list
+                        }]
+                    })
+                }else if(type == 2){
+                    var data = data.data.productStatisicProportion;
+                    if(data.length == 0){
+                        alert('该时间段没有浏览数据，请重新选择时间！')
+                        return false;
+                    }
+                    var list = [];
+                    var labels = [];
+                    for(var i = 0; i < data.length; i++){
+                        list.push(data[i].countProductVisits);
+                        labels.push(data[i].name);
+                    }
+                    ProportionVisitsApex.updateOptions({
+                        series: list,
+                        labels: labels
+                    })
+                }else if(type == 3){
+                    var data = data.data.demonstrationStatisics0;
+                    var list = [];
+                    for(var i = 0; i < data.length; i++){
+                        list.push(data[i].countDemonstrationStatistics);
+                    }
+                    demonstrationAnalysisApex.updateOptions({
+                        series: [{
+                            name: "申请数",
+                            data: list
+                        }]
+                    })
+                }else if(type == 4){
+                    var data = data.data.demonstrationStatisics1;
+                    var list = [];
+                    for(var i = 0; i < data.length; i++){
+                        list.push(data[i].countDemonstrationStatistics);
+                    }
+                    ApplyAnalysisApex.updateOptions({
+                        series: [{
+                            name: "试用数",
+                            data: list
+                        }]
+                    })
+                }else if(type == 5){
+                    var data = data.data.demonstrationStatisics2;
+                    var list = [];
+                    for(var i = 0; i < data.length; i++){
+                        list.push(data[i].countDemonstrationStatistics);
+                    }
+                    DownloadAnalysisApex.updateOptions({
+                        series: [{
+                            name: "下载量",
+                            data: list
+                        }]
+                    })
+                }else if(type == 6){
+                    var data = data.data.countProductStatistics;
+                    var list = [];
+                    for(var i = 0; i < data.length; i++){
+                        list.push(data[i].countProductStatistics);
+                    }
+                    SalesAnalysisApex.updateOptions({
+                        series: [{
+                            name: "下载量",
+                            data: list
+                        }]
+                    })
+                }else if(type == 7){
+                    var data = data.data.countProductPruchaseNames;
+                    if(data.length == 0){
+                        alert('该时间段没有浏览数据，请重新选择时间！')
+                        return false;
+                    }
+                    var list = [];
+                    var labels = [];
+                    for(var i = 0; i < data.length; i++){
+                        list.push(data[i].countProductPruchaseNames);
+                        labels.push(data[i].purchase_name);
+                    }
+                    PurchaseAnalysisApex.updateOptions({
+                        series: list,
+                        labels: labels
+                    });
+                }
+
+
+            },
+            error:function(data){
+                console.log(data.responseJSON);
+            }
+        });
+    }
+
+
+
+
+
+
+    // var lineOptions = {
+    //     chart: {
+    //         height: 350,
+    //         type: "line",
+    //         zoom: {
+    //             enabled: !1
+    //         },
+    //         toolbar: {
+    //             show: !1
+    //         },
+    //     },
+    //     dataLabels: {
+    //         enabled: !1
+    //     },
+    //     colors: ["#289ffe","#e71f19"],
+    //     stroke: {
+    //         width: [2,2],
+    //         curve: "straight"
+    //     },
+    //     series: [{
+    //         name: "2022年",
+    //         data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 63, 60, 66]
+    //     }, {
+    //         name: "2021年",
+    //         data: [12, 35, 13, 132, 68, 312, 55, 11, 88, 55, 11, 88]
+    //     }],
+    //     grid: {
+    //         row: {
+    //             colors: ["transparent", "transparent"],
+    //             opacity: .2
+    //         },
+    //         borderColor: "#f1f3fa"
+    //     },
+    //     yaxis: {
+    //         show: true
+    //     },
+    //     xaxis: {
+    //         categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+    //     },
+    //     tooltip: {
+    //         y: {
+    //             formatter: function(o) {
+    //                 return "&yen; " + o + "元"
+    //             }
+    //         }
+    //     },
+    //     responsive: [{
+    //         breakpoint: 600,
+    //         options: {
+    //             chart: {
+    //                 toolbar: {
+    //                     show: !1
+    //                 }
+    //             },
+    //             legend: {
+    //                 show: !1
+    //             }
+    //         }
+    //     }]
+    // };
+
+</script>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+    <meta charset="utf-8" />
+    <title>Hyper - Responsive Bootstrap 4 Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <!-- Start Content-->
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+            <div class="content">
+
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-lg-8">
+                                        <form id="list" th:action="@{/web/company_role/list}" class="form-inline">
+                                            <input type="hidden" id="pageNum" name="pageNum" th:value="${page.pageNum}" />
+                                            <input type="hidden" id="pageSize" name="pageSize" th:value="${page.pageSize}" /><div class="form-group mx-sm-3 mb-2">
+                                            <label for="status-select" class="mr-2">每页显示</label>
+                                            <select class="custom-select" id="selectPageSize">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                        </div>
+                                            <div class="form-group mb-2">
+                                                <label for="name" class="mr-2">角色名称</label>
+                                                <input type="search" class="form-control" name="name" th:value="${name}" id="name" placeholder="角色名称">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-lg-right">
+                                            <button type="button" onclick="$('#list').submit();" id = "search" class="btn btn-light mb-2">搜索</button>
+                                            <a th:href="@{/web/company_role/add}" ><button type="button" class="btn btn-danger mb-2 mr-2"><i class="mdi mdi-basket mr-1"></i>创建角色</button></a>
+
+                                        </div>
+                                    </div><!-- end col-->
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-centered mb-0">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>角色名称</th>
+                                            <th>角色描述</th>
+                                            <th>是否内置</th>
+                                            <th>创建日期</th>
+                                            <th style="width: 125px;">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="role,brandStart :${page.list}" th:id="'tr_'+${role.id}" >
+                                            <td th:text="${brandStart.index+1}"></td>
+                                            <td th:text="${role.name}"></td>
+                                            <td th:text="${role.description}"></td>
+                                            <td th:text="${role.isSystem?'是':'否'}"></td>
+                                            <td  th:text="${#dates.format(role.createDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <td th:if="${!role.isSystem}">
+                                                <a th:href="@{/web/company_role/edit(id=${role.id})}" class="action-icon"> <i class="mdi mdi-account-card-details"></i></a>
+                                                <a href="javaScript:void(0)" th:onclick="|deleteMethod(${role.id},'@{/web/company_role/delete}')|" class="action-icon" style="color: red"> <i class="mdi mdi-delete"></i></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- end card-body-->
+                        </div> <!-- end card-->
+                    </div> <!-- end col -->
+                </div>
+                <!--警告弹窗-->
+                <th:block th:replace="~{web/incloud/status::warning}"></th:block>
+                <!--删除弹窗-->
+                <th:block th:replace="~{web/incloud/delete::deleteMode}"></th:block>
+                <!-- end row-->
+                <div th:replace="~{web/incloud/page::page}"></div>
+            </div> <!-- content -->
+            <!-- Footer Start -->
+            <div th:replace="~{web/incloud/footer::footer}"></div>
+
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+    </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+<!-- third party js -->
+<script src="assets/js/vendor/jquery.dataTables.min.js" th:src="@{/assets/js/vendor/jquery.dataTables.min.js}"></script>
+<script src="assets/js/vendor/dataTables.bootstrap4.js" th:src="@{/assets/js/vendor/dataTables.bootstrap4.js}"></script>
+<script src="assets/js/vendor/dataTables.responsive.min.js" th:src="@{/assets/js/vendor/dataTables.responsive.min.js}"></script>
+<script src="assets/js/vendor/responsive.bootstrap4.min.js" th:src="@{/assets/js/vendor/responsive.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/dataTables.buttons.min.js" th:src="@{/assets/js/vendor/dataTables.buttons.min.js}"></script>
+<script src="assets/js/vendor/buttons.bootstrap4.min.js" th:src="@{/assets/js/vendor/buttons.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/buttons.html5.min.js" th:src="@{/assets/js/vendor/buttons.html5.min.js}"></script>
+<script src="assets/js/vendor/buttons.flash.min.js" th:src="@{/assets/js/vendor/buttons.flash.min.js}"></script>
+<script src="assets/js/vendor/buttons.print.min.js" th:src="@{/assets/js/vendor/buttons.print.min.js}"></script>
+<script src="assets/js/vendor/dataTables.keyTable.min.js" th:src="@{/assets/js/vendor/dataTables.keyTable.min.js}"></script>
+<script src="assets/js/vendor/dataTables.select.min.js" th:src="@{/assets/js/vendor/dataTables.select.min.js}"></script>
+<!-- third party js ends -->
+
+<!-- demo app -->
+<script src="assets/js/pages/demo.datatable-init.js" th:src="@{/assets/js/pages/demo.datatable-init.js}"></script>
+<!-- end demo js-->
+<script th:src="@{/assets/js/list.js}"></script>
+<th:block th:replace="~{web/incloud/delete::deleteModeJquery}"></th:block>
+
+
+</body>
+</html>

@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.DemonstrationStatisticsDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.DemonstrationStatistics" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product" property="product" jdbcType="BIGINT" />
+    <result column="member" property="member" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="iplat" property="iplat" jdbcType="VARCHAR" />
+    <result column="iplng" property="iplng" jdbcType="VARCHAR" />
+    <result column="nation" property="nation" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="adcode" property="adcode" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="area" property="area" jdbcType="BIGINT" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="hospital" property="hospital" jdbcType="BIGINT" />
+    <result column="department" property="department" jdbcType="BIGINT" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="BIGINT" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="BIT" />
+    <result column="status" property="status" jdbcType="BIGINT" />
+    <result column="admin_id" property="adminId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product, member, create_date, ip, iplat, iplng, nation, province, city, district, 
+    adcode, company_id, area, address, name, hospital, department, phone, mobile, content, 
+    type, email, is_delete, status, admin_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tf_demonstration_statistics
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+
+  <select id="demonstrationStatisticList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT DATE_FORMAT(create_date,'%Y/%m') AS TIME,COUNT(1) AS satistics FROM tf_demonstration_statistics
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type != null" >
+      AND type = #{type,jdbcType=BIGINT}
+    </if>
+     GROUP BY TIME ORDER BY TIME  DESC LIMIT 12
+  </select>
+
+  <select id="getYears" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+         SELECT
+              DATE_FORMAT(create_date, '%Y') year , COUNT(id) AS countNum,type
+          FROM tf_demonstration_statistics
+           WHERE 1 = 1
+            <if test="companyId != null" >
+              AND company_id = #{companyId,jdbcType=BIGINT}
+            </if>
+            <if test="dtype != null" >
+              AND type = #{dtype,jdbcType=BIGINT}
+            </if>
+          GROUP BY DATE_FORMAT(create_date, '%Y') ORDER BY year DESC
+  </select>
+
+  <select id="thatYear" resultType="java.lang.Integer" parameterType="java.util.Map">
+    SELECT COALESCE( B.countNum,0) countNum   FROM (
+    SELECT CONCAT(#{year} ,'-01') AS mon UNION
+    SELECT CONCAT(#{year} ,'-02') AS mon UNION
+    SELECT CONCAT(#{year} ,'-03') AS mon UNION
+    SELECT CONCAT(#{year},'-04') AS mon UNION
+    SELECT CONCAT(#{year} ,'-05') AS mon UNION
+    SELECT CONCAT(#{year} ,'-06') AS mon UNION
+    SELECT CONCAT(#{year} ,'-07') AS mon UNION
+    SELECT CONCAT(#{year} ,'-08') AS mon UNION
+    SELECT CONCAT(#{year} ,'-09') AS mon UNION
+    SELECT CONCAT(#{year} ,'-10') AS mon UNION
+    SELECT CONCAT(#{year} ,'-11') AS mon UNION
+    SELECT CONCAT(#{year} ,'-12') AS mon
+    ) A LEFT JOIN (
+    SELECT
+    DATE_FORMAT(create_date, '%Y-%m') createTime,
+    COUNT(id) countNum
+    FROM
+    tf_demonstration_statistics
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type != null" >
+      AND type = #{type,jdbcType=BIGINT}
+    </if>
+    GROUP BY
+    DATE_FORMAT(create_date, '%Y-%m')
+    ) B ON A.mon = B.createTime order by A.mon
+
+  </select>
+
+  <select id="getProductName" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT B.name ,COUNT(A.id) countNum ,A.type FROM tf_demonstration_statistics A ,tf_product B WHERE A.product = B.id
+    <if test="dtype != null" >
+      AND  A.type =  #{dtype,jdbcType=BIGINT}
+    </if>
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS( A.create_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(A.create_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( A.create_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(A.create_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and A.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY B.name
+  </select>
+
+
+  <select id="getProductNameApplyTrial" resultType="java.lang.Integer" parameterType="java.util.Map">
+     SELECT COALESCE (D.countNum,0) countNum FROM (
+    SELECT DATE_FORMAT(create_date, '%Y') YEAR  FROM tf_demonstration_statistics where type = #{type} GROUP BY YEAR
+	      ) C LEFT JOIN (SELECT DATE_FORMAT(A.create_date, '%Y') YEAR,B.name,COUNT(A.id) countNum
+	FROM
+	    tf_demonstration_statistics A,tf_product B WHERE A.product = B.id and A.type = #{type} and B.name = #{name}
+	GROUP BY DATE_FORMAT(A.create_date, '%Y') ,B.name  ORDER BY YEAR
+	    ) D ON C.year = D.year ORDER BY  C.year DESC
+
+  </select>
+
+  <select id="getProvince" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT province AS name ,COUNT(id) AS countNum ,type FROM tf_demonstration_statistics
+    WHERE 1 = 1
+    <if test="dtype != null" >
+      AND  type =  #{dtype,jdbcType=BIGINT}
+    </if>
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS( create_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(create_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(create_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(create_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY province
+  </select>
+
+  <select id="getProvinceApplyTrial" resultType="java.lang.Integer" parameterType="java.util.Map">
+                 SELECT COALESCE (B.countNum,0) countNum FROM (
+    SELECT DATE_FORMAT(create_date, '%Y') YEAR  FROM tf_demonstration_statistics where  type = #{type} GROUP BY YEAR
+	      ) A LEFT JOIN (SELECT DATE_FORMAT(create_date, '%Y') YEAR,province,COUNT(id) countNum
+	FROM
+	    tf_demonstration_statistics WHERE  type = #{type} and province = #{name}
+	GROUP BY
+	      DATE_FORMAT(create_date, '%Y') ,province  ORDER BY YEAR
+	    ) B ON A.year = B.year ORDER BY A.year DESC
+
+  </select>
+
+
+  <select id="getDemonstrationStatisticStatisics" resultType="java.util.Map" parameterType="java.util.Map">
+          SELECT A.mon,COALESCE(B.countNum,0) AS countNum FROM (
+            SELECT CONCAT(#{year} ,'-01') AS mon UNION
+            SELECT CONCAT(#{year} ,'-02') AS mon UNION
+            SELECT CONCAT(#{year} ,'-03') AS mon UNION
+            SELECT CONCAT(#{year},'-04') AS mon UNION
+            SELECT CONCAT(#{year} ,'-05') AS mon UNION
+            SELECT CONCAT(#{year} ,'-06') AS mon UNION
+            SELECT CONCAT(#{year} ,'-07') AS mon UNION
+            SELECT CONCAT(#{year} ,'-08') AS mon UNION
+            SELECT CONCAT(#{year} ,'-09') AS mon UNION
+            SELECT CONCAT(#{year} ,'-10') AS mon UNION
+            SELECT CONCAT(#{year} ,'-11') AS mon UNION
+            SELECT CONCAT(#{year} ,'-12') AS mon ) A LEFT JOIN  (
+          SELECT
+          DATE_FORMAT(create_date, '%Y-%m') createTime,
+          COUNT(id) countNum
+          FROM
+          tf_demonstration_statistics WHERE type = 0 AND company_id = #{companyId}
+          GROUP BY
+          DATE_FORMAT(create_date, '%Y-%m')
+          ) B ON A.mon = B.createTime ORDER BY A.mon
+  </select>
+
+
+  <select id="getApplyDemonstration" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT
+        (SELECT COUNT(1) FROM `tf_demonstration_statistics` WHERE STATUS = 0  AND  TO_DAYS(create_date) = TO_DAYS(NOW())
+          <if test="companyId != null" >
+            AND company_id = #{companyId,jdbcType=BIGINT}
+          </if>
+          <if test="type != null" >
+            AND type = #{type,jdbcType=BIGINT}
+          </if>
+         ) AS stayDemonstration ,
+        (SELECT COUNT(1) FROM `tf_demonstration_statistics` WHERE STATUS = 1  AND  TO_DAYS(create_date) = TO_DAYS(NOW())
+        <if test="companyId != null" >
+          AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="type != null" >
+          AND type = #{type,jdbcType=BIGINT}
+        </if>
+         ) AS alreadyDemonstration,
+        IFNULL( ROUND(
+        ( (SELECT COUNT(1) FROM `tf_demonstration_statistics` WHERE TO_DAYS(create_date) = TO_DAYS(NOW())
+        <if test="companyId != null" >
+          AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="type != null" >
+          AND type = #{type,jdbcType=BIGINT}
+        </if>
+         )
+         -
+        (SELECT COUNT(1) FROM `tf_demonstration_statistics` WHERE TO_DAYS(NOW()) - TO_DAYS(create_date) = 1
+        <if test="companyId != null" >
+          AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="type != null" >
+          AND type = #{type,jdbcType=BIGINT}
+        </if>
+         )
+        )/(SELECT COUNT(1) FROM `tf_demonstration_statistics` WHERE TO_DAYS(NOW()) - TO_DAYS(create_date) = 1
+        <if test="companyId != null" >
+          AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+        <if test="type != null" >
+          AND type = #{type,jdbcType=BIGINT}
+        </if>
+         ) * 100,2),0) AS increase
+  </select>
+
+
+
+
+
+
+  <!--本月或上月 0代表本月 1代表上月-->
+  <select id="getMonthCountDemonstrationStatistics" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM tf_demonstration_statistics
+    WHERE
+    <if test="month != null" >
+      PERIOD_DIFF( DATE_FORMAT( NOW( ) , '%Y%m' ) , DATE_FORMAT( create_date, '%Y%m' ) ) =#{month,jdbcType=BIGINT}
+    </if>
+    <if test="companyId != null" >
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type != null" >
+      AND type = #{type,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--本周或上周0代表本周 1 代表上周-->
+  <select id="getWeekCountDemonstrationStatistics" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM tf_demonstration_statistics
+    WHERE
+    1 = 1
+    <if test="week != null" >
+      AND YEARWEEK(DATE_FORMAT(create_date,'%Y-%m-%d'),1) = YEARWEEK(NOW(),#{week,jdbcType=BIGINT})
+    </if>
+    <if test="companyId != null" >
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type != null" >
+      AND type = #{type,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--今天或昨天 1代表昨天  0代表今天-->
+  <select id="getDayCountDemonstrationStatistics" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM tf_demonstration_statistics
+    WHERE 1 = 1
+    <if test="day != null" >
+      AND TO_DAYS(NOW()) - TO_DAYS(create_date) = #{day,jdbcType=BIGINT}
+    </if>
+    <if test="companyId != null" >
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type != null" >
+      AND type = #{type,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="getAll"  resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT
+    D.*,DEP.`name` AS departmentName , H.`name` AS hName,A.`full_name` AS afullName ,P.`name` AS pName
+    FROM
+    `tf_demonstration_statistics` D,
+    tf_hospital H,
+    tf_area A,
+    tf_product P ,
+    tf_department DEP
+    WHERE D.`hospital` = H.`id`
+    AND D.`area` = A.`id`
+    AND D.`product` = P.`id`
+    AND D.`department` = DEP.`id`
+    <if test="companyId!=null">
+      and D.company_id = #{companyId}
+    </if>
+    <if test="type!=null">
+      and D.type = #{type}
+    </if>
+    <if test="status!=null">
+      and D.status = #{status}
+    </if>
+    ORDER BY D.`create_date` DESC
+  </select>
+
+  <select id="getDemonstrationStatisics" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+      SELECT A.mon, IFNULL(B.countDemonstrationStatistics,0) countDemonstrationStatistics FROM (
+      SELECT 1 AS mon
+      UNION SELECT 2
+      UNION SELECT 3
+      UNION SELECT 4
+      UNION SELECT 5
+      UNION SELECT 6
+      UNION SELECT 7
+      UNION SELECT 8
+      UNION SELECT 9
+      UNION SELECT 10
+      UNION SELECT 11
+      UNION SELECT 12
+      ) A LEFT JOIN (
+      SELECT COUNT(1) countDemonstrationStatistics ,DATE_FORMAT(create_date,'%m') AS MONTH FROM `tf_demonstration_statistics`
+      WHERE 1 = 1
+      <if test="companyId!=null">
+        and company_id = #{companyId}
+      </if>
+      <if test="productId!=null">
+        and product = #{productId}
+      </if>
+      <if test="type!=null">
+        and type = #{type}
+      </if>
+      <if test="year!=null">
+        AND DATE_FORMAT(create_date,'%Y') = #{year}
+      </if>
+    GROUP BY DATE_FORMAT(create_date,'%y-%m')
+      ) B ON A.mon = B.month  ORDER BY A.mon
+
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_demonstration_statistics
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.DemonstrationStatistics" >
+    insert into tf_demonstration_statistics (id, product, member, 
+      create_date, ip, iplat, 
+      iplng, nation, province, 
+      city, district, adcode, 
+      company_id, area, address, 
+      name, hospital, department, 
+      phone, mobile, content, 
+      type, email, is_delete, status, 
+      admin_id)
+    values (#{id,jdbcType=BIGINT}, #{product,jdbcType=BIGINT}, #{member,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{ip,jdbcType=VARCHAR}, #{iplat,jdbcType=VARCHAR}, 
+      #{iplng,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR}, #{adcode,jdbcType=VARCHAR}, 
+      #{companyId,jdbcType=BIGINT}, #{area,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{hospital,jdbcType=BIGINT}, #{department,jdbcType=BIGINT}, 
+      #{phone,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{type,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, #{status,jdbcType=BIGINT}, 
+      #{adminId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.DemonstrationStatistics" >
+    insert into tf_demonstration_statistics
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="product != null" >
+        product,
+      </if>
+      <if test="member != null" >
+        member,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="iplat != null" >
+        iplat,
+      </if>
+      <if test="iplng != null" >
+        iplng,
+      </if>
+      <if test="nation != null" >
+        nation,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="adcode != null" >
+        adcode,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="hospital != null" >
+        hospital,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="adminId != null" >
+        admin_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="product != null" >
+        #{product,jdbcType=BIGINT},
+      </if>
+      <if test="member != null" >
+        #{member,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="iplat != null" >
+        #{iplat,jdbcType=VARCHAR},
+      </if>
+      <if test="iplng != null" >
+        #{iplng,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="adcode != null" >
+        #{adcode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=BIGINT},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="hospital != null" >
+        #{hospital,jdbcType=BIGINT},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=BIGINT},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=BIGINT},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.DemonstrationStatistics" >
+    update tf_demonstration_statistics
+    <set >
+      <if test="product != null" >
+        product = #{product,jdbcType=BIGINT},
+      </if>
+      <if test="member != null" >
+        member = #{member,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="iplat != null" >
+        iplat = #{iplat,jdbcType=VARCHAR},
+      </if>
+      <if test="iplng != null" >
+        iplng = #{iplng,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        nation = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        district = #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="adcode != null" >
+        adcode = #{adcode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=BIGINT},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="hospital != null" >
+        hospital = #{hospital,jdbcType=BIGINT},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=BIGINT},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=BIGINT},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null" >
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.DemonstrationStatistics" >
+    update tf_demonstration_statistics
+    set product = #{product,jdbcType=BIGINT},
+      member = #{member,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      ip = #{ip,jdbcType=VARCHAR},
+      iplat = #{iplat,jdbcType=VARCHAR},
+      iplng = #{iplng,jdbcType=VARCHAR},
+      nation = #{nation,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      district = #{district,jdbcType=VARCHAR},
+      adcode = #{adcode,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=BIGINT},
+      area = #{area,jdbcType=BIGINT},
+      address = #{address,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      hospital = #{hospital,jdbcType=BIGINT},
+      department = #{department,jdbcType=BIGINT},
+      phone = #{phone,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      type = #{type,jdbcType=BIGINT},
+      email = #{email,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=BIT},
+      status = #{status,jdbcType=BIGINT},
+      admin_id = #{adminId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

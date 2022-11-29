@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--    // 强制Chromium内核，作用于360浏览器、QQ浏览器等国产双核浏览器：-->
+    <meta name="renderer" content="webkit"/>
+    <!--    // 强制Chromium内核，作用于其他双核浏览器：-->
+    <meta name="force-rendering" content="webkit"/>
+    <!--    // 如果有安装 Google Chrome Frame 插件则强制为Chromium内核，否则强制本机支持的最高版本IE内核，作用于IE浏览器：-->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <title>[[${journalism.title}]]</title>
+</head>
+
+<link rel="stylesheet" th:href="@{/assets/css/productView/demo.css}" type="text/css" />
+<link rel="stylesheet" th:href="@{/assets/css/productView/home.css}"  type="text/css" />
+<link rel="stylesheet" th:href="@{/assets/css/productView/2j.css}" type="text/css" />
+<link rel="stylesheet" th:href="@{/assets/css/productView/iconfont.css}" type="text/css" />
+<script th:src="@{/assets/js/productView/jquery.min.js}"></script>
+<link rel="stylesheet" th:href="@{/assets/css/productView/iconfont.js}" type="text/css" />
+<style>
+    .next .iconfont, .prev .iconfont {
+        font-size: 50px;
+    }
+
+    .gsjs {
+        width: 1200px;
+        background: #ffff;
+        margin: auto;
+        -moz-box-shadow: 0px 0px 12px #e1eefc;
+        -webkit-box-shadow: 0px 0px 12px #e1eefc;
+        box-shadow: 0px 0px 12px #e1eefc;
+        padding: 40px 200px;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    .gsjs .text {
+        font-size: 14px;
+        color: #333;
+        line-height: 160%;
+    }
+
+    .gsjs .text p {
+        padding-top: 10px;
+        text-align: justify;
+    }
+
+    .gsjs img {
+        padding: 10px 0px;
+        max-width: 800px;
+    }
+
+</style>
+<body>
+<div class="banner">
+    <img class="banner_logo" onerror="this.src='../../assets/img/companyLogo.jpg'" th:src="@{${company.logo}}"/>
+    <img onerror="this.src='../../assets/img/companyBackgroundImg.jpg'" th:src="@{${company.backgroundimg}}"/>
+</div>
+<div>
+    <div class="company">
+        <div class="title">
+            <li>
+                <a>公司简介</a>
+            </li>
+            <li >
+                <a>产品目录</a>
+            </li>
+            <li class="Selected">
+                <a>新闻动态</a>
+            </li>
+            <li >
+                <a>学术活动</a>
+            </li>
+            <li >
+                <a>媒体报道</a>
+            </li>
+            <li >
+                <a>会议展览</a>
+            </li>
+
+        </div>
+    </div>
+
+</div>
+
+<div style="height:36px;width:100%;display:block;background: #f5faff;"></div>
+
+<div class="content">
+
+    <div class="newsxx">
+        <div id="name">[[${journalism.title}]]</div>
+        <div class="shij" style="border: 0;padding-bottom: 10px">来源：[[${journalism.datasource}]]　　　时间：[[${#dates.format(journalism.createDate,'yyyy-MM-dd')}]]</div>
+        <div class="target" style="padding: 0 0 20px; justify-content: flex-end;border-bottom: 1px solid #ddd;">
+
+            <th:block th:with="arrays=${#strings.arraySplit(journalism.keyword,',')}">
+                <a th:each="arrayS:${arrays}" th:href="@{/article/list(index=3,category=7,keywords=${arrayS})}" th:text="${#strings.length(arrayS)>4?#strings.substring(arrayS,3):arrayS}"></a>
+            </th:block>
+
+        </div>
+        <div id="text">
+            <p th:utext="${journalism.content}"><br /></p>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+</html>

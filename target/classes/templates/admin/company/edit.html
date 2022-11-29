@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>公司简介</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{admin/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-lg-10" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="mb-3">公司简介</h2>
+
+                <form class="needs-validation" novalidate  method="post" onsubmit="return checkFrom()" th:action="@{/admin/company/update}"  enctype="multipart/form-data">
+                  <div class="form-group mb-3">
+                    <label for="name">公司名称</label>
+                    <input type="hidden" class="form-control" id="id" name="id" th:value="${company.id}" required>
+                    <input type="text" class="form-control" id="name" name="name" th:value="${company.name}" placeholder="name" required>
+                    <div class="invalid-feedback">
+                      公司名称必填
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>logo</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file"  name = "companyLogo" accept="image/*" class="custom-file-input" id="inputGroupFile04">
+                        <label class="custom-file-label" for="inputGroupFile04">上传logo</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>营业执照</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file"  name = "companylicense" accept="image/*" class="custom-file-input" id="companylicense">
+                        <label class="custom-file-label" for="companylicense">上传营业执照</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>背景图</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file"  name = "companybackgroundimg" accept="image/*" class="custom-file-input" id="companybackgroundimg">
+                        <label class="custom-file-label" for="companybackgroundimg">上传背景图(1920*397)</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>公众号二维码</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file"  name = "qrCodeLogo" accept="image/*" class="custom-file-input" id="qrCode">
+                        <label class="custom-file-label" for="qrCode">上传公众号二维码</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="url">网址</label>
+                    <input type="text" class="form-control" id="url" name="url" th:value="${company.url}" placeholder="url">
+                    <div class="invalid-feedback">
+                      公司网址
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="url">联系电话</label>
+                    <input type="text" class="form-control" id="mobile" name="mobile" th:value="${company.mobile}" placeholder="mobile">
+                    <div class="invalid-feedback">
+                      联系电话
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="areaId">地区</label><br/>
+                    <input type="hidden" class="form-control" id="areaId" name="areaId" th:value="${company.areaId}" th:title="${area.treePath}">
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="url">详细地址</label>
+                    <input type="text" class="form-control" id="address" name="address" th:value="${company.address}" placeholder="详细地址">
+                    <div class="invalid-feedback">
+                      详细地址
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="url">简介</label>
+                    <textarea class="form-control" id="example-textarea" rows="3" name="introduce" th:text="${company.introduce}" placeholder="简介"></textarea>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="url">公司介绍</label>
+                    <div class="card">
+                      <div class="card-body">
+                        <!-- basic summernote-->
+                        <!--<input type="hidden" id="introduction"  name="introduction"/>-->
+                        <textarea  id="summernote-basic" name="introduction" rows="10" cols="80" th:utext="${company.introduction}"></textarea>
+                        <!--<div id="summernote-basic" class="summernote-basic" th:utext="${company.introduction}"></div>-->
+                      </div>
+                      <!-- end card-body -->
+                    </div> <!-- end card-->
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:history.back(-1);">返回</button>
+                  </div>
+                </form>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+      </div>
+      <!--警告弹窗-->
+      <th:block th:replace="~{admin/incloud/status::warning}"></th:block>
+      <!-- Footer Start -->
+      <div th:replace="~{admin/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<div class="rightbar-overlay"></div>
+
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script th:src="@{/assets/js/pages/demo.form-wizard.js}"></script>
+
+<script th:src="@{/ueditor/ueditor.config.js}"></script>
+<script th:src="@{/ueditor/ueditor.all.js}"></script>
+<script th:src="@{/ueditor/lang/zh-cn/zh-cn.js}"></script>
+
+<!--&lt;!&ndash; SimpleMDE demo &ndash;&gt;-->
+<!--<script th:src="@{/assets/js/pages/demo.simplemde.js}"></script>-->
+<!--三级联动效果-->
+<script th:src="@{/assets/js/lSelect.js}"></script>
+
+<script>
+  //页面加载就调用
+  $(function(){
+    UE.getEditor('summernote-basic',{initialFrameWidth:'100%',initialFrameHeight:180});
+    // 地区选择
+    $("#areaId").lSelect({
+      url: "[[@{/admin/area/getAreas}]]"
+    });
+  });
+
+
+
+  var width,height;//背景图宽高
+  $("#companybackgroundimg").change(function (e) {
+    var file, img;
+    var _URL = window.URL || window.webkitURL;
+    if ((file = this.files[0])) {
+      img = new Image();
+      img.onload = function () {
+        width = this.width;
+        height = this.height;
+        console.log("width:"+ this.width+",height"+this.height+"filesize"+ file.size)
+        // callback && callback({"width": this.width, "height": this.height, "filesize": file.size});
+      };
+      img.src = _URL.createObjectURL(file);
+    }
+  });
+
+  var logoWidth,logoHeight;//logo图宽高
+  $("#logo").change(function (e) {
+    var file, img;
+    var _URL = window.URL || window.webkitURL;
+    if ((file = this.files[0])) {
+      img = new Image();
+      img.onload = function () {
+        logoWidth = this.width;
+        logoHeight = this.height;
+        console.log("width:"+ this.width+",height"+this.height+"filesize"+ file.size)
+        // callback && callback({"width": this.width, "height": this.height, "filesize": file.size});
+      };
+      img.src = _URL.createObjectURL(file);
+    }
+  });
+
+  //提交校验
+  function checkFrom() {
+    var companybackgroundimgVal = $('#companybackgroundimg').val();
+    if(companybackgroundimgVal!=''){
+
+      if(width != 1920 && height != 397){
+        $('#warningContent').html('请重新上传背景图，背景图的宽高为1920*397');
+        $("#btn-warning").click();
+        return false;
+      }
+    }
+
+    var logoVal = $('#logo').val();
+    if (logoVal!=''){
+      if(logoWidth != 160 && logoHeight != 80){
+        $('#warningContent').html('请重新上传logo图片，logo图的宽高为160*80');
+        $("#btn-warning").click();
+        return false;
+      }
+    }
+    return true;
+  }
+
+</script>
+
+
+
+
+</body>
+
+</html>

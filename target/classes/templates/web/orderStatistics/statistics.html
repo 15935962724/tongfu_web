@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>交易统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+    <!--<link th:href="@{/assets/css/datePicker/daterangepicker.css}"  rel="stylesheet" type="text/css" />-->
+
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <!-- Start Content-->
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+
+            <div class="content">
+
+                <div class="row">
+
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">今年  vs  往年(销售额统计)</h4>
+                                <div id="all-mixed" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">每年销售额统计</h4>
+                                <div id="distributed-column" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">统计每年结算订单数</h4>
+                                <div id="stacked-column" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                </div>
+                <!-- end row-->
+
+                <div class="row">
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body"  style="height: 451px;">
+                                <h4 class="header-title">支付方式订单数</h4>
+                                <input class="datePicker" id="systemDatePicker" />
+                                <div id="system-simple-pie" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body"  style="height: 451px;">
+                                <h4 class="header-title">支付方式订金额</h4>
+                                <input class="datePicker" id="orderDatePicker" />
+                                <div id="order-simple-pie" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">统计每年结算订金额</h4>
+                                <div id="order-stacked-column" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body" style="height: 451px;">
+                                <h4 class="header-title">订单来源</h4>
+                                <div id="world-map-markers" style="height: 384px"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body"  style="height: 451px;">
+                                <h4 class="header-title">订单来源</h4>
+                                <input class="datePicker" id="orderSourceDatePicker" />
+                                <div id="order-source-simple-pie" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                </div>
+
+            </div>
+
+            <!-- Footer Start -->
+            <div th:replace="~{web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+
+    </div> <!-- end wrapper-->
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+<!-- third party js -->
+<script src="assets/js/vendor/Chart.bundle.min.js" th:src="@{/assets/js/vendor/Chart.bundle.min.js}"></script>
+<script src="assets/js/vendor/jquery-jvectormap-1.2.2.min.js" th:src="@{/assets/js/vendor/jquery-jvectormap-1.2.2.min.js}"></script>
+<script src="assets/js/vendor/jquery-jvectormap-cn-mill.js" th:src="@{/assets/js/vendor/jquery-jvectormap-cn-mill.js}"></script>
+<!--<script th:src="@{/assets/js/datePicker/moment.min.js}"></script>-->
+<!--<script th:src="@{/assets/js/datePicker/daterangepicker.min.js}"></script>-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+<!-- third party end -->
+
+<!--<script th:src="@{/assets/js/pages/demo.apex-mixed.js}"></script>-->
+
+<script th:inline="javascript" type="text/javascript">
+
+    //页面加载就调用
+    $(function(){
+
+        var mapList = [[${mapList}]];
+
+        var colors = [];
+        var data = [];
+        var categories = [];
+
+        console.log([[${series}]])
+        for (var i = 0;i<mapList.length;i++){
+            colors.push(randomColor());
+            data.push(mapList[i].countNum);
+            categories.push(mapList[i].year);
+        }
+        console.log(colors)
+
+        //今年  vs  往年(销售额统计)
+        var allMixedOptions = {
+            chart: {height: 380, type: "line", stacked: !1, toolbar: {show: !1}},
+            stroke: {width: [1,1,1], curve: "smooth"},
+            // plotOptions: {bar: {columnWidth: "50%"}},
+            // colors: colors,
+            // series: [
+            //     {"name": "Team A", "type": "column", "data": [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]},
+            //     {"name": "Team B","type": "area", "data": [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]},
+            //     {"name": "Team C", "type": "line", "data": [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]}],
+            series:[[${series}]],
+            fill: {
+                opacity: 0.7,
+                gradient: {
+                    inverseColors: !1,
+                    shade: "light",
+                    type: "vertical",
+                    opacityFrom: .85,
+                    opacityTo: .55,
+                    stops: [0, 100, 100, 100]
+                }
+            },
+            // labels: ["01/01/2003", "02/01/2003", "03/01/2003", "04/01/2003", "05/01/2003", "06/01/2003", "07/01/2003", "08/01/2003", "09/01/2003", "10/01/2003", "11/01/2003"],
+            markers: {size: 0},
+            legend: {offsetY: -10},
+            xaxis: {
+                categories: [" 01", " 02", " 03", " 04", " 05", " 06", " 07", " 08", " 09 ", " 10", " 11", " 12"]
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+                y: {
+                    formatter: function(value,{ seriesIndex, dataPointIndex, w }) {
+                        console.log(w.config.series[seriesIndex].value)
+                        console.log(value)
+                        return value +'元';
+                    }
+                }
+            },
+            grid: {borderColor: "#f1f3fa"}
+        };
+        var allMixed = new ApexCharts(document.querySelector("#all-mixed"), allMixedOptions);
+        allMixed.render();
+
+        //每年销售额统计
+        var distributedColumnOptions = {
+            chart: {
+                height: 380, type: "bar", toolbar: {show: !1}, events: {
+                    click: function (o, e, t) {
+                        console.log(o, e, t)
+                    }
+                }
+            },
+            colors: colors,
+            plotOptions: {bar: {columnWidth: "45%", distributed: !0}},
+            dataLabels: {enabled: !1},
+            series: [{"name": "交易额", "data": data}],
+            xaxis: {
+                categories: categories,
+                labels: {style: {colors: colors, fontSize: "14px"}}
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+                y: {
+                    // formatter: function (e) {
+                    //     console.log(e)
+                    //     return void 0 !== e ? e.toFixed(0) + "$" : e
+                    // },
+                    formatter: function(value,{ seriesIndex, dataPointIndex, w }) {
+                        return '$  '+ value +'元';
+                    }
+                }
+            },
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var distributedColumn = new ApexCharts(document.querySelector("#distributed-column"), distributedColumnOptions);
+        distributedColumn.render();
+
+        //统计每年结算方式
+        var color = [];
+        for (var i = 0;i<[[${amountOrder}]].length;i++){
+            color.push(randomColor());
+        }
+        var stackedColumnOptions = {
+            chart: {height: 380, type: "bar", stacked: !0, toolbar: {show: !1}},
+            plotOptions: {bar: {horizontal: !1, columnWidth: "50%"}},
+            // series: [
+            //     {name: "Product A", data: [44, 55, 41, 67, 22, 43, 21, 49]},
+            //     {name: "Product B",data: [13, 23, 20, 8, 13, 27, 33, 12]},
+            //     {name: "Product C", data: [11, 17, 15, 15, 21, 14, 15, 13]}
+            //     ],
+            series: [[${systemJsonArray}]],
+            xaxis: {categories:categories},
+            colors: color,
+            fill: {opacity: 1},
+            legend: {offsetY: -10},
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var stackedColumn = new ApexCharts(document.querySelector("#stacked-column"), stackedColumnOptions);
+        stackedColumn.render();
+
+        //统计每年结算订金额
+        var color = [];
+        for (var i = 0;i<[[${amountOrder}]].length;i++){
+            color.push(randomColor());
+        }
+        var orderStackedColumnOptions = {
+            chart: {height: 380, type: "bar", stacked: !0, toolbar: {show: !1}},
+            // series: [
+            //     {name: "Product A", data: [44, 55, 41, 67, 22, 43, 21, 49]},
+            //     {name: "Product B",data: [13, 23, 20, 8, 13, 27, 33, 12]},
+            //     {name: "Product C", data: [11, 17, 15, 15, 21, 14, 15, 13]}
+            //     ],
+            series: [[${orderJsonArray}]],
+            xaxis: {categories:categories},
+            colors: color,
+            fill: {opacity: 1},
+            legend: {offsetY: -10},
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return "$ " + val + " 元"
+                    }
+                }
+            },
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var orderStackedColumn = new ApexCharts(document.querySelector("#order-stacked-column"), orderStackedColumnOptions);
+        orderStackedColumn.render();
+
+        // 支付方式统计
+        var systemSimplePieColor = [];
+        var systemSimplePieSeries = [];
+        var systemSimplePieLabels = [];
+        var amountOrder = [[${amountOrder}]];
+        for (var i = 0;i<amountOrder.length;i++){
+            systemSimplePieColor.push(randomColor());
+            systemSimplePieLabels.push(amountOrder[i].payment_method_name);
+            systemSimplePieSeries.push(amountOrder[i].countOrder);
+        }
+        var simplePieOptions = {
+            chart: {
+                height: 400,
+                type: "donut",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        customIcons: [{
+                            icon: '<img src="../../assets/img/day.png" width="20">',
+                            index: 0,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("按日统计")
+                                provinces = amountOrderStatisics(1);
+                                var dayColor = [];
+                                var daySeries = [];
+                                var dayLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    dayColor.push(randomColor());
+                                    dayLabels.push(provinces[i].payment_method_name);
+                                    daySeries.push(provinces[i].countOrder);
+                                }
+                                systemSimplePie.updateOptions({
+                                    series: daySeries,
+                                    labels: dayLabels,
+                                    colors: dayColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/week.png" width="20">',
+                            index: 1,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = amountOrderStatisics(2);
+                                var weekColor = [];
+                                var weekSeries = [];
+                                var weekLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    weekColor.push(randomColor());
+                                    weekLabels.push(provinces[i].payment_method_name);
+                                    weekSeries.push(provinces[i].countOrder);
+                                }
+                                systemSimplePie.updateOptions({
+                                    series: weekSeries,
+                                    labels: weekLabels,
+                                    colors: weekColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/month.png" width="20">',
+                            index: 2,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = amountOrderStatisics(3);
+                                var monthColor = [];
+                                var monthSeries = [];
+                                var monthLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    monthColor.push(randomColor());
+                                    monthLabels.push(provinces[i].payment_method_name);
+                                    monthSeries.push(provinces[i].countOrder);
+                                }
+                                systemSimplePie.updateOptions({
+                                    series: monthSeries,
+                                    labels: monthLabels,
+                                    colors: monthColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/year.png" width="20">',
+                            index: 3,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = amountOrderStatisics(4);
+                                var yearColor = [];
+                                var yearSeries = [];
+                                var yearLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    yearColor.push(randomColor());
+                                    yearLabels.push(provinces[i].payment_method_name);
+                                    yearSeries.push(provinces[i].countOrder);
+                                }
+                                systemSimplePie.updateOptions({
+                                    series: yearSeries,
+                                    labels: yearLabels,
+                                    colors: yearColor,
+                                })
+                            }
+                        },{
+                            icon: '<p class="apexChartsDatePicker"><img src="../../assets/img/datePicker.png" width="20"></p>',
+                            index: 4,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log(1)
+                                $('#systemDatePicker').click()
+                            }
+                        }]
+                    }
+                },
+            },
+            plotOptions: {
+                pie: {
+                    size: 100
+                }
+            },
+            series: systemSimplePieSeries,
+            labels: systemSimplePieLabels,
+            colors: systemSimplePieColor,
+            legend: {
+                show: !0,
+                height: 400,
+                position: "left",
+                horizontalAlign: "left",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: -20,
+                offsetY: 0
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 400}, legend: {show: !1}}}]
+        };
+        var systemSimplePie = new ApexCharts(document.querySelector("#system-simple-pie"), simplePieOptions);
+        systemSimplePie.render();
+
+
+        // 支付方式金额统计
+        var orderSimplePieColor = [];
+        var orderSimplePieSeries = [];
+        var orderSimplePieLabels = [];
+        var amountOrder = [[${amountOrder}]];
+        for (var i = 0;i<amountOrder.length;i++){
+            orderSimplePieColor.push(randomColor());
+            orderSimplePieLabels.push(amountOrder[i].payment_method_name);
+            orderSimplePieSeries.push(amountOrder[i].sumOrder);
+        }
+        var orderSimplePieOptions = {
+            chart: {
+                height: 400,
+                type: "donut",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        customIcons: [{
+                            icon: '<img src="../../assets/img/day.png" width="20">',
+                            index: 0,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("按日统计")
+                                provinces = amountOrderStatisics(1);
+                                var dayColor = [];
+                                var daySeries = [];
+                                var dayLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    dayColor.push(randomColor());
+                                    dayLabels.push(provinces[i].payment_method_name);
+                                    daySeries.push(provinces[i].sumOrder);
+                                }
+                                orderSimplePie.updateOptions({
+                                    series: daySeries,
+                                    labels: dayLabels,
+                                    colors: dayColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/week.png" width="20">',
+                            index: 1,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = amountOrderStatisics(2);
+                                var weekColor = [];
+                                var weekSeries = [];
+                                var weekLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    weekColor.push(randomColor());
+                                    weekLabels.push(provinces[i].payment_method_name);
+                                    weekSeries.push(provinces[i].sumOrder);
+                                }
+                                orderSimplePie.updateOptions({
+                                    series: weekSeries,
+                                    labels: weekLabels,
+                                    colors: weekColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/month.png" width="20">',
+                            index: 2,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = amountOrderStatisics(3);
+                                var monthColor = [];
+                                var monthSeries = [];
+                                var monthLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    monthColor.push(randomColor());
+                                    monthLabels.push(provinces[i].payment_method_name);
+                                    monthSeries.push(provinces[i].sumOrder);
+                                }
+                                orderSimplePie.updateOptions({
+                                    series: monthSeries,
+                                    labels: monthLabels,
+                                    colors: monthColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/year.png" width="20">',
+                            index: 3,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = amountOrderStatisics(4);
+                                var yearColor = [];
+                                var yearSeries = [];
+                                var yearLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    yearColor.push(randomColor());
+                                    yearLabels.push(provinces[i].payment_method_name);
+                                    yearSeries.push(provinces[i].sumOrder);
+                                }
+                                orderSimplePie.updateOptions({
+                                    series: yearSeries,
+                                    labels: yearLabels,
+                                    colors: yearColor,
+                                })
+                            }
+                        },{
+                            icon: '<p class="apexChartsDatePicker"><img src="../../assets/img/datePicker.png" width="20"></p>',
+                            index: 4,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log(1)
+                                $('#orderDatePicker').click()
+                            }
+                        }]
+                    }
+                },
+            },
+            plotOptions: {
+                pie: {
+                    size: 100
+                }
+            },
+            series: orderSimplePieSeries,
+            labels: orderSimplePieLabels,
+            colors: orderSimplePieColor,
+            legend: {
+                show: !0,
+                height: 400,
+                position: "left",
+                horizontalAlign: "left",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: -20,
+                offsetY: 0
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+                y: {
+                    formatter: function(value,{ seriesIndex, dataPointIndex, w }) {
+                        return "$ " + value +"元";
+                    }
+                }
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 400}, legend: {show: !1}}}]
+        };
+        var orderSimplePie = new ApexCharts(document.querySelector("#order-simple-pie"), orderSimplePieOptions);
+        orderSimplePie.render();
+
+
+        var orderSourceSimplePieColor = [];
+        var orderSourceSimplePieSeries = [];
+        var orderSourceSimplePieLabels = [];
+        var orderSourcePie = [[${orderSourcePie}]];
+        for (var i = 0;i<orderSourcePie.length;i++){
+            orderSourceSimplePieColor.push(randomColor());
+            orderSourceSimplePieLabels.push(orderSourcePie[i].province);
+            orderSourceSimplePieSeries.push(orderSourcePie[i].countOrder);
+        }
+        var orderSourceSimplePieOptions = {
+            chart: {
+                height: 400,
+                type: "donut",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        customIcons: [{
+                            icon: '<img src="../../assets/img/day.png" width="20">',
+                            index: 0,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("按日统计")
+                                provinces = orderSource(1);
+                                var dayColor = [];
+                                var daySeries = [];
+                                var dayLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    dayColor.push(randomColor());
+                                    dayLabels.push(provinces[i].province);
+                                    daySeries.push(provinces[i].countOrder);
+                                }
+                                orderSourceSimplePie.updateOptions({
+                                    series: daySeries,
+                                    labels: dayLabels,
+                                    colors: dayColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/week.png" width="20">',
+                            index: 1,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = orderSource(2);
+                                var weekColor = [];
+                                var weekSeries = [];
+                                var weekLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    weekColor.push(randomColor());
+                                    weekLabels.push(provinces[i].province);
+                                    weekSeries.push(provinces[i].countOrder);
+                                }
+                                orderSourceSimplePie.updateOptions({
+                                    series: weekSeries,
+                                    labels: weekLabels,
+                                    colors: weekColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/month.png" width="20">',
+                            index: 2,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = orderSource(3);
+                                var monthColor = [];
+                                var monthSeries = [];
+                                var monthLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    monthColor.push(randomColor());
+                                    monthLabels.push(provinces[i].province);
+                                    monthSeries.push(provinces[i].countOrder);
+                                }
+                                orderSourceSimplePie.updateOptions({
+                                    series: monthSeries,
+                                    labels: monthLabels,
+                                    colors: monthColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/year.png" width="20">',
+                            index: 3,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = orderSource(4);
+                                var yearColor = [];
+                                var yearSeries = [];
+                                var yearLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    yearColor.push(randomColor());
+                                    yearLabels.push(provinces[i].province);
+                                    yearSeries.push(provinces[i].countOrder);
+                                }
+                                orderSourceSimplePie.updateOptions({
+                                    series: yearSeries,
+                                    labels: yearLabels,
+                                    colors: yearColor,
+                                })
+                            }
+                        },{
+                            icon: '<p class="apexChartsDatePicker"><img src="../../assets/img/datePicker.png" width="20"></p>',
+                            index: 4,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log(1)
+                                $('#orderSourceDatePicker').click()
+                            }
+                        }]
+                    }
+                },
+            },
+            plotOptions: {
+                pie: {
+                    size: 100
+                }
+            },
+            series: orderSourceSimplePieSeries,
+            labels: orderSourceSimplePieLabels,
+            colors: orderSourceSimplePieColor,
+            legend: {
+                show: !0,
+                height: 400,
+                position: "left",
+                horizontalAlign: "left",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: -20,
+                offsetY: 0
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 400}, legend: {show: !1}}}]
+        };
+        var orderSourceSimplePie = new ApexCharts(document.querySelector("#order-source-simple-pie"), orderSourceSimplePieOptions);
+        orderSourceSimplePie.render();
+
+
+
+
+
+        var orderSourceMap = [];
+         orderSourceMap = [[${orderSource}]];
+
+        for (var i = 0; i < orderSourceMap.length; i++){
+            orderSourceMap[i].latLng = orderSourceMap[i].latLng.split(",")
+        }
+        console.log(orderSourceMap);
+        !function (r) {
+            var t = function () {
+                this.$body = r("body"), this.charts = []
+            };
+            t.prototype.initMaps = function () {
+                r("#world-map-markers").length > 0 && r("#world-map-markers").vectorMap({
+                    map: "cn_mill",
+                    normalizeFunction: "polynomial",
+                    hoverOpacity: .7,
+                    hoverColor: !1,
+                    regionStyle: {initial: {fill: randomColor()}},
+                    markerStyle: {
+                        initial: {
+                            r: 9,
+                            fill: randomColor(),
+                            "fill-opacity": .9,
+                            stroke: "#fff",
+                            "stroke-width": 7,
+                            "stroke-opacity": .4
+                        }, hover: {stroke: "#fff", "fill-opacity": 1, "stroke-width": 1.5}
+                    },
+                    backgroundColor: "transparent",
+
+                    markers: orderSourceMap,
+                    // markers: [
+                    //     {latLng: [31.02989471,121.44371], name: "New York"},
+                    //     {latLng: [35.736026, 114.314757],name: "San Francisco"},
+                    //     {latLng: [39.072207, 117.231878], name: "Sydney"},
+                    //     {latLng: [39.90469, 116.40717], name: "Singapore"}
+                    // ],
+                    zoomOnScroll: !1
+                })
+            }, t.prototype.init = function () {
+                var t = this;
+                Chart.defaults.global.defaultFontFamily = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif', r("#dash-daterange").daterangepicker({singleDatePicker: !0}), t.charts = this.initMaps(), r(window).on("resize", function (a) {
+                    r.each(t.charts, function (r, t) {
+                        try {
+                            t.destroy()
+                        } catch (r) {
+                        }
+                    }), t.charts = t.initCharts()
+                })
+            }, r.Dashboard = new t, r.Dashboard.Constructor = t
+        }(window.jQuery), function (r) {
+            "use strict";
+            r.Dashboard.init()
+        }(window.jQuery);
+
+        //日期选择配置
+        var locale = {
+            "format": 'YYYY-MM-DD',
+            "separator": " - ",
+            "applyLabel": "确定",
+            "cancelLabel": "取消",
+            "fromLabel": "起始时间",
+            "toLabel": "结束时间'",
+            "customRangeLabel": "自定义",
+            "weekLabel": "W",
+            "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+            "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            "firstDay": 1
+        };
+
+        //支付方式订单数
+        $('#systemDatePicker').daterangepicker({
+            'locale': locale,
+            "alwaysShowCalendars": true,
+            "startDate": new Date(),
+            "endDate": new Date(),
+            "opens": "right",
+        }, function (start, end, label) {
+            //地区选择时间回调
+            //开始时间 start.format('YYYY-MM-DD')
+            //结束时间 end.format('YYYY-MM-DD')
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+
+            provinces = amountOrderStatisics(null,start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD'));
+            var dateColor = [];
+            var dateSeries = [];
+            var dateLabels = [];
+            for (var i = 0;i<provinces.length;i++){
+                dateColor.push(randomColor());
+                dateLabels.push(provinces[i].payment_method_name);
+                dateSeries.push(provinces[i].countOrder);
+            }
+            systemSimplePie.updateOptions({
+                series: dateSeries,
+                labels: dateLabels,
+                colors: dateColor,
+            })
+
+        });
+
+        //根据来源统计用户注册数
+        $('#orderDatePicker').daterangepicker({
+            'locale': locale,
+            "alwaysShowCalendars": true,
+            "startDate": new Date(),
+            "endDate": new Date(),
+            "opens": "right",
+        }, function (start, end, label) {
+            //地区选择时间回调
+            //开始时间 start.format('YYYY-MM-DD')
+            //结束时间 end.format('YYYY-MM-DD')
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+
+            provinces = amountOrderStatisics(null,start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD'));
+            var dateColor = [];
+            var dateSeries = [];
+            var dateLabels = [];
+            for (var i = 0;i<provinces.length;i++){
+                dateColor.push(randomColor());
+                dateLabels.push(provinces[i].payment_method_name);
+                dateSeries.push(provinces[i].sumOrder);
+            }
+            orderSimplePie.updateOptions({
+                series: dateSeries,
+                labels: dateLabels,
+                colors: dateColor,
+            })
+
+        });
+
+
+        //自定义统计订单来源
+        $('#orderSourceDatePicker').daterangepicker({
+            'locale': locale,
+            "alwaysShowCalendars": true,
+            "startDate": new Date(),
+            "endDate": new Date(),
+            "opens": "right",
+        }, function (start, end, label) {
+            //地区选择时间回调
+            //开始时间 start.format('YYYY-MM-DD')
+            //结束时间 end.format('YYYY-MM-DD')
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+
+            provinces = orderSource(null,start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD'));
+            var dateColor = [];
+            var dateSeries = [];
+            var dateLabels = [];
+            for (var i = 0;i<provinces.length;i++){
+                dateColor.push(randomColor());
+                dateLabels.push(provinces[i].province);
+                dateSeries.push(provinces[i].countOrder);
+            }
+            orderSourceSimplePie.updateOptions({
+                series: dateSeries,
+                labels: dateLabels,
+                colors: dateColor,
+            })
+
+        });
+
+
+
+
+        // 根据支付方式自定义统计
+        function amountOrderStatisics(type,startDate,endDate) {
+            var   systemStatisicsData ;
+            $.ajax({
+                type:"POST",
+                url:[[@{/web/orderStatistics/amountOrder}]],
+            data:{type:type,startDate:startDate,endDate:endDate},
+            dataType:"json",
+                async: false,
+                success:function (data) {
+                console.log(data.data);
+                systemStatisicsData =  data.data;
+            },
+            error:function(data){
+                console.log(data.responseJSON);
+            }
+        });
+            if(systemStatisicsData.length == 0){
+                alert("该时间段暂无数据！")
+                return undefined;
+            }else{
+                return systemStatisicsData;
+            }
+        }
+
+        function orderSource(type,startDate,endDate) {
+            var   orderSources ;
+            $.ajax({
+                type:"POST",
+                url:[[@{/web/orderStatistics/orderSource}]],
+            data:{type:type,startDate:startDate,endDate:endDate},
+            dataType:"json",
+                async: false,
+                success:function (data) {
+                console.log(data.data);
+                orderSources =  data.data;
+            },
+            error:function(data){
+                console.log(data.responseJSON);
+            }
+        });
+            if(orderSources.length == 0){
+                alert("该时间段暂无数据！")
+                return undefined;
+            }else{
+                return orderSources;
+            }
+        }
+
+
+
+        /*随机颜色*/
+        function randomColor() {
+            var r = Math.floor(Math.random()*256);
+            var g = Math.floor(Math.random()*256);
+            var b = Math.floor(Math.random()*256);
+            if(r < 16){
+                r = "0"+r.toString(16);
+            }else{
+                r = r.toString(16);
+            }
+            if(g < 16){
+                g = "0"+g.toString(16);
+            }else{
+                g = g.toString(16);
+            }
+            if(b < 16){
+                b = "0"+b.toString(16);
+            }else{
+                b = b.toString(16);
+            }
+            return "#"+r+g+b;
+        }
+
+    });
+
+</script>
+
+
+</body>
+</html>

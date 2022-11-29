@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.MessageDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Message" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="for_message" property="forMessage" jdbcType="BIGINT" />
+    <result column="receiver" property="receiver" jdbcType="BIGINT" />
+    <result column="sender" property="sender" jdbcType="BIGINT" />
+    <result column="is_forward_receiver" property="isForwardReceiver" jdbcType="BIT" />
+    <result column="is_forward_sender" property="isForwardSender" jdbcType="BIT" />
+    <result column="operator" property="operator" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="is_handle" property="isHandle" jdbcType="BIT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tongfu.entity.Message" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, ip, for_message, receiver, sender, is_forward_receiver, is_forward_sender,
+    operator, product_id, is_handle, company_id, email
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tf_message
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="messageStatisticList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT DATE_FORMAT(create_date,'%Y-%m') AS TIME,COUNT(1) AS satistics FROM tf_message
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    GROUP BY TIME ORDER BY TIME  DESC LIMIT 12
+  </select>
+
+  <select id="getAdvice" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT
+      (SELECT COUNT(1) FROM tf_message WHERE is_forward_receiver = TRUE AND is_handle = FALSE AND  TO_DAYS(create_date) = TO_DAYS(NOW())
+        <if test="companyId != null" >
+          AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+       ) AS toBeReplied
+      ,
+      (SELECT COUNT(1) FROM tf_message WHERE is_forward_receiver = TRUE AND is_handle = TRUE AND  TO_DAYS(create_date) = TO_DAYS(NOW())
+        <if test="companyId != null" >
+          AND company_id = #{companyId,jdbcType=BIGINT}
+        </if>
+       ) AS replied ,
+        IFNULL( ROUND(
+      (
+      (SELECT COUNT(1) FROM tf_message WHERE is_forward_receiver = TRUE AND is_handle = FALSE AND  TO_DAYS(create_date) = TO_DAYS(NOW())
+      <if test="companyId != null" >
+        AND company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+      )
+      -
+      (SELECT COUNT(1) FROM tf_message WHERE is_forward_receiver = TRUE AND is_handle = FALSE AND  TO_DAYS(NOW()) - TO_DAYS(create_date) = 1
+      <if test="companyId != null" >
+        AND company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+       )
+      )/(SELECT COUNT(1) FROM tf_message WHERE is_forward_receiver = TRUE AND is_handle = FALSE AND  TO_DAYS(NOW()) - TO_DAYS(create_date) = 1
+      <if test="companyId != null" >
+        AND company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+      ) * 100,2),0) AS increase
+  </select>
+
+  <select id="getAll" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT M.*,P.name,C.bname ,Me.username  FROM tf_message M,tf_product P,(
+    SELECT A.`id` id ,A.`name` aname,B.`id` bid, CONCAT(B.`name`,'-',A.`name`) bname FROM tf_product_category A ,tf_product_category B WHERE A.`parent` = B.`id`
+    ) C ,tf_member Me
+    WHERE M.product_id = P.id AND P.product_category = C.id AND M.sender = Me.id
+    <if test="companyId!=null ">
+      and M.company_id = #{companyId}
+    </if>
+    <if test="isForwardReceiver!=null ">
+      and M.is_forward_receiver = #{isForwardReceiver}
+    </if>
+    <if test="isForwardSender!=null ">
+      and M.is_forward_sender = #{isForwardSender}
+    </if>
+    <if test="isHandle!=null ">
+      and M.is_handle = #{isHandle}
+    </if>
+    <if test="productCategory!=null ">
+      and C.id = #{productCategory}
+    </if>
+    <if test="name!=null and name !=''">
+      and P.name like '%${name}%'
+    </if>
+  </select>
+
+
+  <!--本月或上月 0代表本月 1代表上月-->
+  <select id="getMonthCountProductMessage" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM tf_message
+    WHERE 1 = 1
+    <if test="month != null" >
+      AND PERIOD_DIFF( DATE_FORMAT( NOW( ) , '%Y%m' ) , DATE_FORMAT( create_date, '%Y%m' ) ) =#{month,jdbcType=BIGINT}
+    </if>
+    <if test="companyId != null" >
+      AND  company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--本周或上周0代表本周 1 代表上周-->
+  <select id="getWeekCountProductMessage" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM tf_message
+    WHERE 1 = 1
+    <if test="week != null" >
+      AND YEARWEEK(date_format( create_date,'%Y-%m-%d')) = (YEARWEEK(now()) - #{week,jdbcType=BIGINT})
+    </if>
+    <if test="companyId != null" >
+      AND  company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--今天或昨天 1代表昨天  0代表今天-->
+  <select id="getDayCountProductMessage" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM tf_message
+    WHERE 1 = 1
+    <if test="day != null" >
+      AND TO_DAYS(NOW()) - TO_DAYS(create_date) = #{day,jdbcType=BIGINT}
+    </if>
+    <if test="companyId != null" >
+      AND  company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+      delete from tf_message
+      where id = #{id,jdbcType=BIGINT}
+    </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Message" >
+    insert into tf_message (id, create_date, ip,
+      for_message, receiver, sender,
+      is_forward_receiver, is_forward_sender, operator,
+      product_id, is_handle, company_id,
+      email, content)
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{ip,jdbcType=VARCHAR},
+      #{forMessage,jdbcType=BIGINT}, #{receiver,jdbcType=BIGINT}, #{sender,jdbcType=BIGINT},
+      #{isForwardReceiver,jdbcType=BIT}, #{isForwardSender,jdbcType=BIT}, #{operator,jdbcType=BIGINT},
+      #{productId,jdbcType=BIGINT}, #{isHandle,jdbcType=BIT}, #{companyId,jdbcType=BIGINT},
+      #{email,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Message" >
+    insert into tf_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="forMessage != null" >
+        for_message,
+      </if>
+      <if test="receiver != null" >
+        receiver,
+      </if>
+      <if test="sender != null" >
+        sender,
+      </if>
+      <if test="isForwardReceiver != null" >
+        is_forward_receiver,
+      </if>
+      <if test="isForwardSender != null" >
+        is_forward_sender,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="isHandle != null" >
+        is_handle,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="forMessage != null" >
+        #{forMessage,jdbcType=BIGINT},
+      </if>
+      <if test="receiver != null" >
+        #{receiver,jdbcType=BIGINT},
+      </if>
+      <if test="sender != null" >
+        #{sender,jdbcType=BIGINT},
+      </if>
+      <if test="isForwardReceiver != null" >
+        #{isForwardReceiver,jdbcType=BIT},
+      </if>
+      <if test="isForwardSender != null" >
+        #{isForwardSender,jdbcType=BIT},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="isHandle != null" >
+        #{isHandle,jdbcType=BIT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Message" >
+    update tf_message
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="forMessage != null" >
+        for_message = #{forMessage,jdbcType=BIGINT},
+      </if>
+      <if test="receiver != null" >
+        receiver = #{receiver,jdbcType=BIGINT},
+      </if>
+      <if test="sender != null" >
+        sender = #{sender,jdbcType=BIGINT},
+      </if>
+      <if test="isForwardReceiver != null" >
+        is_forward_receiver = #{isForwardReceiver,jdbcType=BIT},
+      </if>
+      <if test="isForwardSender != null" >
+        is_forward_sender = #{isForwardSender,jdbcType=BIT},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="isHandle != null" >
+        is_handle = #{isHandle,jdbcType=BIT},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tongfu.entity.Message" >
+    update tf_message
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      ip = #{ip,jdbcType=VARCHAR},
+      for_message = #{forMessage,jdbcType=BIGINT},
+      receiver = #{receiver,jdbcType=BIGINT},
+      sender = #{sender,jdbcType=BIGINT},
+      is_forward_receiver = #{isForwardReceiver,jdbcType=BIT},
+      is_forward_sender = #{isForwardSender,jdbcType=BIT},
+      operator = #{operator,jdbcType=BIGINT},
+      product_id = #{productId,jdbcType=BIGINT},
+      is_handle = #{isHandle,jdbcType=BIT},
+      company_id = #{companyId,jdbcType=BIGINT},
+      email = #{email,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Message" >
+    update tf_message
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      ip = #{ip,jdbcType=VARCHAR},
+      for_message = #{forMessage,jdbcType=BIGINT},
+      receiver = #{receiver,jdbcType=BIGINT},
+      sender = #{sender,jdbcType=BIGINT},
+      is_forward_receiver = #{isForwardReceiver,jdbcType=BIT},
+      is_forward_sender = #{isForwardSender,jdbcType=BIT},
+      operator = #{operator,jdbcType=BIGINT},
+      product_id = #{productId,jdbcType=BIGINT},
+      is_handle = #{isHandle,jdbcType=BIT},
+      company_id = #{companyId,jdbcType=BIGINT},
+      email = #{email,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

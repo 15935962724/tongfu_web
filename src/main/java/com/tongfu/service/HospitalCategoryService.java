@@ -1,0 +1,22 @@
+package com.tongfu.service;
+
+import com.tongfu.entity.HospitalCategory;
+
+import java.util.List;
+import java.util.Map;
+
+public interface HospitalCategoryService {
+    int deleteByPrimaryKey(Long id);
+
+    int insert(HospitalCategory record);
+
+    int insertSelective(HospitalCategory record);
+
+    HospitalCategory selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(HospitalCategory record);
+
+    int updateByPrimaryKey(HospitalCategory record);
+
+    List<HospitalCategory> getAll(Map<String, Object> query_map);
+}

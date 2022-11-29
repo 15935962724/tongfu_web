@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+  <head>
+    <title></title>
+  </head>
+  <body>
+
+
+    <nav th:fragment="product">
+
+      <div class="border p-3 mt-4 mt-lg-0 rounded">
+        <h4 class="header-title mb-3">最新发布</h4>
+
+        <div class="table-responsive">
+          <table class="table table-centered mb-0">
+            <tbody>
+            <tr th:each="product:${products}">
+              <td>
+                <img th:src="@{${product.image}}" onerror="this.src='http://jh.chinaserve.com.cn/res/Home/product/16071282/16071283_s.jpg'" alt="contact-img"
+                     title="contact-img" class="rounded mr-2" height="48" />
+                <p class="m-0 d-inline-block align-middle">
+                  <a href="apps-ecommerce-products-details.html"
+                     class="text-body font-weight-semibold">[[${product.name}]]</a>
+                  <br>
+                </p>
+              </td>
+              <td class="text-right">
+                ¥[[${#numbers.formatDecimal(product.price,1,'COMMA',2,'POINT')}]]
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- end table-responsive -->
+      </div> <!-- end .border-->
+
+    </nav>
+  </body>
+</html>

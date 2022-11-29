@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongfu.dao.RoleAuthorityDao">
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.RoleAuthority">
+    <result column="role" jdbcType="BIGINT" property="role" />
+    <result column="authorities" jdbcType="VARCHAR" property="authorities" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tongfu.entity.RoleAuthority">
+    insert into tf_role_authority (role, authorities)
+    values (#{role,jdbcType=BIGINT}, #{authorities,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.RoleAuthority">
+    insert into tf_role_authority
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="role != null">
+        role,
+      </if>
+      <if test="authorities != null">
+        authorities,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="role != null">
+        #{role,jdbcType=BIGINT},
+      </if>
+      <if test="authorities != null">
+        #{authorities,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <insert id="insertMap" parameterType="java.util.Map">
+    insert into tf_role_authority
+    (role, authorities)
+    values
+    <foreach collection="authorities" item="item" index="index" separator=",">
+      (
+      #{role,jdbcType=BIGINT}, #{item,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+  <delete id="deleteAuthoritie" parameterType="java.util.Map">
+    delete from tf_role_authority where role = #{role,jdbcType=BIGINT}
+  </delete>
+
+  <select id="getAuthorities" parameterType="java.lang.String" resultType="java.lang.String" >
+      SELECT authorities FROM tf_role r,tf_admin a,tf_admin_role ar ,tf_role_authority ra
+      WHERE r.id = ar.roles AND a.id = ar.admins AND r.id = ra.role AND  a.username = #{username,jdbcType=VARCHAR};
+  </select>
+
+  <select id="getAll" resultType="java.lang.String" parameterType="java.util.HashMap" >
+    SELECT
+    authorities
+    FROM tf_role_authority
+    WHERE 1 = 1
+    <if test="role!=null ">
+      AND role = #{role,jdbcType=BIGINT}
+    </if>
+  </select>
+
+</mapper>

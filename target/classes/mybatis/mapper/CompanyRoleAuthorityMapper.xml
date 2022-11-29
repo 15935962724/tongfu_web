@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.CompanyRoleAuthorityDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.CompanyRoleAuthority" >
+    <result column="company_role" property="companyRole" jdbcType="BIGINT" />
+    <result column="authorities" property="authorities" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tongfu.entity.CompanyRoleAuthority" >
+    insert into tf_company_role_authority (company_role, authorities)
+    values (#{companyRole,jdbcType=BIGINT}, #{authorities,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.CompanyRoleAuthority" >
+    insert into tf_company_role_authority
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="companyRole != null" >
+        company_role,
+      </if>
+      <if test="authorities != null" >
+        authorities,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="companyRole != null" >
+        #{companyRole,jdbcType=BIGINT},
+      </if>
+      <if test="authorities != null" >
+        #{authorities,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="insertMap" parameterType="java.util.Map">
+    insert into tf_company_role_authority
+    (company_role, authorities)
+    values
+    <foreach collection="companyRoleAuthoritys" item="item" index="index" separator=",">
+      (#{companyRoleId,jdbcType=BIGINT},#{item,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+
+  <select id="getAuthorities" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT cra.`authorities` FROM tf_admin a ,tf_admin_company_role acr ,tf_company c ,tf_company_role  cr ,tf_company_role_authority cra WHERE
+    a.`id` = acr.`admins` AND c.`id` = cr.`company_id` AND acr.`company_role` = cr.`id` AND cr.`id` = cra.`company_role` AND  a.username = #{username,jdbcType=VARCHAR};
+  </select>
+  <select id="getCompanyAuthorities" resultType="java.lang.String" parameterType="java.util.HashMap">
+     SELECT authorities FROM tf_company_role_authority where company_role = #{companyRoleId,jdbcType=BIGINT}
+  </select>
+
+
+</mapper>

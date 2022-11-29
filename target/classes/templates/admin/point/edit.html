@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>积分设置</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+  <!-- App css -->
+  <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+  <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+</head>
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{admin/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+    <div class="content-page">
+      <div class="content">
+        <div class="row">
+          <div class="col-lg-6" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-3">积分设置</h4>
+
+                <form class="needs-validation" novalidate  method="post" th:action="@{/admin/point/update}">
+                  <div class="form-group mb-3">
+                    <label for="memberRegisterPoint">会员注册</label>
+                    <input type="text" class="form-control" id="memberRegisterPoint" name="memberRegisterPoint"  th:value="${setting.memberRegisterPoint}" placeholder="memberRegisterPoint" required>
+                    <div class="invalid-feedback">
+                      会员注册
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="purchaseProductPoint">购买软件赠送积分(购买产品订单金额：积分，如：2，表示2元赠送1积分)</label>
+                    <input type="text" class="form-control" id="purchaseProductPoint" name="purchaseProductPoint" th:value="${setting.purchaseProductPoint}" placeholder="purchaseProductPoint" required>
+                    <div class="invalid-feedback">
+                       购买软件赠送积分
+                    </div>
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary">返回</button>
+                  </div>
+                </form>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- Footer Start -->
+      <div th:replace="~{admin/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+</body>
+
+</html>

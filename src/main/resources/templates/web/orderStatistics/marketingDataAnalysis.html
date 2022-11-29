@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8" />
+    <title>品牌数据统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <link href="assets/css/newCss.css" th:href="@{/assets/css/newCss.css}"  rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+
+            <div class="content">
+
+
+
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    全国销售地区分析
+                                </div>
+                                <div class="date" data-toggle="date-picker" id="rankMap"><img src="../../assets/img/datePicker.png" width="20"></div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content">
+                                <div id="map-chart" class="col-lg-12 apex-charts" style="height: 300px"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    全国城市销售排名
+                                </div>
+                                <div class="date" data-toggle="date-picker" id="rankTable"><img src="../../assets/img/datePicker.png" width="20"></div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content">
+                                <div class="newCard_Content_List">
+                                    <table class="table table-striped dt-responsive nowrap" width="100%">
+                                        <thead>
+                                        <tr>
+                                            <th>排名</th>
+                                            <th>城市名称</th>
+                                            <th>销售量</th>
+                                            <th>销售占比</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="tBody">
+                                        <tr th:each="order,orderStart:${orderprovince}" >
+                                            <td>[[${orderStart.index+1}]]</td>
+                                            <td>[[${order.province}]]</td>
+                                            <td>[[${order.countCompanyOrder}]]</td>
+                                            <td>[[${order.proportion}]]</td>
+                                        </tr>
+
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    销售额分析
+                                </div>
+                                <div class="dateYear">
+                                    <img src="../../assets/img/datePicker.png" width="20">
+                                    <input id="SalesAnalysisDate" type="text" data-provide="datepicker" data-date-min-view-mode="2" data-date-format="yyyy">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="SalesAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    销售额对比分析
+                                </div>
+                                <div class="dateYear">
+                                    <img src="../../assets/img/datePicker.png" width="20">
+                                    <input id="SalesComparisonDate" type="text" data-provide="datepicker" data-date-min-view-mode="2" data-date-format="yyyy">
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                <div id="SalesComparison" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    订单分析
+                                </div>
+                                <div class="dateYear">
+                                    <img src="../../assets/img/datePicker.png" width="20">
+                                    <input id="OrderAnalysisDate" type="text" data-provide="datepicker" data-date-min-view-mode="2" data-date-format="yyyy">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="OrderAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    订单对比分析
+                                </div>
+                                <div class="dateYear">
+                                    <img src="../../assets/img/datePicker.png" width="20">
+                                    <input id="OrderComparisonDate" type="text" data-provide="datepicker" data-date-min-view-mode="2" data-date-format="yyyy">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                <div id="OrderComparison" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    退单分析
+                                </div>
+                                <div class="dateYear">
+                                    <img src="../../assets/img/datePicker.png" width="20">
+                                    <input id="ReturnAnalysisDate" type="text" data-provide="datepicker" data-date-min-view-mode="2" data-date-format="yyyy">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="ReturnAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+            </div>
+
+            <!-- Footer Start -->
+            <div th:replace="~{web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+    </div> <!-- end wrapper-->
+
+</div>
+</body>
+</html>
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+<script th:src="@{/assets/js/vendor/jquery-jvectormap-1.2.2.min.js}"></script>
+<script th:src="@{/assets/js/vendor/jquery-jvectormap-cn-mill.js}"></script>
+<script th:inline="javascript" type="text/javascript">
+    var dateYear = new Date().getFullYear();
+    //全国销售地区分析
+    var orderprovince = [[${orderprovince}]]
+    console.log('全国销售地区分析');
+    console.log(orderprovince);
+
+
+
+    var mapList = [];
+    for(var i = 0; i < orderprovince.length; i++){
+        var mapLatlng = {
+            name: orderprovince[i].province + "："+ orderprovince[i].countCompanyOrder +"单",
+            latLng: [
+                orderprovince[i].iplat,
+                orderprovince[i].iplng
+            ]
+        };
+        mapList.push(mapLatlng);
+    }
+    createMap(mapList);
+
+    $('#rankMap').on('apply.daterangepicker', function(ev, picker) {
+        getRankList(picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'),1);
+    });
+    $('#rankTable').on('apply.daterangepicker', function(ev, picker) {
+        getRankList(picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'),2);
+    });
+    //var url =  '/web/orderStatistics/orderprovince';// 全国销售地区分析  日期参数：startDate  endDate
+    function getRankList(start,end,type) {
+        $.ajax({
+            type:"POST",
+            url: [[@{/web/orderStatistics/orderprovince}]],
+            data:{
+                startDate:start,
+                endDate:end
+            },
+            dataType:"json",
+            async: false,
+            success:function(data) {
+                console.log(data.data);
+                var data = data.data;
+                if(type == 1){
+                    var listData = []
+                    for(var i = 0; i < data.length; i++){
+                        var mapLatlng = {
+                            name: data[i].province + "："+ data[i].countCompanyOrder +"单",
+                            latLng: [
+                                data[i].iplat,
+                                data[i].iplng
+                            ]
+                        };
+                        listData.push(mapLatlng);
+                    }
+                    createMap(listData);
+                }else if(type == 2){
+                    var rankHtml = '';
+                    for(var i = 0; i < data.length; i++){
+                        rankHtml += '<tr>';
+                        rankHtml += '<td>'+ (i+1) +'</td>';
+                        rankHtml += '<td>'+ data[i].province +'</td>';
+                        rankHtml += '<td>'+ data[i].countCompanyOrder +'</td>';
+                        rankHtml += '<td>'+ data[i].proportion +'</td>';
+                        rankHtml += '</tr>';
+                    }
+                    $("#tBody").empty();
+                    $("#tBody").append(rankHtml);
+
+                }
+
+            },
+            error:function(data){
+                console.log(data.responseJSON);
+            }
+        });
+    }
+
+
+    function createMap(list) {
+        $("#map-chart").empty();
+        $("#map-chart").vectorMap({
+            map: "cn_mill",
+            normalizeFunction: "polynomial",
+            hoverOpacity: .7,
+            hoverColor: !1,
+            regionStyle: {initial: {fill: '#289ffe'}},
+            markerStyle: {
+                initial: {
+                    r: 9,
+                    fill: '#e71f19',
+                    "fill-opacity": .9,
+                    stroke: "#fff",
+                    "stroke-width": 7,
+                    "stroke-opacity": .4
+                }, hover: {stroke: "#fff", "fill-opacity": 1, "stroke-width": 1.5}
+            },
+            backgroundColor: "transparent",
+            markers: list,
+            zoomOnScroll: !1
+        });
+    }
+
+
+    //销售额分析
+    var sumOrderAmountPaid = [[${sumOrderAmountPaid}]];
+    console.log('销售额分析');
+    console.log(sumOrderAmountPaid);
+    var SalesAnalysisData = [];
+    for(var i = 0; i < sumOrderAmountPaid.length; i++){
+        SalesAnalysisData.push(sumOrderAmountPaid[i].sumOrderAmountPaid);
+    }
+    var SalesAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "bar",
+            toolbar: {
+                show: !1
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: !1,
+                endingShape: "rounded",
+                columnWidth: "55%"
+            }
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        stroke: {
+            show: !0,
+            width: 2,
+            colors: ["transparent"]
+        },
+        colors: ["#727cf5", "#0acf97", "#fa5c7c"],
+        series: [{
+            name: "销售额",
+            data: SalesAnalysisData
+        }],
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        legend: {
+            offsetY: -10
+        },
+        fill: {
+            opacity: 1
+        },
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return "&yen; " + o + "元"
+                }
+            }
+        }
+    };
+    var SalesAnalysisApex = new ApexCharts(document.querySelector("#SalesAnalysis"), SalesAnalysisOptions);
+    SalesAnalysisApex.render();
+
+
+    //销售额对比分析
+    var comparativeAnalysisOfSales = [[${comparativeAnalysisOfSales}]];
+    console.log('销售额对比分析');
+    console.log(comparativeAnalysisOfSales);
+    var SalesComparisonThis = [];
+    var SalesComparisonLast = [];
+    for(var i = 0; i < comparativeAnalysisOfSales.length; i++){
+        SalesComparisonThis.push(comparativeAnalysisOfSales[i].thisYearOrderAmountPaid);
+        SalesComparisonLast.push(comparativeAnalysisOfSales[i].lastYearOrderAmountPaid);
+    }
+    var SalesComparisonOptions = {
+        chart: {
+            height: 350,
+            type: "line",
+            zoom: {
+                enabled: !1
+            },
+            toolbar: {
+                show: !1
+            },
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        colors: ["#289ffe","#e71f19"],
+        stroke: {
+            width: [2,2],
+            curve: "straight"
+        },
+        series: [{
+            name: dateYear + "年",
+            data: SalesComparisonThis
+        }, {
+            name: dateYear-1 + "年",
+            data: SalesComparisonLast
+        }],
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        yaxis: {
+            show: true
+        },
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return "&yen; " + o + "元"
+                }
+            }
+        },
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    toolbar: {
+                        show: !1
+                    }
+                },
+                legend: {
+                    show: !1
+                }
+            }
+        }]
+    };
+    var SalesComparisonApex = new ApexCharts(document.querySelector("#SalesComparison"), SalesComparisonOptions);
+    SalesComparisonApex.render();
+
+
+
+    //订单分析
+    var countOrders = [[${countOrders}]];
+    console.log('订单分析');
+    console.log(countOrders);
+    var OrderAnalysisData = [];
+    for(var i = 0; i < countOrders.length; i++){
+        OrderAnalysisData.push(countOrders[i].countOrder);
+    }
+    var OrderAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "bar",
+            toolbar: {
+                show: !1
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: !1,
+                endingShape: "rounded",
+                columnWidth: "55%"
+            }
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        stroke: {
+            show: !0,
+            width: 2,
+            colors: ["transparent"]
+        },
+        colors: ["#727cf5", "#0acf97", "#fa5c7c"],
+        series: [{
+            name: "订单量",
+            data: OrderAnalysisData
+        }],
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        legend: {
+            offsetY: -10
+        },
+        fill: {
+            opacity: 1
+        },
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "单"
+                }
+            }
+        }
+    };
+    var OrderAnalysisApex = new ApexCharts(document.querySelector("#OrderAnalysis"), OrderAnalysisOptions);
+    OrderAnalysisApex.render();
+
+
+    //订单对比分析
+    var countOrderOfSales = [[${countOrderOfSales}]];
+    console.log('订单对比分析');
+    console.log(countOrderOfSales);
+    var OrderComparisonThis = [];
+    var OrderComparisonLast = [];
+    for(var i = 0; i < countOrderOfSales.length; i++){
+        OrderComparisonThis.push(countOrderOfSales[i].thisYearCountOrder);
+        OrderComparisonLast.push(countOrderOfSales[i].lastYearCountOrder);
+    }
+    var OrderComparisonOptions = {
+        chart: {
+            height: 350,
+            type: "line",
+            zoom: {
+                enabled: !1
+            },
+            toolbar: {
+                show: !1
+            },
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        colors: ["#289ffe","#e71f19"],
+        stroke: {
+            width: [2,2],
+            curve: "straight"
+        },
+        series: [{
+            name: dateYear + "年",
+            data: OrderComparisonThis
+        }, {
+            name: dateYear-1 + "年",
+            data: OrderComparisonLast
+        }],
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        yaxis: {
+            show: true
+        },
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "单"
+                }
+            }
+        },
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    toolbar: {
+                        show: !1
+                    }
+                },
+                legend: {
+                    show: !1
+                }
+            }
+        }]
+    };
+    var OrderComparisonApex = new ApexCharts(document.querySelector("#OrderComparison"), OrderComparisonOptions);
+    OrderComparisonApex.render();
+
+
+    //退单分析
+    var countRefurnsOrder = [[${countRefurnsOrder}]];
+    console.log('退单分析');
+    console.log(countRefurnsOrder);
+    var ReturnAnalysisData = [];
+    for(var i = 0; i < countRefurnsOrder.length; i++){
+        ReturnAnalysisData.push(countRefurnsOrder[i].countRefurnsOrder);
+    }
+    var ReturnAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "bar",
+            toolbar: {
+                show: !1
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: !1,
+                endingShape: "rounded",
+                columnWidth: "55%"
+            }
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        stroke: {
+            show: !0,
+            width: 2,
+            colors: ["transparent"]
+        },
+        colors: ["#727cf5", "#0acf97", "#fa5c7c"],
+        series: [{
+            name: "退单量",
+            data: ReturnAnalysisData
+        }],
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        legend: {
+            offsetY: -10
+        },
+        fill: {
+            opacity: 1
+        },
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return "&yen; " + o + "元"
+                }
+            }
+        }
+    };
+    var ReturnAnalysisApex = new ApexCharts(document.querySelector("#ReturnAnalysis"), ReturnAnalysisOptions);
+    ReturnAnalysisApex.render();
+
+
+    //销售额分析
+    $("#SalesAnalysisDate").change(function () {
+        getYearData($(this).val(),1);
+        $(".datepicker").remove();
+    });
+    //销售额对比分析
+    $("#SalesComparisonDate").change(function () {
+        getYearData($(this).val(),2);
+        $(".datepicker").remove();
+    });
+    //订单分析
+    $("#OrderAnalysisDate").change(function () {
+        getYearData($(this).val(),3);
+        $(".datepicker").remove();
+    });
+    //订单对比分析
+    $("#OrderComparisonDate").change(function () {
+        getYearData($(this).val(),4);
+        $(".datepicker").remove();
+    });
+    //退单分析
+    $("#ReturnAnalysisDate").change(function () {
+        getYearData($(this).val(),5);
+        $(".datepicker").remove();
+    });
+
+    //var url =  '/web/orderStatistics/salesAnalysis';// 销售额分析 后面5大模块通用一个Ajax 接口  参数：year
+    function getYearData(year,type) {
+        $.ajax({
+            type:"POST",
+            url: [[@{/web/orderStatistics/salesAnalysis}]],
+            data:{
+                year: year,
+                type: type
+            },
+            dataType:"json",
+            async: false,
+            success:function(data) {
+                console.log(data.data);
+                if(type == '1'){
+                    var data = data.data.sumOrderAmountPaid;
+                    var list = [];
+                    for(var i = 0; i < data.length; i++){
+                        list.push(data[i].sumOrderAmountPaid);
+                    }
+                    SalesAnalysisApex.updateOptions({
+                        series: [{
+                            name: "销售额",
+                            data: list
+                        }]
+                    })
+                }else if(type == '2'){
+                    var data = data.data.comparativeAnalysisOfSales;
+                    var This = [];
+                    var Last = [];
+                    for(var i = 0; i < data.length; i++){
+                        This.push(data[i].thisYearOrderAmountPaid);
+                        Last.push(data[i].lastYearOrderAmountPaid);
+                    }
+                    SalesComparisonApex.updateOptions({
+                        series: [{
+                            name: year + "年",
+                            data: This
+                        }, {
+                            name: year-1 + "年",
+                            data: Last
+                        }]
+                    });
+                }else if(type == '3'){
+                    var data = data.data.countOrders;
+                    var list = [];
+                    for(var i = 0; i < data.length; i++){
+                        list.push(data[i].countOrder);
+                    }
+                    OrderAnalysisApex.updateOptions({
+                        series: [{
+                            name: "订单量",
+                            data: list
+                        }]
+                    });
+                }else if(type == '4'){
+                    var data = data.data.countOrderOfSales;
+                    var This = [];
+                    var Last = [];
+                    for(var i = 0; i < data.length; i++){
+                        This.push(data[i].thisYearCountOrder);
+                        Last.push(data[i].lastYearCountOrder);
+                    }
+                    OrderComparisonApex.updateOptions({
+                        series: [{
+                            name: year + "年",
+                            data: This
+                        }, {
+                            name: year-1 + "年",
+                            data: Last
+                        }]
+                    });
+                }else if(type == '5'){
+                    var data = data.data.countRefurnsOrder;
+                    var list = [];
+                    for(var i = 0; i < data.length; i++){
+                        list.push(data[i].countRefurnsOrder);
+                    }
+                    ReturnAnalysisApex.updateOptions({
+                        series: [{
+                            name: "退单量",
+                            data: list
+                        }]
+                    });
+                }
+
+            },
+            error:function(data){
+                console.log(data.responseJSON);
+            }
+        });
+    }
+    
+    
+    
+
+
+
+    var barOptions = {
+        chart: {
+            height: 350,
+            type: "bar",
+            toolbar: {
+                show: !1
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: !1,
+                endingShape: "rounded",
+                columnWidth: "55%"
+            }
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        stroke: {
+            show: !0,
+            width: 2,
+            colors: ["transparent"]
+        },
+        colors: ["#727cf5", "#0acf97", "#fa5c7c"],
+        series: [{
+            name: "销售额",
+            data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 63, 60, 66]
+        }],
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        legend: {
+            offsetY: -10
+        },
+        fill: {
+            opacity: 1
+        },
+        grid: {
+            row: {
+                colors: ["transparent", "transparent"],
+                opacity: .2
+            },
+            borderColor: "#f1f3fa"
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return "&yen; " + o + "元"
+                }
+            }
+        }
+    };
+
+    var lineOptions = {
+        chart: {
+            height: 350,
+                type: "line",
+                zoom: {
+                enabled: !1
+            },
+            toolbar: {
+                show: !1
+            },
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        colors: ["#289ffe","#e71f19"],
+            stroke: {
+        width: [2,2],
+            curve: "straight"
+    },
+        series: [{
+            name: "2022年",
+            data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 63, 60, 66]
+        }, {
+            name: "2021年",
+            data: [12, 35, 13, 132, 68, 312, 55, 11, 88, 55, 11, 88]
+        }],
+            grid: {
+        row: {
+            colors: ["transparent", "transparent"],
+                opacity: .2
+        },
+        borderColor: "#f1f3fa"
+    },
+        yaxis: {
+            show: true
+        },
+        xaxis: {
+            categories: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return "&yen; " + o + "元"
+                }
+            }
+        },
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    toolbar: {
+                        show: !1
+                    }
+                },
+                legend: {
+                    show: !1
+                }
+            }
+        }]
+    };
+
+
+</script>

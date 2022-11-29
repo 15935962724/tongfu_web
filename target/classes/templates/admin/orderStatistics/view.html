@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>订单详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+    <style>
+        .logistics{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3px 0 0 10px;
+        }
+
+        .logistics label{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            cursor: pointer;
+        }
+        .logistics input{
+            margin: 0 6px;
+        }
+        .selectAddress{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{/web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <!-- Start Content-->
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{/web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+            <div class="content">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                            </div>
+                            <h4 class="page-title">订单信息</h4>
+                        </div> <!-- end page-title-box -->
+                    </div> <!-- end col-->
+                </div>
+                <!-- end page title -->
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3" style="color: #0088ff;">订单编号：[[${order.sn}]]  总共[[${quantity}]]件商品
+                                <th:block th:if="${order.shippingStatus ==0 or order.shippingStatus ==1}">
+                                    <a href="javaScript:void(0)" style="float: right;" data-toggle="modal" data-target="#myModal">发货</a>
+                                </th:block>
+                                </h4>
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th>商品名称</th>
+                                            <th>单价</th>
+                                            <th>数量</th>
+                                            <th>已发货数量</th>
+                                            <th>小计</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="orderItem:${orderItems}">
+                                            <td th:text="${orderItem.name}"></td>
+                                            <td th:text="'$'+${#numbers.formatDecimal(orderItem.price,0,2)}"></td>
+                                            <td th:text="${orderItem.quantity}"></td>
+                                            <td th:text="${orderItem.returnQuantity}"></td>
+                                            <td th:text="'$'+${#numbers.formatDecimal(orderItem.price*orderItem.quantity,0,2)}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end table-responsive -->
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">订单摘要</h4>
+
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th>说明</th>
+                                            <th>金额</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>商品总价 :</td>
+                                            <td th:text="'$'+${#numbers.formatDecimal(countPrice,0,2)}"></td>
+                                        </tr>
+                                        <!--<tr>
+                                            <td>手续费 :</td>
+                                            <td th:text="'$'+${#numbers.formatDecimal(order.fee,0,2)}"></td>
+                                        </tr>-->
+                                        <tr>
+                                            <td>运费 :</td>
+                                            <td th:text="'$'+${#numbers.formatDecimal(order.freight,0,2)}"></td>
+                                        </tr>
+                                        <!--<tr>
+                                            <td>税金 : </td>
+                                            <td th:text="'$'+${#numbers.formatDecimal(order.tax,0,2)}"></td>
+                                        </tr>-->
+                                        <tr>
+                                            <td>折扣 : </td>
+                                            <td th:text="${order.promotionDiscount==1?'无':#numbers.formatDecimal(order.promotionDiscount,1,1)}+'折扣'"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>总计 :</th>
+                                            <th th:text="'$'+${#numbers.formatDecimal(amount,0,2)}"></th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end table-responsive -->
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row -->
+
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">收货信息
+                                    <!--<a href="javaScript:(0)" style="float: right;color: #0072cd" id = "btn-warning" data-toggle="modal" data-target="#centermodal">发货</a>-->
+                                </h4>
+                                <h5>[[${order.consignee}]]</h5>
+                                <address class="mb-0 font-14 address-lg">
+                                    [[${order.areaName}]]&nbsp;[[${order.address}]]<br>
+                                    <abbr title="Phone">电话:</abbr> [[${order.phone}]]<br/>
+                                    <abbr title="email">邮箱:</abbr> [[${order.email}]]<br/>
+                                    <abbr title="crate">下单时间:</abbr> [[${#dates.format(order.createDate,'yyyy-MM-dd HH:mm')}]]
+                                </address>
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                    <th:block th:if="${order.isMakeInvoice}">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="header-title mb-3" th:text="'发票信息'+${order.isMakeInvoice?'':'(未申开发票)'}"></h4>
+                                    <ul class="list-unstyled mb-0" >
+                                        <li>
+                                            <p class="mb-2"><span class="font-weight-bold mr-2">发票抬头:</span><i th:text="${orderInvoice.title:'无'}"></i></p>
+                                            <p class="mb-2"><span class="font-weight-bold mr-2">发票类型:</span>
+                                                <i>
+                                                    <th:block th:if="${order.invoiceType==1}">
+                                                        普通电子发票
+                                                    </th:block>
+                                                    <th:block th:if="${order.invoiceType==2}">
+                                                        增值税专用发票
+                                                    </th:block>
+                                                </i>
+                                            </p>
+                                            <p class="mb-2"><span class="font-weight-bold mr-2">开票金额:</span><i>[[${orderInvoice.amount}]]</i></p>
+                                            <p class="mb-0"><span class="font-weight-bold mr-2">发票内容:</span> <i>[[${orderInvoice.content}]]</i></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> <!-- end col -->
+                    </th:block>
+
+
+                    <!--<div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">Delivery Info</h4>
+
+                                <div class="text-center">
+                                    <i class="mdi mdi-truck-fast h2 text-muted"></i>
+                                    <h5><b>UPS Delivery</b></h5>
+                                    <p class="mb-1"><b>Order ID :</b> xxxx235</p>
+                                    <p class="mb-0"><b>Payment Mode :</b> COD</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> &lt;!&ndash; end col &ndash;&gt;-->
+                </div>
+                <!-- end row -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">订单记录</h4>
+
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th>编号</th>
+                                            <th>操作内容</th>
+                                            <th>操作时间</th>
+                                            <th>操作人账号</th>
+                                            <th>操作人姓名</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="orderLog,orderLogStart:${orderLogs}">
+                                            <td th:text="${orderLogStart.index+1}"></td>
+                                            <td th:text="${orderLog.content}"></td>
+                                            <td th:text="${#dates.format(orderLog.createDate,'yyyy-MM-dd HH:mm')}"></td>
+                                            <td th:text="${orderLog.operator}"></td>
+                                            <td th:text="${orderLog.operatorName}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end table-responsive -->
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+
+                </div>
+                <!-- end row -->
+
+            </div>
+             <!-- content -->
+            <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                <div class="modal-dialog">
+                    <div class="modal-content" style="width: 850px;" >
+                        <form>
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">发货单</h4>
+                                <input type="hidden" name="orders" th:value="${order.id}">
+                                <div class="logistics">
+                                    <span>是否使用物流信息</span>
+                                    <label for="logistics1" onclick="editType(true)"><input type="radio" name="logistics" id="logistics1" value="true" checked/>是</label>
+                                    <label for="logistics2" onclick="editType(false)"><input type="radio" name="logistics" id="logistics2" value="false"/>否</label>
+                                </div>
+
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <div class="modal-body" style="text-align: center">
+                                <table id="shopList" class="table mb-0">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th>编号</th>
+                                        <th>名称</th>
+                                        <th style="display: none">产品id</th>
+                                        <th>购买数量</th>
+                                        <!--<th>购买方式</th>-->
+                                        <th>准备发货数量</th>
+                                        <th>已发货数量</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="orderItem,orderItemStart:${orderItems}">
+                                        <td th:text="${orderItemStart.index+1}"></td>
+                                        <td >
+                                            <th:block th:if="${#strings.length(orderItem.name)>10}">
+                                                 [[${#strings.substring(orderItem.name,0,10)}]]...
+                                            </th:block>
+                                            <th:block th:if="${#strings.length(orderItem.name)<=10}">
+                                                [[${orderItem.name}]]
+                                            </th:block>
+                                        </td>
+                                        <td th:text="${orderItem.id}" style="display: none"></td>
+                                        <td>[[${orderItem.quantity}]]</td>
+                                        <!--<td>[[${orderItem.purchaseName}]]</td>-->
+                                        <td><input type="number" min="1" value="1" th:max="${orderItem.quantity}" class="form-control" placeholder="Qty"></td>
+                                        <td th:text="${orderItem.returnQuantity}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="modal-body" id="logisticsInfo" style="text-align: left">
+                                <table class="table mb-0">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th colspan="2">发货人信息</th>
+                                        <th colspan="2">物流信息</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td style="width: 89px;">姓名</td>
+                                        <td style="width: 320px;"><input type="text" class="form-control operator" placeholder="姓名" ></td>
+                                        <td style="width: 89px;">物流公司</td>
+                                        <td style="width: 320px;">
+                                            <select class="custom-select deliveryCorpId" id="parentProductCategory">
+                                                <option  value="" >--请选择--</option>
+                                                <option th:each="deliveryCorp:${deliveryCorps}" th:value="${deliveryCorp.id}" th:text="${deliveryCorp.name}"></option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>电话</td>
+                                        <td><input type="text" class="form-control operator_phone" placeholder="电话" ></td>
+                                        <td>重量</td>
+                                        <td><input type="text" class="form-control weight" value="1" placeholder="重量" ></td>
+                                    </tr>
+                                    <tr>
+                                        <td>地区</td>
+                                        <td class="selectAddress">
+                                            <input type="hidden" class="form-control operator_area_id" id="areaId" name="areaId">
+                                        </td>
+                                        <td>运费</td>
+                                        <td><input type="number" min="1" class="form-control freight" placeholder="运费" ></td>
+                                    </tr>
+                                    <tr>
+                                        <td>详细地址</td>
+                                        <td><input type="text" class="form-control operator_address" placeholder="地址" ></td>
+                                        <td>物流单号</td>
+                                        <td><input type="text" class="form-control tracking_no" placeholder="物流单号" ></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" onclick="deliver();" class="btn btn-primary">发货</button>
+                                <button type="button" class="btn btn-light" data-dismiss="modal">取消</button>
+
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+            <!-- Footer Start -->
+            <div th:replace="~{/web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+
+    </div> <!-- end wrapper-->
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+<!-- third party js -->
+<script src="assets/js/vendor/jquery.dataTables.min.js" th:src="@{/assets/js/vendor/jquery.dataTables.min.js}"></script>
+<script src="assets/js/vendor/dataTables.bootstrap4.js" th:src="@{/assets/js/vendor/dataTables.bootstrap4.js}"></script>
+<script src="assets/js/vendor/dataTables.responsive.min.js" th:src="@{/assets/js/vendor/dataTables.responsive.min.js}"></script>
+<script src="assets/js/vendor/responsive.bootstrap4.min.js" th:src="@{/assets/js/vendor/responsive.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/dataTables.buttons.min.js" th:src="@{/assets/js/vendor/dataTables.buttons.min.js}"></script>
+<script src="assets/js/vendor/buttons.bootstrap4.min.js" th:src="@{/assets/js/vendor/buttons.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/buttons.html5.min.js" th:src="@{/assets/js/vendor/buttons.html5.min.js}"></script>
+<script src="assets/js/vendor/buttons.flash.min.js" th:src="@{/assets/js/vendor/buttons.flash.min.js}"></script>
+<script src="assets/js/vendor/buttons.print.min.js" th:src="@{/assets/js/vendor/buttons.print.min.js}"></script>
+<script src="assets/js/vendor/dataTables.keyTable.min.js" th:src="@{/assets/js/vendor/dataTables.keyTable.min.js}"></script>
+<script src="assets/js/vendor/dataTables.select.min.js" th:src="@{/assets/js/vendor/dataTables.select.min.js}"></script>
+<!-- third party js ends -->
+<!-- demo app -->
+<script src="assets/js/pages/demo.datatable-init.js" th:src="@{/assets/js/pages/demo.datatable-init.js}"></script>
+<!-- end demo js-->
+<script th:src="@{/assets/js/list.js}"></script>
+
+<!--三级联动效果-->
+<script th:src="@{/assets/js/lSelect.js}"></script>
+<script>
+
+
+    //页面加载就调用
+    $(function(){
+        // 地区选择
+        $("#areaId").lSelect({
+            url: "[[@{/web//area/getAreas}]]",
+            width: "96px",
+            margin: "4px",
+        });
+    });
+
+
+    //发货
+    function deliver() {
+        var shippingItems=[];
+        //循环每一个表行(tr)
+        $("#shopList tbody tr").each(function(){
+            var currentRow=$(this);
+            var col3_value=currentRow.find("td:eq(2)").text();
+            var col4_value=currentRow.find("td:eq(3)").text();
+            var col5_value=currentRow.find("td:eq(4)").children("input").val();
+            if(col5_value == "0" || col5_value == ""){
+                alert("请输入正确的发货数量!")
+                return false;
+            }
+            var obj={};
+            obj.orderItemId=col3_value;
+            obj.quantity=col5_value;
+            shippingItems.push(obj);
+        });
+        console.log($('input[name=logistics]:checked').val());
+        if ($('input[name=logistics]:checked').val()=='true'){
+            if($(".operator").val() == "" || $(".operator_phone").val() == "" || $("#areaId").val() == "" || $(".operator_address").val() == ""){
+                alert("发货人信息请填写完整！")
+                return false;
+            };
+            //手机号验证
+            var pattern = /^(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/;
+            if(!pattern.test($('.operator_phone').val())){
+                alert("请输入正确的手机号！")
+                return false;
+            }
+            if($(".deliveryCorpId").val() == "" || $(".weight").val() == "" || $(".freight").val() == "" || $(".tracking_no").val() == ""){
+                alert("物流信息请填写完整！")
+                return false;
+            };
+        }
+        var datas = {
+            logistics:$('input[name=logistics]:checked').val(),
+            operator: $(".operator").val(),
+            operator_phone: $(".operator_phone").val(),
+            operator_area_id: $("#areaId").val(),
+            operator_address: $(".operator_address").val(),
+            deliveryCorpId: $(".deliveryCorpId").val(),
+            weight: $(".weight").val(),
+            freight: $(".freight").val(),
+            tracking_no: $(".tracking_no").val(),
+            orderId: [[${order.id}]],
+            shippingItems: shippingItems
+        };
+        console.log(datas);
+        $.ajax({
+            type:"POST",
+            contentType: "application/json",
+            url:'[[@{/web/shipping/save}]]',
+            data:JSON.stringify(datas).toString(),
+            dataType: "json",
+            async: false,
+            success:function(data){
+                console.log(data)
+                if (data.status==200) {
+                    alert("操作成功");
+                    location.reload();
+                }else {
+                    alert("操作失败");
+                    location.reload();
+                }
+
+
+            }
+        });
+
+    }
+
+    function editType(value) {
+        if(value){
+            $("#logisticsInfo").show()
+        }else{
+            $("#logisticsInfo").hide()
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.MemberPointWorkshopDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.MemberPointWorkshop" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="member_id" property="memberId" jdbcType="BIGINT" />
+    <result column="workshop_id" property="workshopId" jdbcType="BIGINT" />
+    <result column="point" property="point" jdbcType="INTEGER" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="member_card" property="memberCard" jdbcType="VARCHAR" />
+    <result column="trip_date" property="tripDate" jdbcType="TIMESTAMP" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, member_id, workshop_id, point, member_name, member_card, 
+    trip_date, is_deleted, status, message
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tf_member_point_workshop
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAll" resultType="java.util.Map" parameterType="java.util.HashMap">
+      SELECT Mpw.id ,Mpw.status ,Mpw.message ,M.username,W.title,W.`holding_time`,W.`type`,W.address,W.url FROM
+       tf_member_point_workshop Mpw,tf_member M,tf_workshop W
+      WHERE Mpw.member_id = M.id AND Mpw.workshop_id =  W.id
+    <if test="username!=null and username !='' ">
+      and M.username like '%${username}%'
+    </if>
+    <if test="type!=null">
+      and W.type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="status!=null">
+      and Mpw.status = #{status,jdbcType=INTEGER}
+    </if>
+  </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_member_point_workshop
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.MemberPointWorkshop" >
+    insert into tf_member_point_workshop (id, create_date, modify_date, 
+      member_id, workshop_id, point, 
+      member_name, member_card, trip_date, 
+      is_deleted, status, message
+      )
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{memberId,jdbcType=BIGINT}, #{workshopId,jdbcType=BIGINT}, #{point,jdbcType=INTEGER}, 
+      #{memberName,jdbcType=VARCHAR}, #{memberCard,jdbcType=VARCHAR}, #{tripDate,jdbcType=TIMESTAMP}, 
+      #{isDeleted,jdbcType=BIT}, #{status,jdbcType=INTEGER}, #{message,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.MemberPointWorkshop" >
+    insert into tf_member_point_workshop
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="workshopId != null" >
+        workshop_id,
+      </if>
+      <if test="point != null" >
+        point,
+      </if>
+      <if test="memberName != null" >
+        member_name,
+      </if>
+      <if test="memberCard != null" >
+        member_card,
+      </if>
+      <if test="tripDate != null" >
+        trip_date,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="workshopId != null" >
+        #{workshopId,jdbcType=BIGINT},
+      </if>
+      <if test="point != null" >
+        #{point,jdbcType=INTEGER},
+      </if>
+      <if test="memberName != null" >
+        #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberCard != null" >
+        #{memberCard,jdbcType=VARCHAR},
+      </if>
+      <if test="tripDate != null" >
+        #{tripDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.MemberPointWorkshop" >
+    update tf_member_point_workshop
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="workshopId != null" >
+        workshop_id = #{workshopId,jdbcType=BIGINT},
+      </if>
+      <if test="point != null" >
+        point = #{point,jdbcType=INTEGER},
+      </if>
+      <if test="memberName != null" >
+        member_name = #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberCard != null" >
+        member_card = #{memberCard,jdbcType=VARCHAR},
+      </if>
+      <if test="tripDate != null" >
+        trip_date = #{tripDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.MemberPointWorkshop" >
+    update tf_member_point_workshop
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      member_id = #{memberId,jdbcType=BIGINT},
+      workshop_id = #{workshopId,jdbcType=BIGINT},
+      point = #{point,jdbcType=INTEGER},
+      member_name = #{memberName,jdbcType=VARCHAR},
+      member_card = #{memberCard,jdbcType=VARCHAR},
+      trip_date = #{tripDate,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      status = #{status,jdbcType=INTEGER},
+      message = #{message,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

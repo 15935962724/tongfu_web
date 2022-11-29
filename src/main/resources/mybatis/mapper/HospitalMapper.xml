@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.HospitalDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Hospital" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="area_id" property="areaId" jdbcType="BIGINT" />
+    <result column="make" property="make" jdbcType="VARCHAR" />
+    <result column="hospital_rank_id" property="hospitalRankId" jdbcType="BIGINT" />
+    <result column="hospital_category_id" property="hospitalCategoryId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, name, address, phone, area_id, make, hospital_rank_id, hospital_category_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tf_hospital
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAll" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT H.* ,R.name AS rname,C.name AS cname FROM tf_hospital H LEFT JOIN `tf_hospital_rank` R ON H.hospital_rank_id = R.id LEFT JOIN `tf_hospital_category` C
+    ON  H.hospital_category_id = C.id
+    where 1 = 1
+    <if test="name!=null and name !=''">
+      and H.name like '%${name}%'
+    </if>
+    <if test="hospitalRankId!=null">
+      and H.hospital_rank_id = #{hospitalRankId,jdbcType=BIGINT}
+    </if>
+    <if test="hospitalCategoryId!=null">
+      and H.hospital_category_id = #{hospitalCategoryId,jdbcType=BIGINT}
+    </if>
+    ORDER BY create_date
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_hospital
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Hospital" >
+    insert into tf_hospital (id, create_date, name,
+      address, phone, area_id,
+      make, hospital_rank_id, hospital_category_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{areaId,jdbcType=BIGINT},
+      #{make,jdbcType=VARCHAR}, #{hospitalRankId,jdbcType=BIGINT}, #{hospitalCategoryId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Hospital" >
+    insert into tf_hospital
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="areaId != null" >
+        area_id,
+      </if>
+      <if test="make != null" >
+        make,
+      </if>
+      <if test="hospitalRankId != null" >
+        hospital_rank_id,
+      </if>
+      <if test="hospitalCategoryId != null" >
+        hospital_category_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=BIGINT},
+      </if>
+      <if test="make != null" >
+        #{make,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalRankId != null" >
+        #{hospitalRankId,jdbcType=BIGINT},
+      </if>
+      <if test="hospitalCategoryId != null" >
+        #{hospitalCategoryId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Hospital" >
+    update tf_hospital
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        area_id = #{areaId,jdbcType=BIGINT},
+      </if>
+      <if test="make != null" >
+        make = #{make,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalRankId != null" >
+        hospital_rank_id = #{hospitalRankId,jdbcType=BIGINT},
+      </if>
+      <if test="hospitalCategoryId != null" >
+        hospital_category_id = #{hospitalCategoryId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Hospital" >
+    update tf_hospital
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      name = #{name,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      area_id = #{areaId,jdbcType=BIGINT},
+      make = #{make,jdbcType=VARCHAR},
+      hospital_rank_id = #{hospitalRankId,jdbcType=BIGINT},
+      hospital_category_id = #{hospitalCategoryId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

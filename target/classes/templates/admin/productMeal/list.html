@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>套餐管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{admin/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+            <div class="content">
+
+                <th:block th:replace="~{admin/incloud/status::updateStatusForm('/admin/productMeal/updateProductMealStatus')}"></th:block>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+
+
+                                <div class="row mb-2">
+                                    <div class="col-lg-8">
+                                        <form id="list" th:action="@{/admin/productMeal/list}" class="form-inline">
+                                            <input type="hidden" id="pageNum" name="pageNum" th:value="${page.pageNum}" />
+                                            <input type="hidden" id="pageSize" name="pageSize" th:value="${page.pageSize}" />
+                                            <div class="form-group mb-2">
+                                                <label for="name" class="mr-2">产品名称</label>
+                                                <input type="search" class="form-control" name="name" th:value="${name}" id="name" placeholder="产品名称">
+                                            </div>
+
+                                            <div class="form-group ml-2 mb-2">
+                                                <label class="mr-2">上架状态</label>
+                                                <select class="custom-select" name="isMarketable">
+                                                    <option value="">全部</option>
+                                                    <option  value="true" >已上架</option>
+                                                    <option  value="false" >已下架</option>
+                                                </select>
+                                            </div>
+                                            <th:block th:replace="~{admin/incloud/status::selectStatus}"></th:block> &nbsp;&nbsp; &nbsp;&nbsp;
+
+                                            <div class="form-group ml-2 mb-2">
+                                                <label class="mr-2">供应商</label>
+                                            </div>
+
+                                            <div class="col-md-3" style="margin-top: -15px;">
+                                                <select class="form-control select2" data-toggle="select2" name="companyId" >
+                                                    <optgroup label="供应商">
+                                                        <option hidden></option>
+                                                        <option th:selected="${companyId==company.id}" th:each="company:${companys}" th:value="${company.id}" th:text="${company.name}"  ></option>
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group ml-2 mb-2">
+                                                <label for="name" class="mr-2">发布时间</label>
+                                                <input type="text" class="form-control"  name ="startDate" data-provide="datepicker" data-date-autoclose="true" th:value="${startDate}">
+                                                 &nbsp;&nbsp;至&nbsp;&nbsp;
+                                                <input type="text" class="form-control" name ="endDate" data-provide="datepicker" data-date-autoclose="true" th:value="${endDate}">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-lg-right">
+                                            <button type="button" onclick="$('#list').submit();" id = "search" class="btn btn-light mb-2">搜索</button>
+                                        </div>
+                                    </div><!-- end col-->
+                                </div>
+                                <label class="mr-2">总共 [[${page.total}]]条数据</label>
+                                <div class="table-responsive">
+                                    <table class="table table-centered mb-0">
+                                        <thead class="thead-light">
+                                        <tr class="text-lg-center">
+                                            <th>序号</th>
+                                            <th>产品名称</th>
+                                            <th>供应商</th>
+                                            <th>销售价</th>
+                                            <th>销量</th>
+                                            <th>审核状态</th>
+                                            <th>是否上架</th>
+                                            <th>创建日期</th>
+                                            <th style="width: 125px;">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="productMeal,productMealStart :${page.list}" class="text-lg-center">
+                                            <td th:text="${productMealStart.index+1}"></td>
+                                            <td>
+                                                <span th:style="${productMeal.productStatus!=2?'color:red;':''}">([[${productMeal.productName}]])</span>
+                                                +
+                                                <span th:style="${productMeal.packageStatus!=2?'color:red;':''}">([[${productMeal.packageName}]])</span>
+                                            </td>
+                                            <td th:text="${productMeal.coName}"></td>
+                                            <td th:text="${productMeal.price}"></td>
+                                            <td th:text="${productMeal.sales}"></td>
+                                            <td th:switch="${productMeal.status}" th:title="${productMeal.status==3}?${productMeal.message}" >
+                                                <th:block th:replace="~{admin/incloud/status::status}"></th:block>
+                                            </td>
+
+                                            <td th:text="${productMeal.is_marketable?'是':'否'}"></td>
+
+                                            <td  th:text="${#dates.format(productMeal.create_date,'yyyy-MM-dd HH:mm')}"></td>
+                                            <td >
+                                                <th:block th:if="${productMeal.productStatus==2 and productMeal.packageStatus==2}">
+                                                        <a href="javascript:void(0);" data-toggle='modal' th:onclick="|updateStatus(${productMeal.id},'${productMeal.productName}+(${productMeal.packageName})')|"  data-target='#edit-modal'>[审核]</a>
+                                                </th:block>
+
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- end card-body-->
+                        </div> <!-- end card-->
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row-->
+
+                <div th:replace="~{admin/incloud/page::page}"></div>
+
+            </div> <!-- content -->
+
+            <!--警告弹窗-->
+            <th:block th:replace="~{admin/incloud/status::warning}"></th:block>
+
+            <!-- Footer Start -->
+            <div th:replace="~{web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+
+    </div> <!-- end wrapper-->
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+<!-- third party js -->
+<script src="assets/js/vendor/jquery.dataTables.min.js" th:src="@{/assets/js/vendor/jquery.dataTables.min.js}"></script>
+<script src="assets/js/vendor/dataTables.bootstrap4.js" th:src="@{/assets/js/vendor/dataTables.bootstrap4.js}"></script>
+<script src="assets/js/vendor/dataTables.responsive.min.js" th:src="@{/assets/js/vendor/dataTables.responsive.min.js}"></script>
+<script src="assets/js/vendor/responsive.bootstrap4.min.js" th:src="@{/assets/js/vendor/responsive.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/dataTables.buttons.min.js" th:src="@{/assets/js/vendor/dataTables.buttons.min.js}"></script>
+<script src="assets/js/vendor/buttons.bootstrap4.min.js" th:src="@{/assets/js/vendor/buttons.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/buttons.html5.min.js" th:src="@{/assets/js/vendor/buttons.html5.min.js}"></script>
+<script src="assets/js/vendor/buttons.flash.min.js" th:src="@{/assets/js/vendor/buttons.flash.min.js}"></script>
+<script src="assets/js/vendor/buttons.print.min.js" th:src="@{/assets/js/vendor/buttons.print.min.js}"></script>
+<script src="assets/js/vendor/dataTables.keyTable.min.js" th:src="@{/assets/js/vendor/dataTables.keyTable.min.js}"></script>
+<script src="assets/js/vendor/dataTables.select.min.js" th:src="@{/assets/js/vendor/dataTables.select.min.js}"></script>
+<!-- third party js ends -->
+<!-- demo app -->
+<script src="assets/js/pages/demo.datatable-init.js" th:src="@{/assets/js/pages/demo.datatable-init.js}"></script>
+<!-- end demo js-->
+<script th:src="@{/assets/js/list.js}"></script>
+
+<th:block th:replace="~{admin/incloud/status::updateStatusJquery}"></th:block>
+
+<script>
+
+    function updateStatus(id,name){
+        // alert(name);
+        console.log(id)
+        $('#update-id').val(id)
+        $('#update-name').val(name)
+    }
+
+
+</script>
+</body>
+</html>

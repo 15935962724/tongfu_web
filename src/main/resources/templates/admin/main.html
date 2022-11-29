@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" >
+
+    <head>
+        <meta charset="utf-8" />
+        <title>主页</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+        <meta content="Coderthemes" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+
+        <!-- App css -->
+        <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+        <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+        <!-- third party css -->
+        <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+        <script src="../../static/assets/js/vendor/jquery-jvectormap-cn-mill.js"></script>
+        <!-- third party css end -->
+    </head>
+
+    <body>
+
+        <!-- Topbar Start -->
+
+        <!--<shiro:hasAnyRoles name="超级管理员">
+            <div th:include="~{incloud/admin_top::top}"></div>
+            &lt;!&ndash; content-page &ndash;&gt;
+        </shiro:hasAnyRoles>-->
+
+        <!--<shiro:hasAnyRoles name="供应商">
+            <div th:include="~{incloud/shop_top::top}"></div>
+            &lt;!&ndash; content-page &ndash;&gt;
+        </shiro:hasAnyRoles>-->
+        <div th:include="~{admin/incloud/top::top}"></div>
+
+        <!-- end Topbar -->
+
+        <div class="container-fluid">
+
+            <!-- Begin page -->
+            <div class="wrapper">
+
+                <!-- ========== Left Sidebar Start ========== -->
+                <!--<div th:replace="~{incloud/top::topbar}"></div>-->
+                <div th:replace="~{admin/incloud/left::left}"></div>
+
+                    <div class="content-page" th:include="~{admin/incloud/admin_main::admin_main}"></div>
+
+            </div> <!-- end wrapper-->
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- END Container -->
+
+        <div class="rightbar-overlay"></div>
+        <!-- /Right-bar -->
+
+
+        <!-- App js -->
+        <script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+        <!-- third party js -->
+        <script src="assets/js/vendor/Chart.bundle.min.js" th:src="@{/assets/js/vendor/Chart.bundle.min.js}"></script>
+        <script src="assets/js/vendor/jquery-jvectormap-1.2.2.min.js" th:src="@{/assets/js/vendor/jquery-jvectormap-1.2.2.min.js}"></script>
+        <script src="assets/js/vendor/jquery-jvectormap-cn-mill.js" th:src="@{/assets/js/vendor/jquery-jvectormap-cn-mill.js}"></script>
+        <!-- third party js ends -->
+
+        <!-- demo app -->
+        <!--<script src="assets/js/pages/demo.dashboard.js"  th:src="@{/assets/js/pages/demo.dashboard.js}"></script>-->
+        <!-- end demo js-->
+
+        <script type="text/javascript" >
+
+            function mains(data) {
+                // alert(data)
+                $('#data').val(data);
+                $('#index').submit();
+            }
+
+        </script>
+
+        <script th:inline="javascript" type="text/javascript">
+            // $('.progress-bar').css('background-color',randomColor());
+            console.log([[${productstatisicMap}]])
+            var productstatisicMap = [];
+            productstatisicMap = [[${productstatisicMap}]];
+
+            for (var i = 0; i < productstatisicMap.length; i++){
+                console.log(typeof (productstatisicMap[i].latLng))
+                productstatisicMap[i].latLng = productstatisicMap[i].latLng.split(",")
+            }
+            console.log(productstatisicMap);
+
+
+
+
+            !function (r) {
+                var t = function () {
+                    this.$body = r("body"), this.charts = []
+                };
+                t.prototype.respChart = function (t, a, e, o) {
+                    var n = Chart.controllers.line.prototype.draw;
+                    Chart.controllers.line.prototype.draw = function () {
+                        n.apply(this, arguments);
+                        var r = this.chart.chart.ctx, t = r.stroke;
+                        r.stroke = function () {
+                            r.save(), r.shadowColor = "rgba(0,0,0,0.01)", r.shadowBlur = 20, r.shadowOffsetX = 0, r.shadowOffsetY = 5, t.apply(this, arguments), r.restore()
+                        }
+                    };
+                    var s = Chart.controllers.doughnut.prototype.draw;
+                    Chart.controllers.doughnut = Chart.controllers.doughnut.extend({
+                        draw: function () {
+                            s.apply(this, arguments);
+                            var r = this.chart.chart.ctx, t = r.fill;
+                            r.fill = function () {
+                                r.save(), r.shadowColor = "rgba(0,0,0,0.03)", r.shadowBlur = 4, r.shadowOffsetX = 0, r.shadowOffsetY = 3, t.apply(this, arguments), r.restore()
+                            }
+                        }
+                    });
+                    var l = Chart.controllers.bar.prototype.draw;
+                    Chart.controllers.bar = Chart.controllers.bar.extend({
+                        draw: function () {
+                            l.apply(this, arguments);
+                            var r = this.chart.chart.ctx, t = r.fill;
+                            r.fill = function () {
+                                r.save(), r.shadowColor = "rgba(0,0,0,0.01)", r.shadowBlur = 20, r.shadowOffsetX = 4, r.shadowOffsetY = 5, t.apply(this, arguments), r.restore()
+                            }
+                        }
+                    }), Chart.defaults.global.defaultFontColor = "#8391a2", Chart.defaults.scale.gridLines.color = "#8391a2";
+                    var i = t.get(0).getContext("2d"), d = r(t).parent();
+                    return function () {
+                        var n;
+                        switch (t.attr("width", r(d).width()), a) {
+                            case"Line":
+                                n = new Chart(i, {type: "line", data: e, options: o});
+                                break;
+                            case"Doughnut":
+                                n = new Chart(i, {type: "doughnut", data: e, options: o});
+                                break;
+                            case"Pie":
+                                n = new Chart(i, {type: "pie", data: e, options: o});
+                                break;
+                            case"Bar":
+                                n = new Chart(i, {type: "bar", data: e, options: o});
+                                break;
+                            case"Radar":
+                                n = new Chart(i, {type: "radar", data: e, options: o});
+                                break;
+                            case"PolarArea":
+                                n = new Chart(i, {data: e, type: "polarArea", options: o})
+                        }
+                        return n
+                    }()
+                }, t.prototype.initCharts = function () {
+                    var t = [];
+                    if (r("#revenue-chart").length > 0) {
+                        var labels = [];
+                        var data1 = [];
+                        var data2 = [];
+                        var thisWeekData = [[${thisWeekData}]];
+                        var upperWeekData = [[${upperWeekData}]];
+
+                        for (var i = 0; i < thisWeekData.length; i++){
+                            // console.log(typeof (thisWeekData[i].week))
+                            labels.push(thisWeekData[i].week)
+                            data1.push(thisWeekData[i].count_price)
+                        }
+                        for (var i = 0; i < upperWeekData.length; i++){
+                            // console.log(typeof (thisWeekData[i].week))
+                            // labels.push(upperWeekData[i].week)
+                            data2.push(upperWeekData[i].count_price)
+                        }
+                        t.push(this.respChart(r("#revenue-chart"), "Line", {
+                            // labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                            labels: labels,
+                            datasets: [{
+                                label: "本周",
+                                backgroundColor: "transparent",
+                                borderColor:randomColor(),
+                                // data: [32, 42, 42, 62, 52, 75, 62]
+                                data: data1
+                            }, {
+                                label: "上周",
+                                fill: !0,
+                                backgroundColor: "transparent",
+                                borderColor: randomColor(),
+                                // data: [42, 58, 66, 93, 82, 105, 92]
+                                data: data2
+                            }]
+                        }, {
+                            maintainAspectRatio: !1,
+                            legend: {display: !1},
+                            tooltips: {
+                                backgroundColor: "#727cf5",
+                                titleFontColor: "#fff",
+                                bodyFontColor: "#fff",
+                                bodyFontSize: 14,
+                                displayColors: !1
+                            },
+                            hover: {intersect: !0},
+                            plugins: {filler: {propagate: !1}},
+                            scales: {
+                                xAxes: [{reverse: !0, gridLines: {color: "rgba(0,0,0,0.05)"}}],
+                                yAxes: [{
+                                    ticks: {stepSize: 50},
+                                    display: !0,
+                                    borderDash: [5, 5],
+                                    gridLines: {color: "rgba(0,0,0,0.01)", fontColor: "#fff"}
+                                }]
+                            }
+                        }))
+                    }
+                    if (r("#adAndProduct").length > 0) {
+                        var a = document.getElementById("adAndProduct").getContext("2d").createLinearGradient(0, 500, 0, 150);
+                        var adAndProductData = [[${adAndProductData}]];
+                        var color = randomColor();
+                        a.addColorStop(0, color), a.addColorStop(1, color);
+                        color = randomColor();
+                        var labels = [];
+                        var adData = [];
+                        var productData = [];
+                        for (var i = 0;i<adAndProductData.length;i++){
+                            labels.push(adAndProductData[i].mon);
+                            adData.push(adAndProductData[i].ad_price);
+                            productData.push(adAndProductData[i].product_price);
+                        }
+                        var e = {
+                            labels: labels,
+                            datasets: [{
+                                label: "广告收入",
+                                backgroundColor: a,
+                                borderColor: a,
+                                hoverBackgroundColor: a,
+                                hoverBorderColor: a,
+                                data: adData
+                            }, {
+                                label: "产品收入",
+                                backgroundColor: color,
+                                borderColor: color,
+                                hoverBackgroundColor: color,
+                                hoverBorderColor: color,
+                                data: productData
+                            }]
+                        };
+                        t.push(this.respChart(r("#adAndProduct"), "Bar", e, {
+                            maintainAspectRatio: !1,
+                            legend: {display: !1},
+                            tooltips: {
+                                backgroundColor: "#727cf5",
+                                titleFontColor: "#fff",
+                                bodyFontColor: "#fff",
+                                bodyFontSize: 14,
+                                displayColors: !1
+                            },
+                            scales: {
+                                yAxes: [{
+                                    gridLines: {display: !1, color: "rgba(0,0,0,0.05)"},
+                                    stacked: !1,
+                                    ticks: {stepSize: 100}
+                                }],
+                                xAxes: [{
+                                    barPercentage: .7,
+                                    categoryPercentage: .5,
+                                    stacked: !1,
+                                    gridLines: {color: "rgba(0,0,0,0.01)"}
+                                }]
+                            }
+                        }))
+                    }
+                    if (r("#average-sales").length > 0) {
+                        t.push(this.respChart(r("#average-sales"), "Doughnut", {
+                            labels: ["Direct", "Affilliate", "Sponsored", "E-mail"],
+                            datasets: [{
+                                data: [300, 135, 48, 154],
+                                backgroundColor: ["#727cf5", "#fa5c7c", "#0acf97", "#ebeff2"],
+                                borderColor: "transparent",
+                                borderWidth: "3"
+                            }]
+                        }, {maintainAspectRatio: !1, cutoutPercentage: 60, legend: {display: !1}}))
+                    }
+                    return t
+                }, t.prototype.initMaps = function () {
+                    r("#world-map-markers").length > 0 && r("#world-map-markers").vectorMap({
+                        map: "cn_mill",
+                        normalizeFunction: "polynomial",
+                        hoverOpacity: .7,
+                        hoverColor: !1,
+                        regionStyle: {initial: {fill: "#e3eaef"}},
+                        markerStyle: {
+                            initial: {
+                                r: 9,
+                                fill: "#727cf5",
+                                "fill-opacity": .9,
+                                stroke: "#fff",
+                                "stroke-width": 7,
+                                "stroke-opacity": .4
+                            }, hover: {stroke: "#fff", "fill-opacity": 1, "stroke-width": 1.5}
+                        },
+                        backgroundColor: "transparent",
+
+                        markers: productstatisicMap,
+                        // markers: [
+                        //     {latLng: [31.02989471,121.44371], name: "New York"},
+                        //     {latLng: [35.736026, 114.314757],name: "San Francisco"},
+                        //     {latLng: [39.072207, 117.231878], name: "Sydney"},
+                        //     {latLng: [39.90469, 116.40717], name: "Singapore"}
+                        // ],
+                        zoomOnScroll: !1
+                    })
+                }, t.prototype.init = function () {
+                    var t = this;
+                    Chart.defaults.global.defaultFontFamily = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif', r("#dash-daterange").daterangepicker({singleDatePicker: !0}), t.charts = this.initCharts(), this.initMaps(), r(window).on("resize", function (a) {
+                        r.each(t.charts, function (r, t) {
+                            try {
+                                t.destroy()
+                            } catch (r) {
+                            }
+                        }), t.charts = t.initCharts()
+                    })
+                }, r.Dashboard = new t, r.Dashboard.Constructor = t
+            }(window.jQuery), function (r) {
+                "use strict";
+                r.Dashboard.init()
+            }(window.jQuery);
+
+
+              /*随机颜色*/
+              function randomColor() {
+                var color = "";
+                for (var i = 0; i < 6; i++) {
+                  color += (Math.random() * 16 | 0).toString(16);
+                }
+                return "#" + color;
+              }
+
+        </script>
+    </body>
+</html>

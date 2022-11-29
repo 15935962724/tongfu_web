@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>发布文章</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+  <script src="https://cdn.bootcss.com/xlsx/0.11.5/xlsx.core.min.js"></script>
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{admin/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+    <div class="content-page">
+      <div class="content">
+        <div class="row">
+          <div class="col-lg-10" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+
+                <form class="needs-validation" novalidate  method="post" onsubmit="return checkFrom()" th:action="@{/admin/article/save}"  enctype="multipart/form-data">
+                  <input type="hidden" th:value="${articleCategory}" name="articleCategory">
+                  <div class="form-group mb-3">
+                    <label for="title">标题</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="标题" required>
+                    <div class="invalid-feedback">
+                      请输入标题
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>图片</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file"  name = "articleLogo"  class="custom-file-input"  accept="image/*" placeholder="图片" id="inputGroupFile04">
+                        <label class="custom-file-label" for="inputGroupFile04">图片(360*210)</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="title">专家姓名</label>
+                    <input type="text" class="form-control" id="expertName" name="expertName" placeholder="专家姓名">
+                    <div class="invalid-feedback">
+                      专家姓名
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="seoKeywords">关键词</label>
+                    <input type="text" class="form-control" id="seoKeywords" name="seoKeywords" placeholder="多个关键词请用逗号隔开">
+                    <div class="invalid-feedback">
+                      标题
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="author">作者</label>
+                    <input type="text" class="form-control" id="author" name="author" placeholder="作者">
+                    <div class="invalid-feedback">
+                      作者
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="author">来源</label>
+                    <input type="text" class="form-control" id="datasource" name="datasource" placeholder="来源">
+                    <div class="invalid-feedback">
+                      来源
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="inputState" class="input-group">排序</label>
+                    <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
+                      <span class="input-group-btn input-group-prepend">
+                      </span>
+                      <input data-toggle="touchspin" id="inputState" name="orders" data-bts-max="500" value="0" data-btn-vertical="true" type="text" class="form-control">
+                      <span class="input-group-btn input-group-append">
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="">描述</label>
+                    <textarea class="form-control" id="example-textarea" rows="3" name="introduce" placeholder="描述"></textarea>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label >内容</label>
+                    <div class="card">
+                      <div class="card-body">
+                        <!-- basic summernote-->
+                        <textarea  id="summernote-basic" name="content" rows="10" cols="80"></textarea>
+                      </div>
+                      <!-- end card-body -->
+                    </div> <!-- end card-->
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-info" onclick="preview();" >预览</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:history.back(-1);">返回</button>
+                  </div>
+                </form>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+      </div>
+       <!-- content -->
+      <!-- Footer Start -->
+      <div th:replace="~{admin/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<div class="rightbar-overlay"></div>
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script th:src="@{/assets/js/pages/demo.form-wizard.js}"></script>
+
+<script th:src="@{/ueditor/ueditor.config.js}"></script>
+<script th:src="@{/ueditor/ueditor.all.js}"></script>
+<script th:src="@{/ueditor/lang/zh-cn/zh-cn.js}"></script>
+<script th:src="@{/assets/js/confit.js}"></script>
+<script >
+  UE.getEditor('summernote-basic',{initialFrameWidth:'100%',initialFrameHeight:180});
+  var Base64 = {
+
+    // private property
+    _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+    // public method for encoding
+    encode: function(input) {
+      var output = "";
+      var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+      var i = 0;
+
+      input = Base64._utf8_encode(input);
+
+      while (i < input.length) {
+
+        chr1 = input.charCodeAt(i++);
+        chr2 = input.charCodeAt(i++);
+        chr3 = input.charCodeAt(i++);
+
+        enc1 = chr1 >> 2;
+        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+        enc4 = chr3 & 63;
+
+        if (isNaN(chr2)) {
+          enc3 = enc4 = 64;
+        } else if (isNaN(chr3)) {
+          enc4 = 64;
+        }
+
+        output = output + this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) + this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+
+      }
+
+      return output;
+    },
+
+    // public method for decoding
+    decode: function(input) {
+      var output = "";
+      var chr1, chr2, chr3;
+      var enc1, enc2, enc3, enc4;
+      var i = 0;
+
+      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+      while (i < input.length) {
+
+        enc1 = this._keyStr.indexOf(input.charAt(i++));
+        enc2 = this._keyStr.indexOf(input.charAt(i++));
+        enc3 = this._keyStr.indexOf(input.charAt(i++));
+        enc4 = this._keyStr.indexOf(input.charAt(i++));
+
+        chr1 = (enc1 << 2) | (enc2 >> 4);
+        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+        chr3 = ((enc3 & 3) << 6) | enc4;
+
+        output = output + String.fromCharCode(chr1);
+
+        if (enc3 != 64) {
+          output = output + String.fromCharCode(chr2);
+        }
+        if (enc4 != 64) {
+          output = output + String.fromCharCode(chr3);
+        }
+
+      }
+
+      output = Base64._utf8_decode(output);
+
+      return output;
+
+    },
+
+    // private method for UTF-8 encoding
+    _utf8_encode: function(string) {
+      string = string.replace(/\r\n/g, "\n");
+      var utftext = "";
+
+      for (var n = 0; n < string.length; n++) {
+
+        var c = string.charCodeAt(n);
+
+        if (c < 128) {
+          utftext += String.fromCharCode(c);
+        } else if ((c > 127) && (c < 2048)) {
+          utftext += String.fromCharCode((c >> 6) | 192);
+          utftext += String.fromCharCode((c & 63) | 128);
+        } else {
+          utftext += String.fromCharCode((c >> 12) | 224);
+          utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+          utftext += String.fromCharCode((c & 63) | 128);
+        }
+
+      }
+
+      return utftext;
+    },
+
+    // private method for UTF-8 decoding
+    _utf8_decode: function(utftext) {
+      var string = "";
+      var i = 0;
+      var c = c1 = c2 = 0;
+
+      while (i < utftext.length) {
+
+        c = utftext.charCodeAt(i);
+
+        if (c < 128) {
+          string += String.fromCharCode(c);
+          i++;
+        } else if ((c > 191) && (c < 224)) {
+          c2 = utftext.charCodeAt(i + 1);
+          string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+          i += 2;
+        } else {
+          c2 = utftext.charCodeAt(i + 1);
+          c3 = utftext.charCodeAt(i + 2);
+          string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+          i += 3;
+        }
+
+      }
+
+      return string;
+    }
+
+  }
+
+  function preview() {
+    var title = $('#title').val();
+    var content = UE.getEditor('summernote-basic').getContent();
+    var lable = $('#seoKeywords').val();
+    var source = $('#datasource').val();
+    content = Base64.encode(content);
+    title = Base64.encode(title);
+    lable = Base64.encode(lable);
+    source = Base64.encode(source);
+    window.open(configUrl+"preview.html?title="+title+"&content="+content+"&lable="+lable+"&source="+source);
+  }
+
+
+</script>
+</body>
+
+</html>

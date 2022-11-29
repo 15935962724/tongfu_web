@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.LearningDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Learning" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="BIGINT" />
+    <result column="signup_entrance" property="signupEntrance" jdbcType="VARCHAR" />
+    <result column="holding_time" property="holdingTime" jdbcType="TIMESTAMP" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="BIGINT" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="is_top" property="isTop" jdbcType="BIGINT" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="is_payment" property="isPayment" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="is_invoice" property="isInvoice" jdbcType="BIGINT" />
+    <result column="introduce" property="introduce" jdbcType="VARCHAR" />
+    <result column="label" property="label" jdbcType="VARCHAR" />
+    <result column="hits" property="hits" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tongfu.entity.Learning" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, company_id, modify_date, phone, title, type, signup_entrance, holding_time,
+    logo, address, status, message, is_top, start_date, end_date, is_payment, price,
+    is_invoice, introduce, label, hits
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tf_learning
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAll" resultType="java.util.Map" parameterType="java.util.HashMap" >
+    SELECT l.*,c.`name` AS cname FROM tf_learning l LEFT JOIN tf_company c ON l.`company_id` = c.`id`
+    where 1 = 1
+    <if test="title!=null and title !='' ">
+      and l.title like '%${title}%'
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and l.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="holdingStartDate != null and holdingEndDate !=null " >
+      and l.holding_time BETWEEN #{holdingStartDate,jdbcType=TIMESTAMP} AND #{holdingEndDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="companyId != null" >
+      and l.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="status != null" >
+      and l.status = #{status,jdbcType=BIGINT}
+    </if>
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS(l.create_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(l.create_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(l.create_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(l.create_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and l.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    ORDER BY l.create_date DESC
+  </select>
+
+  <select id="hitsLearningCouont" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+    select
+    COALESCE(SUM(hits),0)
+    from tf_learning
+    where 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS(create_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(create_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(create_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(create_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+
+
+  <select id="getLearngingMap" resultType="java.util.Map" parameterType="java.util.HashMap" >
+      SELECT * FROM (
+      SELECT COUNT(1) AS count_learning FROM tf_learning WHERE company_id = #{companyId,jdbcType=BIGINT}
+      ) A   ,(SELECT COUNT(1) AS stay_status FROM tf_learning WHERE company_id = #{companyId,jdbcType=BIGINT} AND STATUS = 1
+      ) B,(
+      SELECT COUNT(1) AS already_status FROM tf_learning WHERE company_id = #{companyId,jdbcType=BIGINT} AND STATUS = 2
+      ) C
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_learning
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Learning" >
+    insert into tf_learning (id, create_date, company_id,
+      modify_date, phone, title,
+      type, signup_entrance, holding_time,
+      logo, address, status,
+      message, is_top, start_date,
+      end_date, is_payment, price,
+      is_invoice, introduce, label,
+      hits, content)
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{companyId,jdbcType=BIGINT},
+      #{modifyDate,jdbcType=TIMESTAMP}, #{phone,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
+      #{type,jdbcType=BIGINT}, #{signupEntrance,jdbcType=VARCHAR}, #{holdingTime,jdbcType=TIMESTAMP},
+      #{logo,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{status,jdbcType=BIGINT},
+      #{message,jdbcType=VARCHAR}, #{isTop,jdbcType=BIGINT}, #{startDate,jdbcType=TIMESTAMP},
+      #{endDate,jdbcType=TIMESTAMP}, #{isPayment,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL},
+      #{isInvoice,jdbcType=BIGINT}, #{introduce,jdbcType=VARCHAR}, #{label,jdbcType=VARCHAR},
+      #{hits,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Learning" useGeneratedKeys="true" keyProperty="id" >
+    insert into tf_learning
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="signupEntrance != null" >
+        signup_entrance,
+      </if>
+      <if test="holdingTime != null" >
+        holding_time,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="isTop != null" >
+        is_top,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="isPayment != null" >
+        is_payment,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="isInvoice != null" >
+        is_invoice,
+      </if>
+      <if test="introduce != null" >
+        introduce,
+      </if>
+      <if test="label != null" >
+        label,
+      </if>
+      <if test="hits != null" >
+        hits,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=BIGINT},
+      </if>
+      <if test="signupEntrance != null" >
+        #{signupEntrance,jdbcType=VARCHAR},
+      </if>
+      <if test="holdingTime != null" >
+        #{holdingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIGINT},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="isTop != null" >
+        #{isTop,jdbcType=BIGINT},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isPayment != null" >
+        #{isPayment,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isInvoice != null" >
+        #{isInvoice,jdbcType=BIGINT},
+      </if>
+      <if test="introduce != null" >
+        #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="label != null" >
+        #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="hits != null" >
+        #{hits,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Learning" >
+    update tf_learning
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=BIGINT},
+      </if>
+      <if test="signupEntrance != null" >
+        signup_entrance = #{signupEntrance,jdbcType=VARCHAR},
+      </if>
+      <if test="holdingTime != null" >
+        holding_time = #{holdingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logo != null" >
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIGINT},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="isTop != null" >
+        is_top = #{isTop,jdbcType=BIGINT},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isPayment != null" >
+        is_payment = #{isPayment,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isInvoice != null" >
+        is_invoice = #{isInvoice,jdbcType=BIGINT},
+      </if>
+      <if test="introduce != null" >
+        introduce = #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="label != null" >
+        label = #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="hits != null" >
+        hits = #{hits,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tongfu.entity.Learning" >
+    update tf_learning
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      company_id = #{companyId,jdbcType=BIGINT},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      phone = #{phone,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      type = #{type,jdbcType=BIGINT},
+      signup_entrance = #{signupEntrance,jdbcType=VARCHAR},
+      holding_time = #{holdingTime,jdbcType=TIMESTAMP},
+      logo = #{logo,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIGINT},
+      message = #{message,jdbcType=VARCHAR},
+      is_top = #{isTop,jdbcType=BIGINT},
+      start_date = #{startDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      is_payment = #{isPayment,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      is_invoice = #{isInvoice,jdbcType=BIGINT},
+      introduce = #{introduce,jdbcType=VARCHAR},
+      label = #{label,jdbcType=VARCHAR},
+      hits = #{hits,jdbcType=BIGINT},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Learning" >
+    update tf_learning
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      company_id = #{companyId,jdbcType=BIGINT},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      phone = #{phone,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      type = #{type,jdbcType=BIGINT},
+      signup_entrance = #{signupEntrance,jdbcType=VARCHAR},
+      holding_time = #{holdingTime,jdbcType=TIMESTAMP},
+      logo = #{logo,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIGINT},
+      message = #{message,jdbcType=VARCHAR},
+      is_top = #{isTop,jdbcType=BIGINT},
+      start_date = #{startDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      is_payment = #{isPayment,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      is_invoice = #{isInvoice,jdbcType=BIGINT},
+      introduce = #{introduce,jdbcType=VARCHAR},
+      label = #{label,jdbcType=VARCHAR},
+      hits = #{hits,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.AdDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Ad" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="orders" property="orders" jdbcType="INTEGER" />
+    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="path" property="path" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="ad_position" property="adPosition" jdbcType="BIGINT" />
+    <result column="product_category_id" property="productCategoryId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="payment_status" property="paymentStatus" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tongfu.entity.Ad" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, orders, begin_date, end_date, path, title, type, url,
+    is_deleted, remark, company_id, ad_position, product_category_id, status, price,
+    message, payment_status
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tf_ad
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="toExamineAdCouont" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+    SELECT
+    COUNT(id)
+    FROM tf_ad
+    WHERE 1 = 1
+    <if test="companyId!=null">
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="status!=null">
+      AND status = #{status,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="toShowAdCouont" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+    SELECT
+    COUNT(id)
+    FROM tf_ad
+    WHERE
+    NOW() >= begin_date
+    AND NOW() <![CDATA[<=]]> end_date
+    <if test="companyId!=null">
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="status!=null">
+      AND status = #{status,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="toOverdueadCouont" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+    SELECT
+    COUNT(id)
+    FROM tf_ad
+    WHERE
+    NOW() >= end_date
+    <if test="companyId!=null">
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="status!=null">
+      AND status = #{status,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="getAll" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT ad.*,
+    (
+    CASE
+    <if test="show_status==null">
+      WHEN ad.begin_date > NOW() AND ad.STATUS = 2 THEN '待展示'
+      WHEN ad.begin_date &lt; NOW() AND ad.end_date > NOW() AND ad.STATUS =2 THEN '在展示'
+      WHEN ad.end_date &lt; NOW() AND ad.STATUS =2 THEN '已过期'
+      ELSE '-'
+    </if>
+    <if test="show_status!=null">
+      <if test="show_status==1">
+        WHEN ad.begin_date > NOW() AND ad.STATUS = 2 THEN '待展示'
+      </if>
+      <if test="show_status==2">
+        WHEN ad.begin_date &lt; NOW() AND ad.end_date > NOW() AND ad.STATUS = 2 THEN '在展示'
+      </if>
+      <if test="show_status==3">
+        WHEN ad.end_date &lt; NOW() AND ad.STATUS = 2 THEN '已过期'
+      </if>
+    </if>
+    END
+    )
+    AS show_status,
+    (
+    CASE
+    WHEN ad.begin_date &lt; NOW() AND ad.end_date > NOW() AND ad.STATUS =3 AND ((TO_DAYS(ad.end_date) - TO_DAYS(NOW())) &lt; 30 ) THEN TRUE
+    ELSE FALSE
+    END
+    )
+    AS is_verdue,
+    adp.name AS adName ,COALESCE(com.name,'自营广告') AS companyName
+    FROM tf_ad ad LEFT JOIN  tf_ad_position AS adp ON ad.ad_position = adp.id
+    LEFT JOIN  tf_company AS com ON ad.company_id = com.id
+    where 1 = 1
+    <if test="companyId!=null">
+      <if test="companyId==0 ">
+        AND ad.company_id is null
+      </if>
+      <if test="companyId!=0 ">
+        AND ad.company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+    </if>
+    <if test="title!=null and title !='' ">
+      AND ad.title LIKE '%${title}%'
+    </if>
+    <if test="adPosition!=null">
+      AND ad.ad_position = #{adPosition,jdbcType=BIGINT}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and ad.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="status!=null">
+      AND ad.status = #{status,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_ad
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Ad" >
+    insert into tf_ad (id, create_date, modify_date,
+      orders, begin_date, end_date,
+      path, title, type,
+      url, is_deleted, remark,
+      company_id, ad_position, product_category_id,
+      status, price, message,
+      payment_status, content)
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP},
+      #{orders,jdbcType=INTEGER}, #{beginDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP},
+      #{path,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+      #{url,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}, #{remark,jdbcType=VARCHAR},
+      #{companyId,jdbcType=BIGINT}, #{adPosition,jdbcType=BIGINT}, #{productCategoryId,jdbcType=BIGINT},
+      #{status,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL}, #{message,jdbcType=VARCHAR},
+      #{paymentStatus,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Ad" >
+    insert into tf_ad
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="orders != null" >
+        orders,
+      </if>
+      <if test="beginDate != null" >
+        begin_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="path != null" >
+        path,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="adPosition != null" >
+        ad_position,
+      </if>
+      <if test="productCategoryId != null" >
+        product_category_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="paymentStatus != null" >
+        payment_status,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orders != null" >
+        #{orders,jdbcType=INTEGER},
+      </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="path != null" >
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="adPosition != null" >
+        #{adPosition,jdbcType=BIGINT},
+      </if>
+      <if test="productCategoryId != null" >
+        #{productCategoryId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentStatus != null" >
+        #{paymentStatus,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Ad" >
+    update tf_ad
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orders != null" >
+        orders = #{orders,jdbcType=INTEGER},
+      </if>
+      <if test="beginDate != null" >
+        begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="path != null" >
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="adPosition != null" >
+        ad_position = #{adPosition,jdbcType=BIGINT},
+      </if>
+      <if test="productCategoryId != null" >
+        product_category_id = #{productCategoryId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentStatus != null" >
+        payment_status = #{paymentStatus,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tongfu.entity.Ad" >
+    update tf_ad
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      orders = #{orders,jdbcType=INTEGER},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      path = #{path,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      remark = #{remark,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=BIGINT},
+      ad_position = #{adPosition,jdbcType=BIGINT},
+      product_category_id = #{productCategoryId,jdbcType=BIGINT},
+      status = #{status,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      message = #{message,jdbcType=VARCHAR},
+      payment_status = #{paymentStatus,jdbcType=BIGINT},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Ad" >
+    update tf_ad
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      orders = #{orders,jdbcType=INTEGER},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      path = #{path,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      remark = #{remark,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=BIGINT},
+      ad_position = #{adPosition,jdbcType=BIGINT},
+      product_category_id = #{productCategoryId,jdbcType=BIGINT},
+      status = #{status,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      message = #{message,jdbcType=VARCHAR},
+      payment_status = #{paymentStatus,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

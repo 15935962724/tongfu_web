@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8" />
+    <title>品牌数据统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/newCss.css" th:href="@{/assets/css/newCss.css}"  rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+
+            <div class="content">
+
+                <div class="row">
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    文章数量分析
+                                </div>
+                                <div id="countNumDate" class="date" data-toggle="date-picker"><img src="../../assets/img/datePicker.png" width="20"></div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="countNum" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    文章占比分析
+                                </div>
+                                <div id="countNumPieDate" class="date" data-toggle="date-picker"><img src="../../assets/img/datePicker.png" width="20"></div>
+                            </div>
+
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                <div id="countNumPie" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    文章访问量分析
+                                </div>
+<!--                                <div class="date" data-toggle="date-picker"><img src="../../assets/img/datePicker.png" width="20"></div>-->
+                            </div>
+
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                <div id="sumHits" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    文章访问量占比分析
+                                </div>
+<!--                                <div class="date" data-toggle="date-picker"><img src="../../assets/img/datePicker.png" width="20"></div>-->
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="sumHitsPie" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    品牌访问量分析
+                                </div>
+<!--                                <div class="date" data-toggle="date-picker"><img src="../../assets/img/datePicker.png" width="20"></div>-->
+                            </div>
+
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                <div id="line-chart5" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    品牌访问量占比分析
+                                </div>
+<!--                                <div class="date" data-toggle="date-picker"><img src="../../assets/img/datePicker.png" width="20"></div>-->
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="line-chart6" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    文章排名
+                                </div>
+                                <div class="date" id="pList" data-toggle="date-picker">
+                                    <img src="../../assets/img/datePicker.png" width="20"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                <table class="table table-striped dt-responsive nowrap" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>排名</th>
+                                        <th>文章名称</th>
+                                        <th>所属分类</th>
+                                        <th>浏览量</th>
+                                        <th>占比量</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tBody">
+                                        <tr th:each="article,articleStart:${articleRanking}" >
+                                            <td>[[${articleStart.index+1}]]</td>
+                                            <td>[[${article.title}]]</td>
+                                            <td>[[${article.articleType}]]</td>
+                                            <td>[[${article.hits}]]</td>
+                                            <td>[[${article.proportion}]]</td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <!-- Footer Start -->
+            <div th:replace="~{web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+    </div> <!-- end wrapper-->
+
+</div>
+</body>
+</html>
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+<script th:inline="javascript" type="text/javascript">
+
+    var articles = [[${articles}]];
+    var countNumAry = [];
+    var sumHitsAry = [];
+    var labelAry = [];
+    upData(articles);
+    //更新
+    function upData(data){
+        for (var i = 0; i < data.length; i++){
+            countNumAry.push(data[i].countNum);
+            sumHitsAry.push(data[i].sumHits);
+            labelAry.push(data[i].name);
+        }
+    }
+    var brandConunts = [[${brandConunts}]];
+    var brandConuntsAry = [];
+    var brandConuntsLab = [];
+    for (var i = 0; i < brandConunts.length; i++){
+        brandConuntsAry.push(brandConunts[i].countNum);
+        brandConuntsLab.push(brandConunts[i].NAME);
+    }
+
+
+
+
+    //文章数量分析
+    var countNumOptions = {
+        series: [{
+            name: "文章数量",
+            data: countNumAry
+        }],
+        chart: {
+            height: 350,
+            type: 'bar',
+            zoom: {
+                enabled: !1
+            },
+            toolbar: {
+                show: !1
+            },
+            events: {
+                click: function(chart, w, e) {
+                    // console.log(chart, w, e)
+                }
+            }
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: '45%',
+                distributed: true,
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        legend: {
+            show: false
+        },
+        xaxis: {
+            categories: labelAry,
+            labels: {
+                style: {
+                    fontSize: '12px'
+                }
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "篇"
+                }
+            }
+        }
+    };
+    var countNumApex = new ApexCharts(document.querySelector("#countNum"), countNumOptions);
+    countNumApex.render();
+
+
+    //文章占比分析
+    var countNumPieOptions = {
+        chart: {
+            height: 350,
+            type: "donut"
+        },
+        series: countNumAry,
+        legend: {
+            show: !0,
+            position: "bottom",
+            horizontalAlign: "center",
+            verticalAlign: "middle",
+            floating: !1,
+            fontSize: "14px",
+            offsetX: 0,
+            offsetY: -10
+        },
+        // tooltip: {
+        //     custom: function(e) {
+        //         return '<div class="arrow_box">' +
+        //             '<span>' + pieRankingLabels[e.seriesIndex] + '：'+ pieRankingSeries[e.seriesIndex] +'单</span>' +
+        //             '</div>'
+        //     }
+        // },
+        labels: labelAry,
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    height: 240
+                },
+                legend: {
+                    show: !1
+                }
+            }
+        }],
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "篇"
+                }
+            }
+        }
+    };
+    var countNumPieApex = new ApexCharts(document.querySelector("#countNumPie"), countNumPieOptions);
+    countNumPieApex.render();
+
+
+
+    //var url = '/web/articleStatistics/articleSize';//文章数量分析 自定义日期查询url
+    $('#countNumDate').on('apply.daterangepicker', function(ev, picker) {
+        getArticleSize(picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'),1);
+    });
+    $('#countNumPieDate').on('apply.daterangepicker', function(ev, picker) {
+        getArticleSize(picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'),2);
+    });
+    function getArticleSize(start,end,type) {
+        $.ajax({
+            type:"POST",
+            url: [[@{/web/articleStatistics/articleSize}]],
+            data:{startDate:start,endDate:end},
+            dataType:"json",
+            async: false,
+            success:function (data) {
+                console.log(data.data);
+                var data = data.data;
+                var num = [];
+                var label = [];
+                for (var i = 0; i < data.length; i++){
+                    num.push(data[i].countNum);
+                    label.push(data[i].name);
+                }
+                console.log(num)
+                console.log(label)
+                if(type == 1){
+                    countNumApex.updateOptions({
+                        series: [{name: "文章数量",data: num}],
+                        xaxis: {categories: label}
+                    });
+                }else if(type == 2){
+                    countNumPieApex.updateOptions({
+                        series: num,
+                        labels: label
+                    });
+                }
+            },
+            error:function(data){
+                console.log(data.responseJSON);
+            }
+        });
+    }
+
+
+
+
+
+
+    //文章访问量分析
+    var sumHitsOptions = {
+        series: [{
+            name: "访问量",
+            data: sumHitsAry
+        }],
+        chart: {
+            height: 350,
+            type: 'bar',
+            zoom: {
+                enabled: !1
+            },
+            toolbar: {
+                show: !1
+            },
+            events: {
+                click: function(chart, w, e) {
+                    // console.log(chart, w, e)
+                }
+            }
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: '45%',
+                distributed: true,
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        legend: {
+            show: false
+        },
+        xaxis: {
+            categories: labelAry,
+            labels: {
+                style: {
+                    fontSize: '12px'
+                }
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "次"
+                }
+            }
+        }
+    };
+    var sumHitsApex = new ApexCharts(document.querySelector("#sumHits"), sumHitsOptions);
+    sumHitsApex.render();
+    //文章访问量占比分析
+    var sumHitsPieOptions = {
+        chart: {
+            height: 350,
+            type: "donut"
+        },
+        series: sumHitsAry,
+        legend: {
+            show: !0,
+            position: "bottom",
+            horizontalAlign: "center",
+            verticalAlign: "middle",
+            floating: !1,
+            fontSize: "14px",
+            offsetX: 0,
+            offsetY: -10
+        },
+        // tooltip: {
+        //     custom: function(e) {
+        //         return '<div class="arrow_box">' +
+        //             '<span>' + pieRankingLabels[e.seriesIndex] + '：'+ pieRankingSeries[e.seriesIndex] +'单</span>' +
+        //             '</div>'
+        //     }
+        // },
+        labels: labelAry,
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    height: 240
+                },
+                legend: {
+                    show: !1
+                }
+            }
+        }],
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "次"
+                }
+            }
+        }
+    };
+    var sumHitsPieApex = new ApexCharts(document.querySelector("#sumHitsPie"), sumHitsPieOptions);
+    sumHitsPieApex.render();
+
+    //品牌访问量分析
+    var barOptions2 = {
+        series: [{
+            name: "访问量",
+            data: brandConuntsAry
+        }],
+        chart: {
+            height: 350,
+            type: 'bar',
+            zoom: {
+                enabled: !1
+            },
+            toolbar: {
+                show: !1
+            },
+            events: {
+                click: function(chart, w, e) {
+                    // console.log(chart, w, e)
+                }
+            }
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: '45%',
+                distributed: true,
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        legend: {
+            show: false
+        },
+        xaxis: {
+            categories: brandConuntsLab,
+            labels: {
+                style: {
+                    fontSize: '12px'
+                }
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "次"
+                }
+            }
+        }
+    };
+    new ApexCharts(document.querySelector("#line-chart5"), barOptions2).render();
+
+    var pieOptions2 = {
+        chart: {
+            height: 350,
+            type: "donut"
+        },
+        series: brandConuntsAry,
+        legend: {
+            show: !0,
+            position: "bottom",
+            horizontalAlign: "center",
+            verticalAlign: "middle",
+            floating: !1,
+            fontSize: "14px",
+            offsetX: 0,
+            offsetY: -10
+        },
+        // tooltip: {
+        //     custom: function(e) {
+        //         return '<div class="arrow_box">' +
+        //             '<span>' + pieRankingLabels[e.seriesIndex] + '：'+ pieRankingSeries[e.seriesIndex] +'单</span>' +
+        //             '</div>'
+        //     }
+        // },
+        labels: brandConuntsLab,
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    height: 240
+                },
+                legend: {
+                    show: !1
+                }
+            }
+        }],
+        tooltip: {
+            y: {
+                formatter: function(o) {
+                    return o + "次"
+                }
+            }
+        }
+    };
+    new ApexCharts(document.querySelector("#line-chart6"), pieOptions2).render();
+
+
+
+
+
+
+    //var url = '/web/articleStatistics/getArticles';//文章排名自定义日期查询url
+    $('#pList').on('apply.daterangepicker', function(ev, picker) {
+        getArticleList(picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'));
+    });
+    function getArticleList(start,end) {
+        $.ajax({
+            type:"POST",
+            url: [[@{/web/articleStatistics/getArticles}]],
+        data:{startDate:start,endDate:end},
+        dataType:"json",
+            async: false,
+            success:function (data) {
+            console.log(data.data);
+            var data = data.data;
+            var html = '';
+            for(var i = 0; i < data.length; i++){
+                html += ' <tr>';
+                html += ' <td>'+ (i+1) +'</td>';
+                html += ' <td>'+ data[i].title +'</td>';
+                html += ' <td>'+ data[i].articleType +'</td>';
+                html += ' <td>'+ data[i].hits +'</td>';
+                html += ' <td>'+ data[i].proportion +'</td>';
+                html += ' </tr>';
+            }
+            $("#tBody").empty();
+            $("#tBody").append(html);
+        },
+        error:function(data){
+            console.log(data.responseJSON);
+        }
+    });
+    }
+
+
+
+</script>

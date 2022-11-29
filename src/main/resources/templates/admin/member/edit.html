@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>编辑用户</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+
+  <!-- App css -->
+  <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+  <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+
+  <script th:src="@{/assets/js/Msg.js}"></script>
+  <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+</head>
+
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{admin/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-lg-6" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-3">编辑用户</h4>
+
+                <form class="needs-validation" novalidate onsubmit="return checkip()"  method="post" th:action="@{/admin/member/update}">
+                  <input type="hidden" class="form-control" id="id" name="id" th:value="${member.id}" >
+                  <div class="form-group mb-3">
+                    <label for="username">用户名</label>
+                    <input type="text" class="form-control" id="username" name="username" th:value="${member.username}" placeholder="用户名" disabled>
+                    <div class="invalid-feedback">
+                      请输入账号
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="name">姓名</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="name" th:value="${member.name}" disabled>
+                    <div class="invalid-feedback">
+                      请输入姓名
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="mobile">电话</label>
+                    <input type="text" class="form-control" id="mobile" name="mobile" placeholder="mobile" th:value="${member.mobile}" disabled>
+                    <div class="invalid-feedback">
+                      请输入电话
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="openId">密码</label>
+                    <input type="text" class="form-control" id="password" name="password" placeholder="password">
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="openId">openId</label>
+                    <input type="text" class="form-control" id="openId" name="openId" placeholder="openId" th:value="${member.openId}">
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="qqId">qqId</label>
+                    <input type="text" class="form-control" id="qqId" name="qqId" placeholder="qqId" th:value="${member.qqId}">
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="wbId">wbId</label>
+                    <input type="text" class="form-control" id="wbId" name="wbId" placeholder="wbId" th:value="${member.wbId}">
+                  </div>
+
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary">返回</button>
+                  </div>
+                </form>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+      </div>
+       <!-- content -->
+      <!-- Footer Start -->
+      <div th:replace="~{admin/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+<script>
+
+
+  //页面加载就调用
+  $(function(){
+    var ip=returnCitySN["cip"];
+    $("#registerIp").val(ip);
+
+  });
+
+  //提交校验用户名
+  function checkip() {
+
+    var username = $('#username').val()
+    var email = $('#email').val()
+    var fals = true;
+    $.ajax({
+      type:"GET",
+      url:'[[@{/admin/member/check_username}]]',
+      data:{username:username},
+      dataType:"json",
+      async: false,
+      success:function(data){
+        if (data){
+          alert("该用户名已存在");
+          fals = false;
+        }
+
+      }
+    });
+
+    // var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+    // if(!reg.test(email))
+    // {
+    //   alert("邮箱格式不对");
+    //   fals = false;
+    // }
+
+    return fals;
+  }
+
+</script>
+
+</body>
+
+</html>

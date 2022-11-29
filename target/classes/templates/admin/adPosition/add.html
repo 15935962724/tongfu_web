@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>添加广告位</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{admin/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+    <div class="content-page">
+      <div class="content">
+        <div class="row">
+          <div class="col-lg-6" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-3">广告位置</h4>
+
+                <form class="needs-validation" novalidate  method="post" th:action="@{/admin/adPosition/save}"  enctype="multipart/form-data">
+                  <div class="form-group mb-3">
+                    <label for="name">广告位置</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="首页头部" required>
+                    <div class="invalid-feedback">
+                      位置必填
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="name">宽度</label>
+                    <input type="number" class="form-control" min="1" id="width" name="width" placeholder="单位像素(px)" required>
+                    <div class="invalid-feedback">
+                      宽度必填
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="name">高度</label>
+                    <input type="number" class="form-control" min="1" id="height" name="height" placeholder="单位像素(px)" required>
+                    <div class="invalid-feedback">
+                      高度必填
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="name">价格</label><br>
+                    <input type="number" style="display: inline;width: 80%;"  class="form-control" min="0.01" step="0.01" id="price" name="price" placeholder="单位(元)" required>
+                    元
+                    <label>
+                      <select class="custom-select custom-select-sm ml-1 mr-1" name="priceType">
+                        <option value="1">月</option>
+                        <option value="2">日</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="example-textarea">描述:</label>
+                    <textarea class="form-control" id="example-textarea" maxlength="300" rows="3" name="description" placeholder="描述"></textarea>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="inputState" class="input-group">排序</label>
+                    <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
+                      <span class="input-group-btn input-group-prepend">
+                      </span>
+                      <input data-toggle="touchspin" id="inputState" name="orders" data-bts-max="500" value="0" data-btn-vertical="true" type="text" class="form-control">
+                      <span class="input-group-btn input-group-append">
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:history.back(-1);">返回</button>
+                  </div>
+                </form>
+
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- Footer Start -->
+      <div th:replace="~{admin/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<div class="rightbar-overlay"></div>
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+</body>
+</html>

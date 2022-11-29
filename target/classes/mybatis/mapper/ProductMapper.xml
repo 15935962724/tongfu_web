@@ -1,0 +1,950 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.ProductDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Product" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="allocated_stock" property="allocatedStock" jdbcType="INTEGER" />
+    <result column="cost" property="cost" jdbcType="DECIMAL" />
+    <result column="full_name" property="fullName" jdbcType="VARCHAR" />
+    <result column="hits" property="hits" jdbcType="BIGINT" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="is_gift" property="isGift" jdbcType="BIT" />
+    <result column="is_list" property="isList" jdbcType="BIT" />
+    <result column="is_marketable" property="isMarketable" jdbcType="BIT" />
+    <result column="is_top" property="isTop" jdbcType="BIT" />
+    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
+    <result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="point" property="point" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="sales" property="sales" jdbcType="BIGINT" />
+    <result column="sn" property="sn" jdbcType="VARCHAR" />
+    <result column="stock" property="stock" jdbcType="INTEGER" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="weight" property="weight" jdbcType="INTEGER" />
+    <result column="brand" property="brand" jdbcType="BIGINT" />
+    <result column="product_category" property="productCategory" jdbcType="BIGINT" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="BIGINT" />
+    <result column="activation_mode" property="activationMode" jdbcType="BIGINT" />
+    <result column="is_hideprice" property="isHideprice" jdbcType="BIT" />
+    <result column="price_explain" property="priceExplain" jdbcType="VARCHAR" />
+    <result column="manufactor" property="manufactor" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="software_size" property="softwareSize" jdbcType="VARCHAR" />
+    <result column="software_version" property="softwareVersion" jdbcType="VARCHAR" />
+    <result column="is_related_software" property="isRelatedSoftware" jdbcType="BIT" />
+    <result column="relation_software_url" property="relationSoftwareUrl" jdbcType="VARCHAR" />
+    <result column="product_package" property="productPackage" jdbcType="VARCHAR" />
+    <result column="product_package_url" property="productPackageUrl" jdbcType="VARCHAR" />
+    <result column="is_showproduct_package_url" property="isShowproductPackageUrl" jdbcType="BIT" />
+    <result column="ontrial_package" property="ontrialPackage" jdbcType="VARCHAR" />
+    <result column="ontrial_package_url" property="ontrialPackageUrl" jdbcType="VARCHAR" />
+    <result column="is_show_ontrial_package_url" property="isShowOntrialPackageUrl" jdbcType="BIT" />
+    <result column="is_demonstration" property="isDemonstration" jdbcType="BIT" />
+    <result column="is_recommend" property="isRecommend" jdbcType="BIT" />
+    <result column="orders" property="orders" jdbcType="BIGINT" />
+    <result column="video" property="video" jdbcType="VARCHAR" />
+    <result column="promotion" property="promotion" jdbcType="VARCHAR" />
+    <result column="is_add_service" property="isAddService" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="reserve_stock" property="reserveStock" jdbcType="INTEGER" />
+    <result column="language" property="language" jdbcType="VARCHAR" />
+    <result column="apparatus_category" property="apparatusCategory" jdbcType="VARCHAR" />
+    <result column="authentication_message" property="authenticationMessage" jdbcType="VARCHAR" />
+    <result column="system" property="system" jdbcType="VARCHAR" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="is_scientific" property="isScientific" jdbcType="BIT" />
+    <result column="introduction" property="introduction" jdbcType="LONGVARCHAR" />
+    <result column="recommend_memo" property="recommendMemo" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, allocated_stock, cost, full_name, hits, image, is_gift,
+    is_list, is_marketable, is_top, keyword, market_price, memo, name, point, price,
+    sales, sn, stock, unit, weight, brand, product_category, is_deleted, company_id,
+    status, activation_mode, is_hideprice, price_explain, manufactor, url, software_size,
+    software_version, is_related_software, relation_software_url, product_package, product_package_url,
+    is_showproduct_package_url, ontrial_package, ontrial_package_url, is_show_ontrial_package_url,
+    is_demonstration, is_recommend, orders, video, promotion, is_add_service, product_id,
+    reserve_stock, language, apparatus_category, authentication_message, system, message,
+    is_scientific
+  </sql>
+  <sql id="Blob_Column_List" >
+    introduction, recommend_memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tf_product
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAll" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tf_product
+    where 1 = 1
+    <if test="companyid!=null ">
+      and company_id = #{companyid}
+    </if>
+    <if test="name!=null and name !=''">
+      and name like '%${name}%'
+    </if>
+    <if test="isAddService!=null">
+      and  is_add_service = #{isAddService}
+    </if>
+    <if test="isMarketable!=null ">
+      and is_marketable = #{isMarketable}
+    </if>
+
+    <if test="status!=null ">
+      and status = #{status}
+    </if>
+    ORDER BY create_date DESC
+  </select>
+
+
+  <select id="getCountProduct" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(id) AS countProduct FROM tf_product
+    where 1 = 1
+    <if test="companyId!=null ">
+      and company_id = #{companyId}
+    </if>
+    <if test="isMarketable!=null">
+      and  is_marketable = #{isMarketable}
+    </if>
+    <if test="status!=null">
+      and  status = #{status}
+    </if>
+
+  </select>
+
+  <select id="getAllMap" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT P.* ,C.bname cname ,CO.`name` coName FROM tf_product P LEFT JOIN (
+    SELECT A.`id` id ,A.`name` aname,B.`id` bid, CONCAT(B.`name`,'-',A.`name`) bname FROM tf_product_category A ,tf_product_category B WHERE A.`parent` = B.`id`
+    ) C ON P.`product_category` = C.id LEFT JOIN tf_company CO ON P.`company_id` = CO.`id` WHERE
+    1 = 1 AND P.is_deleted = FALSE
+    <if test="companyid!=null ">
+      and P.company_id = #{companyid}
+    </if>
+    <if test="name!=null and name !=''">
+      and P.name like '%${name}%'
+    </if>
+    <if test="sn!=null and sn !=''">
+      and P.sn like '%${sn}%'
+    </if>
+    <if test="productCategory!=null ">
+      and P.product_category = #{productCategory}
+    </if>
+    <if test="isMarketable!=null ">
+      and P.is_marketable = #{isMarketable}
+    </if>
+
+    <if test="isTrainingPackage">
+      and P.is_add_service = 3
+    </if>
+
+    <if test="!isTrainingPackage">
+      and P.is_add_service != 3
+    </if>
+
+    <if test="status!=null ">
+      and P.status = #{status}
+    </if>
+    <if test="activationMode!=null ">
+      and P.activation_mode = #{activationMode}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and P.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    ORDER BY P.create_date DESC
+  </select>
+
+  <select id="getProductStatistics" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT COALESCE(SUM(B.countId),0) AS sumCode ,A.* FROM (
+    SELECT pu.id AS puId, p.`id`, p.`create_date`, p.name,p.`sales`,p.`hits`,p.`is_add_service`  ,C.bname cname  FROM tf_product p LEFT JOIN  tf_product_purchase pu ON pu.product_id = p.id LEFT JOIN
+    (SELECT A.`id` id ,A.`name` aname,B.`id` bid, CONCAT(B.`name`,'-',A.`name`) bname FROM tf_product_category A ,tf_product_category B WHERE A.`parent` = B.`id`) C ON p.`product_category` = C.id
+    WHERE 1 = 1
+    <if test="companyId!=null ">
+      and p.company_id = #{companyId}
+    </if>
+    GROUP BY p.`id`
+    ) A LEFT JOIN (SELECT prouct_purchase_id,COUNT(id) AS countId FROM `tf_product_activation_code` WHERE STATUS = 1  GROUP BY prouct_purchase_id) B
+    ON A.puId = B.prouct_purchase_id
+    where 1 = 1
+    <if test="name!=null and name !=''">
+      and A.name like '%${name}%'
+    </if>
+    <if test="sn!=null and sn !=''">
+      and A.sn like '%${sn}%'
+    </if>
+    <if test="productCategory!=null ">
+      and A.product_category = #{productCategory}
+    </if>
+    <if test="startDate != null and endDate ==null " >
+      and A.create_date > #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and A.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY A.id
+  </select>
+
+  <select id="nextTableId" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    SELECT AUTO_INCREMENT FROM information_schema.`TABLES`  WHERE table_schema = 'tongfu' AND table_name = #{tableName}
+  </select>
+
+  <select id="getProductSalesStatistics" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+    SELECT id,name,sales,company_id ,A.sumSales ,CONCAT( ROUND((P.`sales`/A.sumSales)*100,2),'%')  AS proportion
+    FROM tf_product P,
+    (SELECT SUM(sales) sumSales FROM tf_product WHERE
+    1 = 1
+    <if test="companyId!=null ">
+      and company_id = #{companyId}
+    </if>
+    ) A WHERE
+    1 = 1
+    <if test="companyId!=null ">
+      and P.company_id = #{companyId}
+    </if>
+  </select>
+
+  <select id="getAuthenticationStatistics" parameterType="java.util.Map"  resultType="java.util.Map">
+    SELECT authentication_message ,COUNT(id) countId FROM tf_product
+    WHERE authentication_message IS NOT NULL
+    GROUP BY authentication_message  ORDER BY COUNT(id) DESC
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tf_product
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Product" >
+    insert into tf_product (id, create_date, modify_date,
+      allocated_stock, cost, full_name,
+      hits, image, is_gift, is_list,
+      is_marketable, is_top, keyword,
+      market_price, memo, name,
+      point, price, sales,
+      sn, stock, unit, weight,
+      brand, product_category, is_deleted,
+      company_id, status, activation_mode,
+      is_hideprice, price_explain, manufactor,
+      url, software_size, software_version,
+      is_related_software, relation_software_url, product_package,
+      product_package_url, is_showproduct_package_url,
+      ontrial_package, ontrial_package_url, is_show_ontrial_package_url,
+      is_demonstration, is_recommend, orders,
+      video, promotion, is_add_service,
+      product_id, reserve_stock, language,
+      apparatus_category, authentication_message,
+      system, message, is_scientific,
+      introduction, recommend_memo)
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP},
+      #{allocatedStock,jdbcType=INTEGER}, #{cost,jdbcType=DECIMAL}, #{fullName,jdbcType=VARCHAR},
+      #{hits,jdbcType=BIGINT}, #{image,jdbcType=VARCHAR}, #{isGift,jdbcType=BIT}, #{isList,jdbcType=BIT},
+      #{isMarketable,jdbcType=BIT}, #{isTop,jdbcType=BIT}, #{keyword,jdbcType=VARCHAR},
+      #{marketPrice,jdbcType=DECIMAL}, #{memo,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{point,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL}, #{sales,jdbcType=BIGINT},
+      #{sn,jdbcType=VARCHAR}, #{stock,jdbcType=INTEGER}, #{unit,jdbcType=VARCHAR}, #{weight,jdbcType=INTEGER},
+      #{brand,jdbcType=BIGINT}, #{productCategory,jdbcType=BIGINT}, #{isDeleted,jdbcType=BIT},
+      #{companyId,jdbcType=BIGINT}, #{status,jdbcType=BIGINT}, #{activationMode,jdbcType=BIGINT},
+      #{isHideprice,jdbcType=BIT}, #{priceExplain,jdbcType=VARCHAR}, #{manufactor,jdbcType=VARCHAR},
+      #{url,jdbcType=VARCHAR}, #{softwareSize,jdbcType=VARCHAR}, #{softwareVersion,jdbcType=VARCHAR},
+      #{isRelatedSoftware,jdbcType=BIT}, #{relationSoftwareUrl,jdbcType=VARCHAR}, #{productPackage,jdbcType=VARCHAR},
+      #{productPackageUrl,jdbcType=VARCHAR}, #{isShowproductPackageUrl,jdbcType=BIT},
+      #{ontrialPackage,jdbcType=VARCHAR}, #{ontrialPackageUrl,jdbcType=VARCHAR}, #{isShowOntrialPackageUrl,jdbcType=BIT},
+      #{isDemonstration,jdbcType=BIT}, #{isRecommend,jdbcType=BIT}, #{orders,jdbcType=BIGINT},
+      #{video,jdbcType=VARCHAR}, #{promotion,jdbcType=VARCHAR}, #{isAddService,jdbcType=BIT},
+      #{productId,jdbcType=BIGINT}, #{reserveStock,jdbcType=INTEGER}, #{language,jdbcType=VARCHAR},
+      #{apparatusCategory,jdbcType=VARCHAR}, #{authenticationMessage,jdbcType=VARCHAR},
+      #{system,jdbcType=VARCHAR}, #{message,jdbcType=VARCHAR}, #{isScientific,jdbcType=BIT},
+      #{introduction,jdbcType=LONGVARCHAR}, #{recommendMemo,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Product" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+    insert into tf_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="allocatedStock != null" >
+        allocated_stock,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+      <if test="fullName != null" >
+        full_name,
+      </if>
+      <if test="hits != null" >
+        hits,
+      </if>
+      <if test="image != null" >
+        image,
+      </if>
+      <if test="isGift != null" >
+        is_gift,
+      </if>
+      <if test="isList != null" >
+        is_list,
+      </if>
+      <if test="isMarketable != null" >
+        is_marketable,
+      </if>
+      <if test="isTop != null" >
+        is_top,
+      </if>
+      <if test="keyword != null" >
+        keyword,
+      </if>
+      <if test="marketPrice != null" >
+        market_price,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="point != null" >
+        point,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="sales != null" >
+        sales,
+      </if>
+      <if test="sn != null" >
+        sn,
+      </if>
+      <if test="stock != null" >
+        stock,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>
+      <if test="brand != null" >
+        brand,
+      </if>
+      <if test="productCategory != null" >
+        product_category,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="activationMode != null" >
+        activation_mode,
+      </if>
+      <if test="isHideprice != null" >
+        is_hideprice,
+      </if>
+      <if test="priceExplain != null" >
+        price_explain,
+      </if>
+      <if test="manufactor != null" >
+        manufactor,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="softwareSize != null" >
+        software_size,
+      </if>
+      <if test="softwareVersion != null" >
+        software_version,
+      </if>
+      <if test="isRelatedSoftware != null" >
+        is_related_software,
+      </if>
+      <if test="relationSoftwareUrl != null" >
+        relation_software_url,
+      </if>
+      <if test="productPackage != null" >
+        product_package,
+      </if>
+      <if test="productPackageUrl != null" >
+        product_package_url,
+      </if>
+      <if test="isShowproductPackageUrl != null" >
+        is_showproduct_package_url,
+      </if>
+      <if test="ontrialPackage != null" >
+        ontrial_package,
+      </if>
+      <if test="ontrialPackageUrl != null" >
+        ontrial_package_url,
+      </if>
+      <if test="isShowOntrialPackageUrl != null" >
+        is_show_ontrial_package_url,
+      </if>
+      <if test="isDemonstration != null" >
+        is_demonstration,
+      </if>
+      <if test="isRecommend != null" >
+        is_recommend,
+      </if>
+      <if test="orders != null" >
+        orders,
+      </if>
+      <if test="video != null" >
+        video,
+      </if>
+      <if test="promotion != null" >
+        promotion,
+      </if>
+      <if test="isAddService != null" >
+        is_add_service,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="reserveStock != null" >
+        reserve_stock,
+      </if>
+      <if test="language != null" >
+        language,
+      </if>
+      <if test="apparatusCategory != null" >
+        apparatus_category,
+      </if>
+      <if test="authenticationMessage != null" >
+        authentication_message,
+      </if>
+      <if test="system != null" >
+        system,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="isScientific != null" >
+        is_scientific,
+      </if>
+      <if test="introduction != null" >
+        introduction,
+      </if>
+      <if test="recommendMemo != null" >
+        recommend_memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="allocatedStock != null" >
+        #{allocatedStock,jdbcType=INTEGER},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="fullName != null" >
+        #{fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="hits != null" >
+        #{hits,jdbcType=BIGINT},
+      </if>
+      <if test="image != null" >
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="isGift != null" >
+        #{isGift,jdbcType=BIT},
+      </if>
+      <if test="isList != null" >
+        #{isList,jdbcType=BIT},
+      </if>
+      <if test="isMarketable != null" >
+        #{isMarketable,jdbcType=BIT},
+      </if>
+      <if test="isTop != null" >
+        #{isTop,jdbcType=BIT},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="marketPrice != null" >
+        #{marketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        #{point,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="sales != null" >
+        #{sales,jdbcType=BIGINT},
+      </if>
+      <if test="sn != null" >
+        #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null" >
+        #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=INTEGER},
+      </if>
+      <if test="brand != null" >
+        #{brand,jdbcType=BIGINT},
+      </if>
+      <if test="productCategory != null" >
+        #{productCategory,jdbcType=BIGINT},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIGINT},
+      </if>
+      <if test="activationMode != null" >
+        #{activationMode,jdbcType=BIGINT},
+      </if>
+      <if test="isHideprice != null" >
+        #{isHideprice,jdbcType=BIT},
+      </if>
+      <if test="priceExplain != null" >
+        #{priceExplain,jdbcType=VARCHAR},
+      </if>
+      <if test="manufactor != null" >
+        #{manufactor,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="softwareSize != null" >
+        #{softwareSize,jdbcType=VARCHAR},
+      </if>
+      <if test="softwareVersion != null" >
+        #{softwareVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="isRelatedSoftware != null" >
+        #{isRelatedSoftware,jdbcType=BIT},
+      </if>
+      <if test="relationSoftwareUrl != null" >
+        #{relationSoftwareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="productPackage != null" >
+        #{productPackage,jdbcType=VARCHAR},
+      </if>
+      <if test="productPackageUrl != null" >
+        #{productPackageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isShowproductPackageUrl != null" >
+        #{isShowproductPackageUrl,jdbcType=BIT},
+      </if>
+      <if test="ontrialPackage != null" >
+        #{ontrialPackage,jdbcType=VARCHAR},
+      </if>
+      <if test="ontrialPackageUrl != null" >
+        #{ontrialPackageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isShowOntrialPackageUrl != null" >
+        #{isShowOntrialPackageUrl,jdbcType=BIT},
+      </if>
+      <if test="isDemonstration != null" >
+        #{isDemonstration,jdbcType=BIT},
+      </if>
+      <if test="isRecommend != null" >
+        #{isRecommend,jdbcType=BIT},
+      </if>
+      <if test="orders != null" >
+        #{orders,jdbcType=BIGINT},
+      </if>
+      <if test="video != null" >
+        #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="promotion != null" >
+        #{promotion,jdbcType=VARCHAR},
+      </if>
+      <if test="isAddService != null" >
+        #{isAddService,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="reserveStock != null" >
+        #{reserveStock,jdbcType=INTEGER},
+      </if>
+      <if test="language != null" >
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="apparatusCategory != null" >
+        #{apparatusCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="authenticationMessage != null" >
+        #{authenticationMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="system != null" >
+        #{system,jdbcType=VARCHAR},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="isScientific != null" >
+        #{isScientific,jdbcType=BIT},
+      </if>
+      <if test="introduction != null" >
+        #{introduction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="recommendMemo != null" >
+        #{recommendMemo,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Product" >
+    update tf_product
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="allocatedStock != null" >
+        allocated_stock = #{allocatedStock,jdbcType=INTEGER},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="fullName != null" >
+        full_name = #{fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="hits != null" >
+        hits = #{hits,jdbcType=BIGINT},
+      </if>
+      <if test="image != null" >
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="isGift != null" >
+        is_gift = #{isGift,jdbcType=BIT},
+      </if>
+      <if test="isList != null" >
+        is_list = #{isList,jdbcType=BIT},
+      </if>
+      <if test="isMarketable != null" >
+        is_marketable = #{isMarketable,jdbcType=BIT},
+      </if>
+      <if test="isTop != null" >
+        is_top = #{isTop,jdbcType=BIT},
+      </if>
+      <if test="keyword != null" >
+        keyword = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="marketPrice != null" >
+        market_price = #{marketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        point = #{point,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="sales != null" >
+        sales = #{sales,jdbcType=BIGINT},
+      </if>
+      <if test="sn != null" >
+        sn = #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null" >
+        stock = #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=INTEGER},
+      </if>
+      <if test="brand != null" >
+        brand = #{brand,jdbcType=BIGINT},
+      </if>
+      <if test="productCategory != null" >
+        product_category = #{productCategory,jdbcType=BIGINT},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIGINT},
+      </if>
+      <if test="activationMode != null" >
+        activation_mode = #{activationMode,jdbcType=BIGINT},
+      </if>
+      <if test="isHideprice != null" >
+        is_hideprice = #{isHideprice,jdbcType=BIT},
+      </if>
+      <if test="priceExplain != null" >
+        price_explain = #{priceExplain,jdbcType=VARCHAR},
+      </if>
+      <if test="manufactor != null" >
+        manufactor = #{manufactor,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="softwareSize != null" >
+        software_size = #{softwareSize,jdbcType=VARCHAR},
+      </if>
+      <if test="softwareVersion != null" >
+        software_version = #{softwareVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="isRelatedSoftware != null" >
+        is_related_software = #{isRelatedSoftware,jdbcType=BIT},
+      </if>
+      <if test="relationSoftwareUrl != null" >
+        relation_software_url = #{relationSoftwareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="productPackage != null" >
+        product_package = #{productPackage,jdbcType=VARCHAR},
+      </if>
+      <if test="productPackageUrl != null" >
+        product_package_url = #{productPackageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isShowproductPackageUrl != null" >
+        is_showproduct_package_url = #{isShowproductPackageUrl,jdbcType=BIT},
+      </if>
+      <if test="ontrialPackage != null" >
+        ontrial_package = #{ontrialPackage,jdbcType=VARCHAR},
+      </if>
+      <if test="ontrialPackageUrl != null" >
+        ontrial_package_url = #{ontrialPackageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isShowOntrialPackageUrl != null" >
+        is_show_ontrial_package_url = #{isShowOntrialPackageUrl,jdbcType=BIT},
+      </if>
+      <if test="isDemonstration != null" >
+        is_demonstration = #{isDemonstration,jdbcType=BIT},
+      </if>
+      <if test="isRecommend != null" >
+        is_recommend = #{isRecommend,jdbcType=BIT},
+      </if>
+      <if test="orders != null" >
+        orders = #{orders,jdbcType=BIGINT},
+      </if>
+      <if test="video != null" >
+        video = #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="promotion != null" >
+        promotion = #{promotion,jdbcType=VARCHAR},
+      </if>
+      <if test="isAddService != null" >
+        is_add_service = #{isAddService,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="productId == null" >
+        product_id = null,
+      </if>
+      <if test="reserveStock != null" >
+        reserve_stock = #{reserveStock,jdbcType=INTEGER},
+      </if>
+      <if test="language != null" >
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="apparatusCategory != null" >
+        apparatus_category = #{apparatusCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="authenticationMessage != null" >
+        authentication_message = #{authenticationMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="system != null" >
+        system = #{system,jdbcType=VARCHAR},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="isScientific != null" >
+        is_scientific = #{isScientific,jdbcType=BIT},
+      </if>
+      <if test="introduction != null" >
+        introduction = #{introduction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="recommendMemo != null" >
+        recommend_memo = #{recommendMemo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tongfu.entity.Product" >
+    update tf_product
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      allocated_stock = #{allocatedStock,jdbcType=INTEGER},
+      cost = #{cost,jdbcType=DECIMAL},
+      full_name = #{fullName,jdbcType=VARCHAR},
+      hits = #{hits,jdbcType=BIGINT},
+      image = #{image,jdbcType=VARCHAR},
+      is_gift = #{isGift,jdbcType=BIT},
+      is_list = #{isList,jdbcType=BIT},
+      is_marketable = #{isMarketable,jdbcType=BIT},
+      is_top = #{isTop,jdbcType=BIT},
+      keyword = #{keyword,jdbcType=VARCHAR},
+      market_price = #{marketPrice,jdbcType=DECIMAL},
+      memo = #{memo,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      point = #{point,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      sales = #{sales,jdbcType=BIGINT},
+      sn = #{sn,jdbcType=VARCHAR},
+      stock = #{stock,jdbcType=INTEGER},
+      unit = #{unit,jdbcType=VARCHAR},
+      weight = #{weight,jdbcType=INTEGER},
+      brand = #{brand,jdbcType=BIGINT},
+      product_category = #{productCategory,jdbcType=BIGINT},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      company_id = #{companyId,jdbcType=BIGINT},
+      status = #{status,jdbcType=BIGINT},
+      activation_mode = #{activationMode,jdbcType=BIGINT},
+      is_hideprice = #{isHideprice,jdbcType=BIT},
+      price_explain = #{priceExplain,jdbcType=VARCHAR},
+      manufactor = #{manufactor,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      software_size = #{softwareSize,jdbcType=VARCHAR},
+      software_version = #{softwareVersion,jdbcType=VARCHAR},
+      is_related_software = #{isRelatedSoftware,jdbcType=BIT},
+      relation_software_url = #{relationSoftwareUrl,jdbcType=VARCHAR},
+      product_package = #{productPackage,jdbcType=VARCHAR},
+      product_package_url = #{productPackageUrl,jdbcType=VARCHAR},
+      is_showproduct_package_url = #{isShowproductPackageUrl,jdbcType=BIT},
+      ontrial_package = #{ontrialPackage,jdbcType=VARCHAR},
+      ontrial_package_url = #{ontrialPackageUrl,jdbcType=VARCHAR},
+      is_show_ontrial_package_url = #{isShowOntrialPackageUrl,jdbcType=BIT},
+      is_demonstration = #{isDemonstration,jdbcType=BIT},
+      is_recommend = #{isRecommend,jdbcType=BIT},
+      orders = #{orders,jdbcType=BIGINT},
+      video = #{video,jdbcType=VARCHAR},
+      promotion = #{promotion,jdbcType=VARCHAR},
+      is_add_service = #{isAddService,jdbcType=BIGINT},
+      product_id = #{productId,jdbcType=BIGINT},
+      reserve_stock = #{reserveStock,jdbcType=INTEGER},
+      language = #{language,jdbcType=VARCHAR},
+      apparatus_category = #{apparatusCategory,jdbcType=VARCHAR},
+      authentication_message = #{authenticationMessage,jdbcType=VARCHAR},
+      system = #{system,jdbcType=VARCHAR},
+      message = #{message,jdbcType=VARCHAR},
+      is_scientific = #{isScientific,jdbcType=BIT},
+      introduction = #{introduction,jdbcType=LONGVARCHAR},
+      recommend_memo = #{recommendMemo,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Product" >
+    update tf_product
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      allocated_stock = #{allocatedStock,jdbcType=INTEGER},
+      cost = #{cost,jdbcType=DECIMAL},
+      full_name = #{fullName,jdbcType=VARCHAR},
+      hits = #{hits,jdbcType=BIGINT},
+      image = #{image,jdbcType=VARCHAR},
+      is_gift = #{isGift,jdbcType=BIT},
+      is_list = #{isList,jdbcType=BIT},
+      is_marketable = #{isMarketable,jdbcType=BIT},
+      is_top = #{isTop,jdbcType=BIT},
+      keyword = #{keyword,jdbcType=VARCHAR},
+      market_price = #{marketPrice,jdbcType=DECIMAL},
+      memo = #{memo,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      point = #{point,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      sales = #{sales,jdbcType=BIGINT},
+      sn = #{sn,jdbcType=VARCHAR},
+      stock = #{stock,jdbcType=INTEGER},
+      unit = #{unit,jdbcType=VARCHAR},
+      weight = #{weight,jdbcType=INTEGER},
+      brand = #{brand,jdbcType=BIGINT},
+      product_category = #{productCategory,jdbcType=BIGINT},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      company_id = #{companyId,jdbcType=BIGINT},
+      status = #{status,jdbcType=BIGINT},
+      activation_mode = #{activationMode,jdbcType=BIGINT},
+      is_hideprice = #{isHideprice,jdbcType=BIT},
+      price_explain = #{priceExplain,jdbcType=VARCHAR},
+      manufactor = #{manufactor,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      software_size = #{softwareSize,jdbcType=VARCHAR},
+      software_version = #{softwareVersion,jdbcType=VARCHAR},
+      is_related_software = #{isRelatedSoftware,jdbcType=BIT},
+      relation_software_url = #{relationSoftwareUrl,jdbcType=VARCHAR},
+      product_package = #{productPackage,jdbcType=VARCHAR},
+      product_package_url = #{productPackageUrl,jdbcType=VARCHAR},
+      is_showproduct_package_url = #{isShowproductPackageUrl,jdbcType=BIT},
+      ontrial_package = #{ontrialPackage,jdbcType=VARCHAR},
+      ontrial_package_url = #{ontrialPackageUrl,jdbcType=VARCHAR},
+      is_show_ontrial_package_url = #{isShowOntrialPackageUrl,jdbcType=BIT},
+      is_demonstration = #{isDemonstration,jdbcType=BIT},
+      is_recommend = #{isRecommend,jdbcType=BIT},
+      orders = #{orders,jdbcType=BIGINT},
+      video = #{video,jdbcType=VARCHAR},
+      promotion = #{promotion,jdbcType=VARCHAR},
+      is_add_service = #{isAddService,jdbcType=BIGINT},
+      product_id = #{productId,jdbcType=BIGINT},
+      reserve_stock = #{reserveStock,jdbcType=INTEGER},
+      language = #{language,jdbcType=VARCHAR},
+      apparatus_category = #{apparatusCategory,jdbcType=VARCHAR},
+      authentication_message = #{authenticationMessage,jdbcType=VARCHAR},
+      system = #{system,jdbcType=VARCHAR},
+      message = #{message,jdbcType=VARCHAR},
+      is_scientific = #{isScientific,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

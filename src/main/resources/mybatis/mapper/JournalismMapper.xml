@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.JournalismDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Journalism" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="orders" property="orders" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="keyWord" property="keyword" jdbcType="VARCHAR" />
+    <result column="datasource" property="datasource" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="hits" property="hits" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="BIGINT" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="introduce" property="introduce" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tongfu.entity.Journalism" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, orders, title, logo, keyWord, datasource, company_id,
+    hits, status, message, introduce
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tf_journalism
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="toExamineJournalismCouont" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+    select
+    count(id)
+    from tf_journalism
+    where 1 = 1
+    <if test="companyId!=null">
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="status!=null">
+      and status = #{status,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="toShowJournalismCouont" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+    select
+    count(id)
+    from tf_journalism
+    where 1 = 1
+    <if test="companyId!=null">
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="status!=null">
+      and status = #{status,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="hitsJournalismCouont" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+    select
+    COALESCE(SUM(hits),0)
+    from tf_journalism
+    where 1 = 1
+    <if test="companyId!=null">
+      AND company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS(create_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(create_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(create_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(create_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+
+  <select id="getArticle" resultType="java.util.Map" parameterType="java.util.HashMap" >
+    SELECT '新闻动态' AS name ,COUNT(id) AS countNum, IFNULL(SUM(hits),0) AS sumHits  FROM tf_journalism WHERE 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    UNION ALL
+    SELECT '学术活动' AS name ,COUNT(id) AS countNum, IFNULL(SUM(hits),0) AS sumHits  FROM tf_learning WHERE 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    UNION ALL
+    SELECT '媒体报道' AS name ,COUNT(id) AS countNum , IFNULL(SUM(hits),0) AS sumHits FROM tf_media WHERE 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    UNION ALL
+    SELECT '会议展览' AS name ,COUNT(id) AS countNum , IFNULL(SUM(hits),0) AS sumHits  FROM tf_media WHERE  1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+
+
+  <select id="getbrandConunt" resultType="java.util.Map" parameterType="java.util.HashMap" >
+    SELECT '微官网' AS NAME ,COUNT(1) AS countNum  FROM `tf_company_statistics` WHERE 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    UNION ALL
+    SELECT '产品' AS NAME ,COUNT(1) AS countNum FROM `tf_product_statistics` WHERE 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    UNION ALL
+    SELECT '文章' AS NAME, SUM(A.sumHits) AS countNum FROM (
+    SELECT  IFNULL(SUM(hits),0) AS sumHits FROM tf_journalism WHERE 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    UNION ALL
+    SELECT IFNULL(SUM(hits),0) AS sumHits FROM tf_learning WHERE 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    UNION ALL
+    SELECT IFNULL(SUM(hits),0) AS sumHits FROM tf_media WHERE 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    UNION ALL
+    SELECT IFNULL(SUM(hits),0) AS sumHits FROM tf_exhibition WHERE 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    ) A
+  </select>
+
+  <select id="getArticleRanking" resultType="java.util.Map" parameterType="java.util.HashMap" >
+    SELECT * FROM (
+    SELECT A.*,C.sumHits , CONCAT(ROUND(A.hits/C.sumHits*100,1),'%') AS 'proportion' FROM (
+    SELECT title,'新闻动态' AS 'articleType', hits  ,create_date ,company_id  FROM tf_journalism
+    UNION ALL
+    SELECT title,'学术活动' AS 'articleType', hits   ,create_date ,company_id FROM tf_learning
+    UNION ALL
+    SELECT title,'媒体报道' AS 'articleType', hits  ,create_date ,company_id   FROM tf_media
+    UNION ALL
+    SELECT title,'会议展览' AS 'articleType', hits   ,create_date ,company_id FROM tf_exhibition
+    ) A
+    ,  (
+    SELECT SUM(B.hits)  AS sumHits FROM (
+    SELECT title,'新闻动态' AS 'articleType', hits  ,create_date ,company_id   FROM tf_journalism
+    UNION ALL
+    SELECT title,'学术活动' AS 'articleType', hits   ,create_date ,company_id FROM tf_learning
+    UNION ALL
+    SELECT title,'媒体报道' AS 'articleType', hits  ,create_date ,company_id FROM tf_media
+    UNION ALL
+    SELECT title,'会议展览' AS 'articleType', hits  ,create_date ,company_id FROM tf_exhibition
+    ) B)C ORDER BY A.hits DESC ) D WHERE 1 = 1
+    <if test="companyId != null" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+
+  </select>
+
+  <select id="getAll" resultType="java.util.Map" parameterType="java.util.HashMap" >
+    SELECT j.*,c.`name` AS cname FROM tf_journalism j LEFT JOIN tf_company c ON j.`company_id` = c.`id`
+    where 1 = 1
+    <if test="title!=null and title !='' ">
+      and j.title like '%${title}%'
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and j.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="keyword != null and keyword !=''" >
+      and j.keyWord  like '%${keyWord}%'
+    </if>
+    <if test="datasource != null and datasource !=''" >
+      and j.datasource = #{datasource,jdbcType=VARCHAR}
+    </if>
+    <if test="companyId != null" >
+      and j.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="content != null" >
+      and  j.content like '%${content}%'
+    </if>
+    <if test="status != null" >
+      and j.status = #{status,jdbcType=BIGINT}
+    </if>
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS(j.create_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(j.create_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(j.create_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(j.create_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and j.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    ORDER BY j.create_date DESC
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_journalism
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Journalism" >
+    insert into tf_journalism (id, create_date, modify_date,
+      orders, title, logo,
+      keyWord, datasource, company_id,
+      hits, status, message,
+      introduce, content)
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP},
+      #{orders,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR},
+      #{keyword,jdbcType=VARCHAR}, #{datasource,jdbcType=VARCHAR}, #{companyId,jdbcType=BIGINT},
+      #{hits,jdbcType=BIGINT}, #{status,jdbcType=BIGINT}, #{message,jdbcType=VARCHAR},
+      #{introduce,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Journalism" useGeneratedKeys="true" keyProperty="id" >
+    insert into tf_journalism
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="orders != null" >
+        orders,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="keyword != null" >
+        keyWord,
+      </if>
+      <if test="datasource != null" >
+        datasource,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="hits != null" >
+        hits,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="introduce != null" >
+        introduce,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orders != null" >
+        #{orders,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="datasource != null" >
+        #{datasource,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="hits != null" >
+        #{hits,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIGINT},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null" >
+        #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Journalism" >
+    update tf_journalism
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orders != null" >
+        orders = #{orders,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        keyWord = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="datasource != null" >
+        datasource = #{datasource,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="hits != null" >
+        hits = #{hits,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIGINT},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null" >
+        introduce = #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tongfu.entity.Journalism" >
+    update tf_journalism
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      orders = #{orders,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      keyWord = #{keyword,jdbcType=VARCHAR},
+      datasource = #{datasource,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=BIGINT},
+      hits = #{hits,jdbcType=BIGINT},
+      status = #{status,jdbcType=BIGINT},
+      message = #{message,jdbcType=VARCHAR},
+      introduce = #{introduce,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Journalism" >
+    update tf_journalism
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      orders = #{orders,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      keyWord = #{keyword,jdbcType=VARCHAR},
+      datasource = #{datasource,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=BIGINT},
+      hits = #{hits,jdbcType=BIGINT},
+      status = #{status,jdbcType=BIGINT},
+      message = #{message,jdbcType=VARCHAR},
+      introduce = #{introduce,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

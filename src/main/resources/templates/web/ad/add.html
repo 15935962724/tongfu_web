@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>发布广告</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/imgCallBack.css}"  rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{web/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-lg-10" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+
+                <form class="needs-validation" novalidate  method="post"  onsubmit="return checkFrom()" th:action="@{/web/ad/save}"  enctype="multipart/form-data">
+                  <div class="form-group mb-3">
+                    <label for="title">标题</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="title" required>
+                    <div class="invalid-feedback">
+                      请输入标题
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>广告图</label>
+
+                    <div class="input-group imgCallBack">
+                      <img class="imgCallBackView" th:src="@{/assets/img/addImg.png}" src="/assets/img/addImg.png"/>
+                      <div class="custom-file">
+                        <input type="file"  name = "adImage"  class="custom-file-input" accept="image/*" placeholder="上传新闻图片" id="adImage" onchange="callBackImg(this,'imgCallBackView')">
+                        <label class="custom-file-label" for="adImage">请上传广告图片</label>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label class="col-form-label">位置</label>
+                    <select name="adPosition" id = "adPosition" class="form-control">
+                      <option th:each="adPosition:${adPositions}" th:value="${adPosition.id}" >[[${adPosition.name}]] ([[${adPosition.width}]]*[[${adPosition.height}]]) </option>
+                    </select>
+                  </div>
+
+                  <input type="hidden" name="productCategoryId" id="productCategoryId">
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label class="col-form-label">所属分类</label>
+                        <select id="inputStates" onchange="inputStatesValue();" class="form-control">
+                          <option value="" >--请选择--</option>
+                          <option th:each="category:${productCategories}" th:value="${category.id}" th:text="${category.name}"></option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="productCategory" class="col-form-label">所属子类</label>
+                        <select id="productCategory" name="productCategory" class="form-control">
+                          <option value="">--请选择--</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="url">跳转地址</label>
+                    <input type="text" class="form-control" id="url" name="url" placeholder="跳转地址">
+                    <div class="invalid-feedback">
+                      跳转地址
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="title">起止时间</label>
+                    <input type="text" class="form-control" id="beginDate" name ="beginDate" data-provide="datepicker" data-date-autoclose="true" >
+                    &nbsp;&nbsp;至&nbsp;&nbsp;
+                    <input type="text" class="form-control" id="endDate"  name ="endDate" data-provide="datepicker" data-date-autoclose="true">
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="url">描述</label>
+                    <textarea class="form-control" id="example-textarea" rows="3" name="content" placeholder="描述"></textarea>
+                  </div>
+
+
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:history.back(-1);">返回</button>
+                  </div>
+                </form>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+      </div>
+       <!-- content -->
+      <!--警告弹窗-->
+      <th:block th:replace="~{web/incloud/status::warning}"></th:block>
+      <!-- Footer Start -->
+      <div th:replace="~{web/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<!-- Summernote js -->
+<script th:src="@{/assets/js/vendor/summernote-bs4.min.js}"></script>
+<!-- Summernote demo -->
+<script th:src="@{/assets/js/pages/demo.summernote.js}"></script>
+
+<script >
+
+  var width,height;
+  $("#adImage").change(function (e) {
+    var file, img;
+    var _URL = window.URL || window.webkitURL;
+    if ((file = this.files[0])) {
+      img = new Image();
+      img.onload = function () {
+        width = this.width;
+        height = this.height;
+        console.log("width:"+ this.width+",height"+this.height+"filesize"+ file.size)
+        // callback && callback({"width": this.width, "height": this.height, "filesize": file.size});
+      };
+      img.src = _URL.createObjectURL(file);
+    }
+  });
+
+
+  //图片回显
+  function callBackImg(_this,name) {
+    var file = _this.files[0];
+    console.log(file);
+    //判断文件格式
+    if (file.type != 'image/png' && file.type != 'image/jpeg' && file.type != 'image/gif') {
+      alert("图片格式不正确");
+      $("."+name).attr("src","/assets/img/addImg.png");
+      return false;
+    }
+    //读取图片
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    //构造Image对象，获取 Image对象
+    //onload在读取完毕后触发
+    reader.onload = function() {
+      //获取读取的URL
+      var imgURL = this.result;
+      $("."+name).attr("src",imgURL)
+    }
+  }
+
+
+  //单击分类
+  function inputStatesValue() {
+    var id = $('#inputStates') .val();
+    var  productCategoryId  = $('#productCategory')
+    productCategoryId.html("");
+    productCategoryId.append("<option value=''>--请选择--</option>");
+    //加载子类数据
+    $.ajax({
+      type:"GET",
+      url:'[[@{/web/category/queryCategory}]]',
+      data:{id:id},
+      dataType:"json",
+      async: false,
+      success:function(data){
+
+        var html = "";
+        if(data.length>0){
+          for (var i = 0;i<data.length;i++){
+            html = html+ '<option value='+data[i].id+'>'+data[i].name+'</option>';
+          }
+        }
+        productCategoryId.append(html);
+      }
+    });
+
+  }
+
+
+
+  //提交校验
+  function checkFrom() {
+
+    var inputStatus = $('#inputStates').val();
+    var productCategory = $('#productCategory').val();
+    var productCategoryId = productCategory || inputStatus ;
+    $('#productCategoryId').val(productCategoryId);
+
+    var adImageVal = $('#adImage').val();
+    var ext = adImageVal.substring(adImageVal.lastIndexOf(".")+1).toUpperCase();
+    if(ext != 'PNG' && ext != 'JPG' && ext != 'JPEG' && ext != 'GIF'&&ext != 'png' && ext != 'jpg' && ext != 'jpeg' && ext != 'gif'){
+      $('#warningContent').html('请上传正确格式的图片');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    var adPosition = $('#adPosition option:selected') .val();
+    if (adPosition == "") {
+      $('#warningContent').html('请选择广告位');
+      $("#btn-warning").click();
+      return false;
+    }else{
+      if(!checkAdPosition(adPosition)){
+        return false;
+      }
+    }
+
+
+
+    var beginDate=$("#beginDate").val();
+    var start=new Date(beginDate.replace("-", "/").replace("-", "/"));
+    var endDate=$("#endDate").val();
+    var end=new Date(endDate.replace("-", "/").replace("-", "/"));
+
+    if(beginDate==''||endDate==''){
+      $('#warningContent').html('请输入广告起止时间!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    if(end<start) {
+      $('#warningContent').html('广告截止时间必须大于起始时间!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    return true;
+  }
+
+
+
+  //校验表单提交
+  function checkAdPosition(id) {
+    var fals = false;
+    // var datas = "{ \"id\": "+username+"}";
+    $.ajax({
+      type:"GET",
+      contentType: "application/json",
+      url:'[[@{/web/ad/check_ad_position}]]',
+      data:{'id':id},
+      dataType: "json",
+      async: false,
+      success:function(data){
+        if (width==data.width&&height==data.height){
+          fals = true;
+        } else {
+          $('#warningContent').html('图片宽高必须是'+data.width+'*'+data.height+'px');
+          $("#btn-warning").click();
+          fals =false;
+        }
+      }
+    });
+    return fals;
+
+
+  }
+
+</script>
+</body>
+</html>

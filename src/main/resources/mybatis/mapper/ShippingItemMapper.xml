@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.ShippingItemDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.ShippingItem" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="sn" property="sn" jdbcType="VARCHAR" />
+    <result column="shipping" property="shipping" jdbcType="BIGINT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tongfu.entity.ShippingItem" >
+    insert into tf_shipping_item (id, create_date, modify_date, 
+      name, quantity, sn, 
+      shipping)
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{name,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{sn,jdbcType=VARCHAR}, 
+      #{shipping,jdbcType=BIGINT} )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.ShippingItem" >
+    insert into tf_shipping_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="sn != null" >
+        sn,
+      </if>
+      <if test="shipping != null" >
+        shipping,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="sn != null" >
+        #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="shipping != null" >
+        #{shipping,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+    
+  <insert id="insertSelectiveMap" parameterType="java.util.HashMap">
+    insert into tf_shipping_item (create_date, modify_date, 
+      name, quantity, sn,shipping)
+    values 
+    <foreach collection="shippingItemList" item="item" index="index" separator=",">
+      (#{item.createDate,jdbcType=TIMESTAMP}, #{item.modifyDate,jdbcType=TIMESTAMP},
+      #{item.name,jdbcType=VARCHAR}, #{item.quantity,jdbcType=INTEGER}, #{item.sn,jdbcType=VARCHAR},
+      #{shipping,jdbcType=BIGINT})
+    </foreach>
+
+  </insert>
+
+</mapper>

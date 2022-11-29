@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+    <meta charset="utf-8" />
+    <title>首页管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+    <link th:href="@{/assets/css/imgCallBack.css}"  rel="stylesheet" type="text/css" />
+
+    <style>
+        .nav-main{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+            background-color: #fff;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .nav-main-active{
+            color: #fff;
+            background-color: #727cf5;
+        }
+        .nav-main a{
+            width: 50%;
+        }
+        .nav-main-btn{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            width: 50%;
+        }
+        .nav-main-btn span{
+            cursor: pointer;
+            text-align: center;
+            margin-right: 20px;
+        }
+        .nav-main-btn span:last-of-type{
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{admin/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+        <div class="content-page">
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">分类管理</h4>
+                                <!-- Signup modal content -->
+                                <div id="signup-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                            <div class="modal-body">
+                                                <div class="text-center mt-2 mb-4">
+                                                    <a href="index.html" class="text-success">
+                                                        <span>添加分类</span>
+                                                    </a>
+                                                </div>
+
+                                                <form class="pl-3 pr-3" method="post" th:action="@{/admin/home/save}"  enctype="multipart/form-data">
+                                                    <input type="hidden" id = "parent" name="parent" />
+                                                    <input type="hidden" name="position" value="1">
+                                                    <input type="hidden" name="type" value="2">
+                                                    <div class="form-group">
+                                                        <label for="name">名称</label>
+                                                        <input class="form-control" type="text" id="name" name="name" required="" placeholder="描述">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>logo</label>
+                                                        <div class="input-group imgCallBack">
+                                                            <img class="imgCallBackView" th:src="@{/assets/img/addImg.png}" src="/assets/img/addImg.png"/>
+                                                            <div class="custom-file">
+                                                                <input type="file"  name = "categoryImg"  class="custom-file-input" id="categoryImg" onchange="callBackImg(this,'imgCallBackView')">
+                                                                <label class="custom-file-label" for="categoryImg">logo</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="seoDescription">编码</label>
+                                                        <input class="form-control" type="text" name="seoTitle" placeholder="编码">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="seoDescription">描述</label>
+                                                        <input class="form-control" type="text" id="seoDescription" name="seoDescription" placeholder="描述">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="inputState" class="input-group">排序</label>
+                                                        <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
+                                                          <span class="input-group-btn input-group-prepend">
+                                                          </span>
+                                                                <input data-toggle="touchspin" id="inputState" name="orders" data-bts-max="500" value="1" data-btn-vertical="true" type="text" class="form-control">
+                                                                <span class="input-group-btn input-group-append">
+                                                          </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group text-center">
+                                                        <button class="btn btn-primary" type="submit">提交</button>
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+
+                                <div id="edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                            <div class="modal-body">
+                                                <div class="text-center mt-2 mb-4">
+                                                    <a href="index.html" class="text-success">
+                                                        <span>编辑分类</span>
+                                                    </a>
+                                                </div>
+
+                                                <form class="pl-3 pr-3" method="post" th:action="@{/admin/home/update}"  enctype="multipart/form-data">
+                                                    <input type="hidden" id = "update-id" name="id" />
+                                                    <div class="form-group">
+                                                        <label for="name">名称</label>
+                                                        <input class="form-control" type="text" id="update-name" name="name" required="" placeholder="描述">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label>logo</label>
+                                                        <div class="input-group imgCallBack">
+                                                            <img class="imgCallBackView1" id="categoryLogo" th:src="@{/assets/img/addImg.png}"/>
+                                                            <div class="custom-file">
+                                                                <input type="file"  name = "categoryImg"  class="custom-file-input" id="inputGroupFile04" onchange="callBackImg(this,'imgCallBackView1')">
+                                                                <label class="custom-file-label" for="inputGroupFile04">分类img</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label >编码</label>
+                                                        <input class="form-control" type="text" id="seoTitle" name="seoTitle" placeholder="编码">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label >描述</label>
+                                                        <input class="form-control" type="text" id="updateseoDescription" name="seoDescription" placeholder="描述">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="updateinputOrders" class="input-group">排序</label>
+                                                        <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
+                                                          <span class="input-group-btn input-group-prepend">
+                                                          </span>
+                                                            <input data-toggle="touchspin" id="updateinputOrders" name="orders" data-bts-max="500" value="1" data-btn-vertical="true" type="text" class="form-control">
+                                                            <span class="input-group-btn input-group-append">
+                                                          </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group text-center">
+                                                        <button class="btn btn-primary" type="submit">提交</button>
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div>
+                                </div>
+
+                                <div class="button-list">
+                                    <!-- Custom width modal -->
+                                    <button type="button" class="btn btn-info" id="categoryAdd" data-toggle="modal" data-target="#signup-modal">添加分类</button>
+                                </div>
+
+                            </div> <!-- end card-body-->
+
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3 mb-2 mb-sm-0">
+
+                                        <div th:each="category ,categoryStart:${page.list}" th:class="${parent==category.id?'nav-main nav-main-active':'nav-main'}" th:id="${category.id}">
+                                            <a class="nav-link" th:onclick="|changeMain(${category.id})|">[[${category.name}]]</a>
+                                            <div class="nav-main-btn">
+                                                <span data-toggle="modal" th:onclick="|updateModeData(${category.id})|" data-target="#edit-modal">编辑</span>
+                                                <span th:onclick="|deleteCategory(${category.id})|">删除</span>
+                                            </div>
+                                        </div>
+
+                                    </div> <!-- end col-->
+
+                                    <div class="col-sm-9">
+                                        <div class="tab-content" id="v-pills-tabContent">
+                                            <div class="tab-pane fade active show" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                                <h4 class="header-title">
+                                                    <button style="margin-bottom: 10px; float: right;" type="button" id="categoryAddParent"
+                                                            class="btn btn-warning" data-toggle="modal"
+                                                            data-target="#signup-modal"><i class="mdi mdi-rocket mr-1"></i> <span>创建子类</span></button>
+                                                </h4>
+                                                <div class="table-responsive-sm">
+                                                    <table class="table table-hover table-centered mb-0">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>序号</th>
+                                                            <th>分类名称</th>
+                                                            <th>排序</th>
+                                                            <th>操作</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody id = "tbody">
+                                                        <tr>
+                                                            <td>ASOS Ridley High Waist</td>
+                                                            <th>分类名称</th>
+                                                            <td><span class="badge badge-primary">82 Pcs</span></td>
+                                                            <td>$6,518.18</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div> <!-- end tab-content-->
+                                    </div> <!-- end col-->
+                                </div>
+                                <!-- end row-->
+                            </div>
+                        </div> <!-- end card-->
+                    </div> <!-- end col-->
+
+                </div>
+                <!-- end row-->
+
+            </div><!-- content -->
+
+            <!-- Footer Start -->
+            <div th:replace="~{admin/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+
+    </div> <!-- end wrapper-->
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+
+<
+
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+
+
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+<!-- third party js -->
+<script src="assets/js/vendor/jquery.dataTables.min.js" th:src="@{/assets/js/vendor/jquery.dataTables.min.js}"></script>
+<script src="assets/js/vendor/dataTables.bootstrap4.js" th:src="@{/assets/js/vendor/dataTables.bootstrap4.js}"></script>
+<script src="assets/js/vendor/dataTables.responsive.min.js" th:src="@{/assets/js/vendor/dataTables.responsive.min.js}"></script>
+<script src="assets/js/vendor/responsive.bootstrap4.min.js" th:src="@{/assets/js/vendor/responsive.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/dataTables.buttons.min.js" th:src="@{/assets/js/vendor/dataTables.buttons.min.js}"></script>
+<script src="assets/js/vendor/buttons.bootstrap4.min.js" th:src="@{/assets/js/vendor/buttons.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/buttons.html5.min.js" th:src="@{/assets/js/vendor/buttons.html5.min.js}"></script>
+<script src="assets/js/vendor/buttons.flash.min.js" th:src="@{/assets/js/vendor/buttons.flash.min.js}"></script>
+<script src="assets/js/vendor/buttons.print.min.js" th:src="@{/assets/js/vendor/buttons.print.min.js}"></script>
+<script src="assets/js/vendor/dataTables.keyTable.min.js" th:src="@{/assets/js/vendor/dataTables.keyTable.min.js}"></script>
+<script src="assets/js/vendor/dataTables.select.min.js" th:src="@{/assets/js/vendor/dataTables.select.min.js}"></script>
+<!-- third party js ends -->
+
+<!-- demo app -->
+<!--<script src="assets/js/pages/demo.datatable-init.js" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>-->
+
+<script th:src="@{/assets/js/pages/demo.datatable-init.js}"></script>
+<!-- end demo js-->
+
+<script >
+
+    //页面加载就调用
+    $(function(){
+        // var id = $("#v-pills-tab a:first-child").attr("id");
+        var id = [[${parent}]];
+        $("#parent").val(id);
+        dataSource(id);
+
+    });
+
+    // 单击分类调用
+    function changeMain(id) {
+        $("#parent").val(id);
+        $("#"+id).addClass("nav-main-active");
+        $("#"+id).siblings(".nav-main").removeClass("nav-main-active");
+        dataSource(id);
+    }
+
+    // $("#tbody .badge-success").on("click",function(){
+    //     alert();
+    //     var id = $(this).attr("id");
+    //     alert(id);
+    //
+    // })
+
+    //图片回显
+    function callBackImg(_this,name) {
+        var file = _this.files[0];
+        console.log(file);
+        //判断文件格式
+        if (file.type != 'image/png' && file.type != 'image/jpeg' && file.type != 'image/gif') {
+            alert("图片格式不正确");
+            $("."+name).attr("src","/assets/img/addImg.png");
+            return false;
+        }
+        //读取图片
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        //构造Image对象，获取 Image对象
+        //onload在读取完毕后触发
+        reader.onload = function() {
+            //获取读取的URL
+            var imgURL = this.result;
+            $("."+name).attr("src",imgURL)
+        }
+    }
+
+    // 编辑给模态框赋值
+    function updateModeData(id){
+        // alert(id);
+        $.ajax({
+            type:"GET",
+            url:'[[@{/admin/home/getCategory}]]',
+            data:{id:id},
+            dataType:"json",
+            async: false,
+            success:function(data){
+                $("#update-name").val(data.name);
+                $("#updateseoDescription").val(data.seoDescription);
+                $("#seoTitle").val(data.seoTitle);
+                $("#updateinputOrders").val(data.orders);
+                $("#update-id").val(data.id);
+                $("#categoryLogo").attr('src',data.image);
+
+            }
+        });
+
+    }
+
+    //添加顶级分类
+    $("#categoryAdd").on("click",function(){
+        $("#parent").val("");
+    });
+
+
+
+    //加载子集数据
+    function dataSource(id) {
+        // alert(id);
+        var tbody = $("#tbody");
+        tbody.html("");
+    $.ajax({
+            type:"GET",
+            url:'[[@{/admin/home/queryCategory}]]',
+            data:{id:id},
+            dataType:"json",
+            async: false,
+            success:function(data){
+
+                var html = "";
+                if(data.length>0){
+                    for (var i = 0;i<data.length;i++){
+                        html = html+ "<tr>";
+                        html = html+ "<td>"+(i+1)+"</td>";
+                        html = html+ "<td>"+data[i].name+"</td>";
+                        html = html+ "<td><span class='badge badge-primary'>"+data[i].orders+"</span></td>";
+                        var url=  '[[@{/}]]'
+                        var comUrl = url.substring(0,url.length-1);
+                        url=  comUrl+'/admin/article/list?articleCategory='+data[i].id;
+                        // alert(url)
+                        // var url= '[[@{/admin/article/list(articleCategory='data[i].id')}]]';
+
+                        html = html+ "<td><a href='"+url+"' ><span class=\"badge badge-success\" >详情</span></a><a  href=\"javascript:;\" ><span class=\"badge badge-success\" data-toggle='modal' onclick=\"updateModeData('"+data[i].id+"')\" id='"+data[i].id+"' data-target='#edit-modal'>编辑</span></a><a href=\"javascript:;\" onclick=\"deleteCategory('"+data[i].id+"');\"> <span class=\"badge badge-danger\">删除</span></a></td>";
+                        html = html+ "</tr>";
+                    }
+                }else{
+                    html = html+ "<tr>";
+                    html = html+ "<td></td>";
+                    // html = html+ "<td></td>";
+                    html = html+ "<td>暂无子类</td>";
+                    html = html+ "</tr>";
+                }
+
+                tbody.append(html);
+
+            }
+    });
+
+    }
+
+    // 删除子类
+    function  deleteCategory(id){
+        // (window.location.pathname)
+         var parent = $('#parent').val();
+        // alert(parent)
+        if (confirm("你确定要删除吗？")){
+
+            $.ajax({
+                type:"GET",
+                url:'[[@{/admin/home/deleteCategory}]]',
+                data:{id:id},
+                dataType:"json",
+                async: false,
+                success:function(data){
+                    console.log(data);
+                    if (data.status==200) {
+                        // window.location.reload();//刷新当前页
+                        // dataSource(parent);
+                        window.location.href=window.location.pathname+"?parent="+parent
+                    }else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+
+    }
+
+    //判断数据是否为null
+    function dataObj(data) {
+        if (!data)
+        {
+            return "";
+        }else {
+            return data;
+        }
+    }
+
+</script>
+</body>
+</html>

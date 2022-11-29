@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.ProductMealDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.ProductMeal" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="product_purchase_id" property="productPurchaseId" jdbcType="BIGINT" />
+    <result column="product_package_id" property="productPackageId" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="is_marketable" property="isMarketable" jdbcType="BIT" />
+    <result column="sales" property="sales" jdbcType="BIGINT" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="status" property="status" jdbcType="BIGINT" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, company_id, product_id, product_purchase_id, product_package_id,
+    price, is_marketable, sales, is_deleted, status, message
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tf_product_meal
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAll" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT C.id ,C.create_date, D.name AS productName,C.name AS packageName ,C.is_marketable,C.price,C.sales,C.status ,C.message,D.status AS productStatus,C.Bstatus AS packageStatus , CO.name AS coName FROM (
+    SELECT A.id,B.name,A.price,A.status ,A.company_id ,A.create_date ,A.is_marketable,A.sales,A.product_package_id ,A.message ,B.status AS Bstatus FROM tf_product_meal A,tf_product B WHERE A.product_package_id = B.id
+    ) C,(
+    SELECT A.id,B.name ,A.`company_id` ,B.status FROM tf_product_meal A,tf_product B WHERE A.product_id = B.id
+    ) D , tf_company CO  WHERE C.id = D.id AND D.company_id = CO.id
+    <if test="productPackageId!=null ">
+      and C.product_package_id = #{productPackageId}
+    </if>
+    <if test="companyId!=null ">
+      and C.company_id = #{companyId}
+    </if>
+    <if test="name!=null and name !=''">
+      and (D.name like '%${name}%' or C.name like '%${name}%')
+    </if>
+    <if test="status!=null ">
+      and C.status = #{status}
+    </if>
+    <if test="isMarketable!=null ">
+      and C.is_marketable = #{isMarketable}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and C.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+
+
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_product_meal
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.ProductMeal" >
+    insert into tf_product_meal (id, create_date, modify_date, 
+      company_id, product_id, product_purchase_id, 
+      product_package_id, price, is_marketable, 
+      sales, is_deleted, status, 
+      message)
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{companyId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{productPurchaseId,jdbcType=BIGINT}, 
+      #{productPackageId,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL}, #{isMarketable,jdbcType=BIT}, 
+      #{sales,jdbcType=BIGINT}, #{isDeleted,jdbcType=BIT}, #{status,jdbcType=BIGINT}, 
+      #{message,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.ProductMeal" >
+    insert into tf_product_meal
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="productPurchaseId != null" >
+        product_purchase_id,
+      </if>
+      <if test="productPackageId != null" >
+        product_package_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="isMarketable != null" >
+        is_marketable,
+      </if>
+      <if test="sales != null" >
+        sales,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="productPurchaseId != null" >
+        #{productPurchaseId,jdbcType=BIGINT},
+      </if>
+      <if test="productPackageId != null" >
+        #{productPackageId,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isMarketable != null" >
+        #{isMarketable,jdbcType=BIT},
+      </if>
+      <if test="sales != null" >
+        #{sales,jdbcType=BIGINT},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIGINT},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.ProductMeal" >
+    update tf_product_meal
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="productPurchaseId != null" >
+        product_purchase_id = #{productPurchaseId,jdbcType=BIGINT},
+      </if>
+      <if test="productPackageId != null" >
+        product_package_id = #{productPackageId,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isMarketable != null" >
+        is_marketable = #{isMarketable,jdbcType=BIT},
+      </if>
+      <if test="sales != null" >
+        sales = #{sales,jdbcType=BIGINT},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIGINT},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateProductMeal" parameterType="java.util.HashMap" >
+    update tf_product_meal
+    <set >
+        status = 1
+    </set>
+    <where>
+      <if test="productPackageId != null" >
+        product_package_id = #{productPackageId,jdbcType=BIGINT}
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT}
+      </if>
+    </where>
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.ProductMeal" >
+    update tf_product_meal
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      company_id = #{companyId,jdbcType=BIGINT},
+      product_id = #{productId,jdbcType=BIGINT},
+      product_purchase_id = #{productPurchaseId,jdbcType=BIGINT},
+      product_package_id = #{productPackageId,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      is_marketable = #{isMarketable,jdbcType=BIT},
+      sales = #{sales,jdbcType=BIGINT},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      status = #{status,jdbcType=BIGINT},
+      message = #{message,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

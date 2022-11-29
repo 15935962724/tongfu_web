@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>添加角色</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+
+  <!-- App css -->
+  <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+  <style>
+    .custom-checkbox ul li{
+      float: left;
+      padding-left: 30px;
+      list-style: none;
+    }
+
+
+
+  </style>
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <!-- Start Content-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{web/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-lg-6" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-3">创建角色</h4>
+
+                <form class="needs-validation" novalidate  method="post" th:action="@{/web/company_role/update}">
+                  <input type="hidden" name="id" th:value="${companyRole.id}">
+                  <div class="form-group mb-3">
+                    <label for="name">角色名称</label>
+                    <input type="text" class="form-control" id="name" name="name" th:value="${companyRole.name}" placeholder="roleName" required>
+                    <div class="invalid-feedback">
+                      角色名称必填
+                    </div>
+                  </div>
+                  <div class="form-group mt-3">
+                    <label for="description">角色描述</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" th:value="${companyRole.description}" placeholder="description"></textarea>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="">商品</label>
+                    <div class="custom-control custom-checkbox">
+                      <ul>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" th:checked="${companyAuthorities.contains('product')}" value="product" id="product" >
+                          <label class="custom-control-label" for="product">商品管理</label>
+                        </li>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities"  th:checked="${companyAuthorities.contains('productMeal')}"  value="productMeal" id="productMeal">
+                          <label class="custom-control-label" for="productMeal">商品套餐</label>
+                        </li>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" th:checked="${companyAuthorities.contains('productStatistics')}" value="productStatistics" id="productStatistics" >
+                          <label class="custom-control-label" for="productStatistics">商品统计</label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="">订单</label>
+                    <div class="custom-control custom-checkbox">
+                      <ul>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" th:checked="${companyAuthorities.contains('order')}" value="order" id="order" >
+                          <label class="custom-control-label" for="order">订单管理</label>
+                        </li>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" value="orderStatistics" th:checked="${companyAuthorities.contains('orderStatistics')}"  id="orderStatistics">
+                          <label class="custom-control-label" for="orderStatistics">订单统计</label>
+                        </li>
+                        <!--<li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" value="invoice" id="invoice" >
+                          <label class="custom-control-label" for="invoice">发票管理</label>
+                        </li>
+                        <li>
+                          <input type="checkbox" class="custom-control-input"  name="authorities" value="Knowhow" id="Knowhow" >
+                          <label class="custom-control-label" for="Knowhow">Knowhow</label>
+                        </li>-->
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="">病例</label>
+                    <div class="custom-control custom-checkbox">
+                      <ul>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" value="caseManagement" th:checked="${companyAuthorities.contains('caseManagement')}" id="caseManagement" >
+                          <label class="custom-control-label" for="caseManagement">病例管理</label>
+                        </li>
+                        <!--<li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" value="commission" id="commission">
+                          <label class="custom-control-label" for="commission">顾问佣金</label>
+                        </li>-->
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label  for="">留言</label>
+                    <div class="custom-control custom-checkbox">
+                      <ul>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" th:checked="${companyAuthorities.contains('message')}" value="message" id="message" >
+                          <label class="custom-control-label" for="message">留言管理</label>
+                        </li>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" th:checked="${companyAuthorities.contains('discuss')}" value="discuss" id="discuss">
+                          <label class="custom-control-label" for="discuss">讨论会员</label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label >广告</label>
+                    <div class="custom-control custom-checkbox">
+                      <ul>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" th:checked="${companyAuthorities.contains('ad')}"  value="ad" id="ad" >
+                          <label class="custom-control-label" for="ad">广告管理</label>
+                        </li>
+                        <!--<li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" value="adPosition" id="adPosition">
+                          <label class="custom-control-label" for="adPosition">广告位</label>
+                        </li>-->
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label >客服</label>
+                    <div class="custom-control custom-checkbox">
+                      <ul>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" th:checked="${companyAuthorities.contains('returnGoods')}" value="returnGoods" id="returnGoods">
+                          <label class="custom-control-label" for="returnGoods">退换货管理</label>
+                        </li>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" th:checked="${companyAuthorities.contains('consultation')}" value="consultation" id="consultation">
+                          <label class="custom-control-label" for="consultation">咨询管理</label>
+                        </li>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" th:checked="${companyAuthorities.contains('customer')}" value="customer" id="customer">
+                          <label class="custom-control-label" for="customer">客服管理</label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+
+
+                  <div class="form-group mb-3">
+                    <label >权限</label>
+                    <div class="custom-control custom-checkbox">
+                      <ul>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities" th:checked="${companyAuthorities.contains('role')}" value="role" id="role">
+                          <label class="custom-control-label" for="role">角色管理</label>
+                        </li>
+                        <li>
+                          <input type="checkbox" class="custom-control-input" name="authorities"  th:checked="${companyAuthorities.contains('admin')}" value="admin" id="admin">
+                          <label class="custom-control-label" for="admin">管理员</label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary">返回</button>
+                  </div>
+                </form>
+
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+      </div>
+       <!-- content -->
+
+      <!-- Footer Start -->
+      <div th:replace="~{web/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+
+</body>
+
+</html>

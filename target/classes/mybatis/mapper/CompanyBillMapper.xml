@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.CompanyBillDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.CompanyBill" >
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="contract_url" property="contractUrl" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="is_first" property="isFirst" jdbcType="BIT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tongfu.entity.CompanyBill" >
+    insert into tf_company_bill (company_id, start_date, end_date, 
+      contract_url, price, remarks, 
+      is_first)
+    values (#{companyId,jdbcType=BIGINT}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, 
+      #{contractUrl,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{remarks,jdbcType=VARCHAR}, 
+      #{isFirst,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.CompanyBill" >
+    insert into tf_company_bill
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="contractUrl != null" >
+        contract_url,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="isFirst != null" >
+        is_first,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contractUrl != null" >
+        #{contractUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="isFirst != null" >
+        #{isFirst,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+    <select id="getYearRegister" resultType="java.util.Map">
+    SELECT DATE_FORMAT(start_date, '%Y') year , COUNT(1) AS countNum FROM tf_company_bill
+    WHERE is_first IS TRUE GROUP BY DATE_FORMAT(start_date, '%Y') ORDER BY year DESC
+    </select>
+  <select id="thatYearRegister" resultType="java.lang.Integer" parameterType="java.util.Map">
+    SELECT COALESCE( B.countNum,0) countNum   FROM (
+    SELECT CONCAT(#{year} ,'-01') AS mon UNION
+    SELECT CONCAT(#{year} ,'-02') AS mon UNION
+    SELECT CONCAT(#{year} ,'-03') AS mon UNION
+    SELECT CONCAT(#{year},'-04') AS mon UNION
+    SELECT CONCAT(#{year} ,'-05') AS mon UNION
+    SELECT CONCAT(#{year} ,'-06') AS mon UNION
+    SELECT CONCAT(#{year} ,'-07') AS mon UNION
+    SELECT CONCAT(#{year} ,'-08') AS mon UNION
+    SELECT CONCAT(#{year} ,'-09') AS mon UNION
+    SELECT CONCAT(#{year} ,'-10') AS mon UNION
+    SELECT CONCAT(#{year} ,'-11') AS mon UNION
+    SELECT CONCAT(#{year} ,'-12') AS mon
+    ) A LEFT JOIN (
+    SELECT
+    DATE_FORMAT(start_date, '%Y-%m') createTime,
+    COUNT(1) countNum
+    FROM
+    tf_company_bill where is_first IS TRUE
+    GROUP BY
+    DATE_FORMAT(start_date, '%Y-%m')
+    ) B ON A.mon = B.createTime order by A.mon
+
+  </select>
+</mapper>

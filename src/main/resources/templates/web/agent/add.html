@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>添加代理商</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+
+  <!-- App css -->
+  <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+  <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+
+  <script th:src="@{/assets/js/Msg.js}"></script>
+  <style>
+    .custom-control{
+      padding: 0;
+    }
+    .shopTypeList{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .shopTypeList li{
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      width: 33%;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{web/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+    <div class="content-page">
+      <div class="content">
+        <div class="row">
+          <div class="col-lg-10" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-3">添加代理商</h4>
+                <form class="needs-validation"  method="post" th:action="@{/web/agent/save}">
+                  <div class="form-group mb-3">
+                    <label for="companyName">公司名称</label>
+                    <input type="text" class="form-control" id="companyName" name="companyName" placeholder="请输入公司名称" required>
+                    <div class="invalid-feedback">
+                      请输入公司名称
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="name">联系人</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="请输入联系人" required>
+                    <div class="invalid-feedback">
+                      请输入联系人
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="mobile">联系电话</label>
+                    <input type="text" class="form-control" id="mobile" name="mobile" placeholder="请输入联系电话" required>
+                    <div class="invalid-feedback">
+                      请输入联系电话
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="areaId">地区</label><br/>
+                    <input type="hidden" class="form-control" id="areaId" name="areaId" >
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label >代理商品</label>
+                    <div class="custom-control custom-checkbox">
+                      <ul class="shopTypeList">
+                        <li th:each="product :${productList}">
+                          <input type="checkbox" class="custom-control-input" name="productId" th:value="${product.id}"  th:id="${product.id}" >
+                          <label class="custom-control-label" th:for="${product.id}">[[${product.name}]]</label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:history.back(-1);">返回</button>
+                  </div>
+                </form>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+      </div>
+       <!-- content -->
+      <!-- Footer Start -->
+      <div th:replace="~{web/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+<!--三级联动效果-->
+<script th:src="@{/assets/js/lSelect.js}"></script>
+<script>
+  //页面加载就调用
+  $(function(){
+    // 地区选择
+    $("#areaId").lSelect({
+      url: "[[@{/web//area/getAreas}]]"
+    });
+  });
+
+</script>
+</body>
+</html>

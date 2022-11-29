@@ -1,0 +1,1 @@
+var configUrl = "http://localhost:8081/tongfu/";

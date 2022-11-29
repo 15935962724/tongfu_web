@@ -1,0 +1,110 @@
+.arrow_box{
+    width: 100px;
+    padding: 5px;
+
+}
+.newIndex_Title{
+    color: #333;
+}
+.newCard{
+    padding: 20px;
+    color: #fff;
+    border-radius: 40px;
+    box-shadow: 0rem 0.3125rem 0.3125rem 0rem rgba(82,63,105,0.2);
+}
+.newCard_Title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.newCard_Title>div{
+    font-size: 22px;
+}
+.newCard_Title>div>img{
+    cursor: pointer;
+}
+.newCard_Title>a{
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+}
+.newCard_Content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.newCard_Content>span{
+    width: 1px;
+    height: 40px;
+    background-color: #fff;
+    margin: 0 20%;
+}
+.newCard_Content_View{
+    width: 20%;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+.newCard_Content_View_Title{
+    font-size: 20px;
+    margin-bottom: 2px;
+}
+.newCard_Content_View_Num{
+    font-size: 16px;
+}
+.newCard_Content_Bottom{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 24px;
+}
+.newCard_Content_Bottom>i{
+    position: relative;
+    top: -1px;
+}
+.newCard_Content_List{
+    width:100%;
+    height: 300px;
+    overflow-y: scroll;
+}
+.newCard_Content_List::-webkit-scrollbar{
+    width: 5px;
+    height:10px;
+    background-color: #666;
+}
+.newCard_Content_List::-webkit-scrollbar-track{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #ccc;
+}
+.newCard_Content_List::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #b5b1b1;
+}
+.dateYear{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    font-size: 12px !important;
+}
+.dateYear select{
+    width: 170px;
+    height: 20px !important;
+    padding: 0 10px !important;
+    margin-right: 20px;
+}
+.dateYear input{
+    position: absolute;
+    top: 10px;
+    right: 0;
+    z-index: 1;
+    opacity: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}

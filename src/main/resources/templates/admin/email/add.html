@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>邮件订阅</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}">
+
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}" rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <!-- Start Content-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{admin/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content" style="width: 630px;">
+              <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">选择用户</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group mb-2">
+
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <label for="username">用户名</label>
+                      <input type="text" id="username" class="form-control" placeholder="用户名">
+                    </div>
+                    <div class="col-sm-4">
+                      <label for="phone">手机号</label>
+                      <input type="text" id="phone" class="form-control" placeholder="手机号">
+                    </div>
+                    <div class="col-sm-4">
+                      <label for="serch"></label><br>
+                      <button type="button" class="btn btn-light" id ="serch" >搜索</button>
+                    </div>
+                  </div>
+                  <div class="row mt-1">
+                    <div class="col-sm-4">
+                      <label for="email">邮箱</label>
+                      <input type="text" id="email" class="form-control" placeholder="邮箱">
+                    </div>
+                    <div class="col-sm-4">
+                      <label >类型</label>
+                      <select class="custom-select" id="type" name="type">
+                        <option value="">全部</option>
+                        <option  value="0" >个人用户</option>
+                        <option  value="1" >企业用户</option>
+                        <option  value="2" >顾问用户</option>
+                        <option  value="3" >3D打印商</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="table-responsive" style="height: 350px;">
+                  <table class="table table-centered mb-0" >
+                    <thead class="thead-light">
+                    <tr class="text-lg-center">
+                      <th>
+                        <div class='custom-control custom-checkbox form-check'>
+                          <input type='checkbox' class='custom-control-input' id='customCheck0'>
+                          <label class='custom-control-label' for='customCheck0' id="customCheck"></label>
+                        </div>
+                      </th>
+                      <th>用户名</th>
+                      <th>手机</th>
+                      <th>email</th>
+                      <th>用户类型</th>
+                    </tr>
+                    </thead>
+                    <tbody  id="memberData">
+                    <tr  class="text-lg-center">
+                      <td >1</td>
+                      <td >1</td>
+                      <td >1</td>
+                      <td >1</td>
+                      <td >1</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal" id="cancel">取消</button>
+                <button type="button" class="btn btn-primary" id="confirm">确定</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-lg-6" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-3">邮件设置</h4>
+
+                <form class="needs-validation" novalidate  method="post" th:action="@{/admin/email/send}">
+                  <div class="form-group mb-3">
+                    <label for="title">主题</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="主题" required>
+                    <div class="invalid-feedback">
+                      主题
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="example-textarea">内容</label>
+                    <textarea class="form-control" id="example-textarea" maxlength="300" rows="3" name="content" placeholder="内容"></textarea>
+                    <div class="invalid-feedback">
+                      内容
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>收件人</label>
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="email" id="sendEmail" name = 'sendEmail' aria-label="Recipient's username">
+                      <div class="input-group-append">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" type="button">搜索</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">发送</button>
+                    <button type="button" class="btn btn-primary">返回</button>
+                  </div>
+                </form>
+              </div>
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+          <!-- end col-->
+        </div>
+        <!-- end row -->
+
+      </div> <!-- content -->
+
+      <!-- Footer Start -->
+      <footer class="footer">
+        <div class="row">
+          <div class="col-md-6">
+            Surgi-plan.com Copyright © All Rights Reserved 2006-2023 京ICP备17046258号
+          </div>
+          <div class="col-md-6">
+            <div class="text-md-right footer-links d-none d-md-block">
+              <a href="javascript: void(0);">About</a>
+              <a href="javascript: void(0);">Support</a>
+              <a href="javascript: void(0);">Contact Us</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+
+  </div> <!-- end wrapper-->
+
+  <!-- ============================================================== -->
+  <!-- End Page content -->
+  <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+
+<!-- Dropzone js -->
+<script th:src="@{/assets/js/vendor/dropzone.min.js}"></script>
+
+<!-- File upload js -->
+<script th:src="@{/assets/js/ui/component.fileupload.js}"></script>
+
+</body>
+<script>
+
+  $(document).ready(function(){
+
+    var datas = "{ \"username\":\"\", \"phone\":\"\", \"email\":\"\", \"type\":\"\"}";
+    dataSource(datas);
+
+    $("#serch").click(function(){
+      // alert()
+      var username = $('#username').val();
+      var phone = $('#phone').val();
+      var email = $('#email').val();
+      var type = $('#type option:selected') .val();
+      console.log(type)
+      var datas = "{ \"username\":\""+username+"\", \"phone\":\""+phone+"\", \"email\":\""+email+"\", \"type\":\""+type+"\"}";
+      dataSource(datas);
+    });
+
+    var i=0;
+    //全选
+    $("#customCheck").on("click",function(){
+      // alert(i)
+      console.log(i)
+      if(i==0){
+        //把所有复选框选中
+        $("#memberData td :checkbox").prop("checked", true);
+        i=1;
+      }else{
+        $("#memberData td :checkbox").prop("checked", false);
+        i=0;
+      }
+
+    });
+
+
+    //确定按钮
+    $("#confirm").on("click",function(){
+      // alert(i)
+      var arr=new Array();
+      $('#memberData input:checkbox[name=emails]:checked').each(function(i){
+        // alert($(this).val());
+        if($(this).val()!=''&&$(this).val()!='undefined'){
+          arr.push($(this).val());
+        }
+      });
+      var vals = arr.join(",");
+      console.log(vals)
+      $('#sendEmail').val(vals);
+      $('#cancel').click();
+    });
+
+
+
+    function dataSource(datas) {
+      var  tbody = $('#memberData');
+      tbody.html("")
+      var html= "";
+      $.ajax({
+        type:"POST",
+        contentType: "application/json",
+        url:'[[@{/admin/email/queryMember}]]',
+        data:datas,
+        dataType:"json",
+        async: false,
+        success:function(data){
+          var memberData= data.data;
+          console.log(memberData.length)
+          for (var i = 0;i<memberData.length;i++){
+
+            html = html+ "<tr  class='text-lg-center'>";
+            html = html+ "<td ><div class='custom-control custom-checkbox form-check'>";
+            html = html+ "<input type='checkbox' class='custom-control-input' name='emails' value='"+memberData[i].email+"'  id='customCheck"+(memberData[i].id)+"'>";
+            html = html+ "<label class='custom-control-label customCheck' for='customCheck"+(memberData[i].id)+"'></label>";
+            html = html+ "</div></td>";
+            html = html+ "<td >"+memberData[i].username+"</td>";
+            html = html+ "<td >"+comtent(memberData[i].phone)+"</td>";
+            html = html+ "<td >"+comtent(memberData[i].email)+"</td>";
+            var memberType = memberData[i].type;
+            console.log(memberType)
+            if(memberType == 0){
+              memberType =  '个人用户';
+            }
+            if(memberType == 1){
+              memberType =  '企业用户';
+            }
+            if(memberType == 2){
+              memberType =  '顾问用户';
+            }
+            if(memberType == 3){
+              memberType =  '3D打印商';
+            }
+            html = html+ "<td >"+memberType+"</td>";
+            html = html+ "</tr>";
+          }
+
+
+          tbody.append(html);
+
+        }
+      });
+    }
+
+
+    function comtent(obj) {
+      if (obj==''||obj == undefined){
+        return '-';
+      }
+      return obj;
+    }
+
+    function types(type) {
+      console.log(type)
+      if(type == 0){
+          return '个人用户';
+      }
+      if(type == 1){
+        return '企业用户';
+      }
+      if(type == 2){
+        return '顾问用户';
+      }
+      if(type == 3){
+        return '3D打印商';
+      }
+
+    }
+
+
+  });
+
+
+
+
+</script>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+  <meta charset="utf-8" />
+  <title>发布商品</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- SimpleMDE css -->
+  <link th:href="@{/assets/css/vendor/simplemde.min.css}"  rel="stylesheet" type="text/css" />
+
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+  <script src="https://cdn.bootcss.com/xlsx/0.11.5/xlsx.core.min.js"></script>
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <!-- Start Content-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{web/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+        <div class="row">
+          <div class="col-lg-6" style="margin: 0 auto;">
+            <h4>套餐>套餐管理>编辑套餐</h4><hr/>
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-3">编辑套餐</h4>
+                <form class="needs-validation" novalidate onsubmit="return checkip()"  method="post" th:action="@{/web/productMeal/update}">
+                  <input class="form-control" type="hidden" name="id" id="id" th:value="${productMeal.id}"/>
+
+                  <div class="form-group mb-3">
+                    <label for="productId" class="col-form-label">主产品</label>
+                    <select id="productId" name="productId" class="form-control">
+                      <option th:selected="${mainProduct.id == productMeal.productId}" th:each="mainProduct:${mainProducts}" th:value="${mainProduct.id}" th:text="${mainProduct.name}"></option>
+                    </select>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="productPackageId" class="col-form-label">培训包</label>
+                    <select id="productPackageId" name="productPackageId" class="form-control">
+                      <option th:selected="${trainingPackageProduct.id == productMeal.productPackageId}" th:each="trainingPackageProduct:${trainingPackageProducts}" th:value="${trainingPackageProduct.id}" th:text="${trainingPackageProduct.name}"></option>
+                    </select>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="price">价格</label>
+                    <input type="text" class="form-control" id="price" name="price" min="0.01" step="0.01" placeholder="单位(元)" th:value="${productMeal.price}" required>
+                    <div class="invalid-feedback">
+                      价格必填
+                    </div>
+                  </div>
+
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary">返回</button>
+                  </div>
+                </form>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- content -->
+      <!-- Footer Start -->
+      <div th:replace="~{web/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<div class="rightbar-overlay"></div>
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script th:src="@{/assets/js/pages/demo.form-wizard.js}"></script>
+<!-- Summernote js -->
+<script th:src="@{/assets/js/vendor/summernote-bs4.min.js}"></script>
+<!--<script src="https://cdn.bootcss.com/simplemde/1.11.2/simplemde.min.js}"></script>-->
+<!-- Summernote demo -->
+<!--<script th:src="@{/assets/js/pages/demo.summernote.js}"></script>-->
+
+<!--&lt;!&ndash; SimpleMDE demo &ndash;&gt;-->
+<script th:src="@{/assets/js/pages/demo.simplemde.js}"></script>
+
+</body>
+
+</html>

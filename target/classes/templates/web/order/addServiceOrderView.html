@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>订单详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+    <style>
+        .logistics{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3px 0 0 10px;
+        }
+
+        .logistics label{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            cursor: pointer;
+        }
+        .logistics input{
+            margin: 0 6px;
+        }
+        .selectAddress{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+
+
+
+        /*上传列表*/
+        .uploadList{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 20px 0 0;
+        }
+        .uploadDiv{
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin: 0 12.5px 20px;
+        }
+        .uploadDiv>input{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            opacity: 0;
+        }
+        .uploadDiv>i,.uploadDiv>a{
+            display: flex;
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+        }
+        .uploadDiv>span{
+            display: block;
+            margin-top: 10px;
+            width: 80px;
+            height: 18px;
+            text-align: center;
+            font-size: 12px;
+            color: #007fdc;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .notUpload{
+            border: 2px dashed #dbdbdb;
+            background: url("../../assets/img/uploadImg.png") center center no-repeat;
+            background-size: 30px auto;
+        }
+        .saveUpload{
+            border: 2px dashed #007fdc;
+            background: url("../../assets/img/saveLoadImg.png") center center no-repeat;
+            background-size: 30px auto;
+        }
+        .downUpload{
+            border: 2px dashed #007fdc;
+            background: url("../../assets/img/downloadImg.png") center center no-repeat;
+            background-size: 30px auto;
+        }
+        .aMove{
+            color: #007fdc !important;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+        .layui-layer-btn0{
+            color: #fff !important;
+        }
+
+
+
+
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{/web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <!-- Start Content-->
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{/web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+            <div class="content">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                            </div>
+                            <h4 class="page-title">订单信息</h4>
+                        </div> <!-- end page-title-box -->
+                    </div> <!-- end col-->
+                </div>
+                <!-- end page title -->
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3" style="color: #0088ff;">订单编号：[[${order.sn}]]  总共[[${quantity}]]件商品
+                                </h4>
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th>商品名称</th>
+                                            <th>单价</th>
+                                            <th>数量</th>
+                                            <th>已发货数量</th>
+                                            <th>小计</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="orderItem:${orderItems}">
+                                            <td th:text="${orderItem.name}"></td>
+                                            <td th:text="'¥'+${#numbers.formatDecimal(orderItem.price,1,'COMMA',2,'POINT')}"></td>
+                                            <td th:text="${orderItem.quantity}"></td>
+                                            <td th:text="${orderItem.shippedQuantity}"></td>
+                                            <td >¥[[${#numbers.formatDecimal(orderItem.price*orderItem.quantity,1,'COMMA',2,'POINT')}]] </td>
+                                            <td>
+                                                <th:block th:if="${orderItem.quantity!=orderItem.shippedQuantity}">
+                                                    <a class="aMove" th:onclick="'javascript:uploadFiles(\''+${orderItem.id}+'\',\''+${orderItem.quantity}+'\')'" >上传病例报告</a>
+                                                </th:block>
+                                                <a class="aMove" th:onclick="'javascript:downloadFiles(\''+${orderItem.memberCaseReport}+'\')'">下载病例报告</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end table-responsive -->
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">订单摘要</h4>
+
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th>说明</th>
+                                            <th>金额</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>商品总价 :</td>
+                                            <td >$ [[${#numbers.formatDecimal(countPrice,1,'COMMA',2,'POINT')}]] </td>
+                                        </tr>
+                                        <!--<tr>
+                                            <td>手续费 :</td>
+                                            <td th:text="'$'+${#numbers.formatDecimal(order.fee,0,2)}"></td>
+                                        </tr>-->
+                                        <tr>
+                                            <td>运费 :</td>
+                                            <td >$ [[${#numbers.formatDecimal(order.freight,1,'COMMA',2,'POINT')}]]</td>
+                                        </tr>
+                                        <!--<tr>
+                                            <td>税金 : </td>
+                                            <td th:text="'$'+${#numbers.formatDecimal(order.tax,0,2)}"></td>
+                                        </tr>-->
+                                        <tr>
+                                            <td>折扣 : </td>
+                                            <td th:text="${order.promotionDiscount==1?'无':#numbers.formatDecimal(order.promotionDiscount,1,1)}+'折扣'"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>总计 :</th>
+                                            <th>$ [[${#numbers.formatDecimal(amount,1,'COMMA',2,'POINT')}]]</th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end table-responsive -->
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row -->
+
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">收货信息
+                                    <!--<a href="javaScript:(0)" style="float: right;color: #0072cd" id = "btn-warning" data-toggle="modal" data-target="#centermodal">发货</a>-->
+                                </h4>
+                                <h5>[[${order.consignee}]]</h5>
+                                <address class="mb-0 font-14 address-lg">
+                                    [[${order.areaName}]]&nbsp;[[${order.address}]]<br>
+                                    <abbr title="Phone">电话:</abbr> [[${order.phone}]]<br/>
+                                    <abbr title="email">邮箱:</abbr> [[${order.email}]]<br/>
+                                    <abbr title="crate">下单时间:</abbr> [[${#dates.format(order.createDate,'yyyy-MM-dd HH:mm')}]]
+                                </address>
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                    <th:block th:if="${order.isMakeInvoice}">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="header-title mb-3" th:text="'发票信息'+${order.isMakeInvoice?'':'(未申开发票)'}"></h4>
+                                    <ul class="list-unstyled mb-0" >
+                                        <li>
+                                            <p class="mb-2"><span class="font-weight-bold mr-2">发票抬头:</span><i th:text="${orderInvoice.title}"></i></p>
+                                            <p class="mb-2"><span class="font-weight-bold mr-2">发票类型:</span>
+                                                <i>
+                                                    <th:block th:if="${orderInvoice.type==1}">
+                                                        普通电子发票
+                                                    </th:block>
+                                                    <th:block th:if="${orderInvoice.type==2}">
+                                                        增值税专用发票
+                                                    </th:block>
+                                                </i>
+                                            </p>
+                                            <p class="mb-2"><span class="font-weight-bold mr-2">开票金额:</span><i>[[${orderInvoice.amount}]]</i></p>
+                                            <p class="mb-0"><span class="font-weight-bold mr-2">发票内容:</span> <i>[[${orderInvoice.pcontent}]]</i></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> <!-- end col -->
+                    </th:block>
+
+
+                    <!--<div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">Delivery Info</h4>
+
+                                <div class="text-center">
+                                    <i class="mdi mdi-truck-fast h2 text-muted"></i>
+                                    <h5><b>UPS Delivery</b></h5>
+                                    <p class="mb-1"><b>Order ID :</b> xxxx235</p>
+                                    <p class="mb-0"><b>Payment Mode :</b> COD</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> &lt;!&ndash; end col &ndash;&gt;-->
+                </div>
+                <!-- end row -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">订单记录</h4>
+
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th>编号</th>
+                                            <th>操作内容</th>
+                                            <th>操作时间</th>
+                                            <th>操作人账号</th>
+                                            <th>操作人姓名</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="orderLog,orderLogStart:${orderLogs}">
+                                            <td th:text="${orderLogStart.index+1}"></td>
+                                            <td th:text="${orderLog.content}"></td>
+                                            <td th:text="${#dates.format(orderLog.createDate,'yyyy-MM-dd HH:mm')}"></td>
+                                            <td th:text="${orderLog.operator}"></td>
+                                            <td th:text="${orderLog.operatorName}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end table-responsive -->
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row -->
+            </div>
+             <!-- content -->
+            <!-- Footer Start -->
+            <div th:replace="~{/web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+
+    </div> <!-- end wrapper-->
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+<!-- third party js -->
+<script src="assets/js/vendor/jquery.dataTables.min.js" th:src="@{/assets/js/vendor/jquery.dataTables.min.js}"></script>
+<script src="assets/js/vendor/dataTables.bootstrap4.js" th:src="@{/assets/js/vendor/dataTables.bootstrap4.js}"></script>
+<script src="assets/js/vendor/dataTables.responsive.min.js" th:src="@{/assets/js/vendor/dataTables.responsive.min.js}"></script>
+<script src="assets/js/vendor/responsive.bootstrap4.min.js" th:src="@{/assets/js/vendor/responsive.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/dataTables.buttons.min.js" th:src="@{/assets/js/vendor/dataTables.buttons.min.js}"></script>
+<script src="assets/js/vendor/buttons.bootstrap4.min.js" th:src="@{/assets/js/vendor/buttons.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/buttons.html5.min.js" th:src="@{/assets/js/vendor/buttons.html5.min.js}"></script>
+<script src="assets/js/vendor/buttons.flash.min.js" th:src="@{/assets/js/vendor/buttons.flash.min.js}"></script>
+<script src="assets/js/vendor/buttons.print.min.js" th:src="@{/assets/js/vendor/buttons.print.min.js}"></script>
+<script src="assets/js/vendor/dataTables.keyTable.min.js" th:src="@{/assets/js/vendor/dataTables.keyTable.min.js}"></script>
+<script src="assets/js/vendor/dataTables.select.min.js" th:src="@{/assets/js/vendor/dataTables.select.min.js}"></script>
+<!-- third party js ends -->
+<!-- demo app -->
+<script src="assets/js/pages/demo.datatable-init.js" th:src="@{/assets/js/pages/demo.datatable-init.js}"></script>
+<!-- end demo js-->
+<script th:src="@{/assets/js/list.js}"></script>
+
+<!--三级联动效果-->
+<script th:src="@{/assets/js/lSelect.js}"></script>
+<script th:src="@{/assets/js/layer/layer.js}"></script>
+<script>
+
+
+    //页面加载就调用
+    $(function(){
+        // 地区选择
+        $("#areaId").lSelect({
+            url: "[[@{/web//area/getAreas}]]",
+            width: "96px",
+            margin: "4px",
+        });
+    });
+
+    //上传文件
+    function uploadFiles(id,num) {
+        var html = '<div class="uploadList">';
+        for(let i = 0; i < num; i++){
+            html += '<div class="uploadDiv"><i class="notUpload"></i><input type="file" name="upload" style="cursor: pointer;" onchange="editUploadImg(this)" /><span></span></div>';
+        }
+        html += '</div>';
+        //上传框
+        layer.open({
+            type: 1,
+            title: '请上传病例报告',
+            skin: 'layui-layer-rim', //加上边框
+            area: ['560px', '380px'], //宽高
+            content: html,
+            btn: ['提交','关闭'],
+            yes: function(index, layero){
+                var formData = new FormData();
+                var files = $(".uploadList input[type='file'][name='upload']");
+                for (var i = 0; i < files.length; i++) {
+                    if(!files[i].files[0]){
+                        layer.msg("请把全部上传文件！");
+                        return false;
+                    }
+                    formData.append("file", files[i].files[0]);
+                }
+                formData.append("id", id);
+                $.ajax({
+                    type : "post",
+                    url : '[[@{/web/order/uploadCaseReport}]]',
+                    data : formData,
+                    cache: false,
+                    processData : false,
+                    contentType : false,
+                    dataType: 'JSON',
+                    success:function(data){
+                        console.log(data);
+                        if (data.status == 200){
+                            location.reload();
+                        }
+                    }
+                });
+
+            },
+            btn2: function(index, layero){
+
+            }
+        });
+    }
+    //下载文件
+    function downloadFiles(arr) {
+        arr = JSON.parse(arr);
+        console.log(arr);
+        var html = '<div class="uploadList">';
+        for(let i = 0; i < arr.length; i++){
+            html += '<div class="uploadDiv"><a class="downUpload" onclick="canvasDownload(\''+arr[i].path+'\','+arr[i].name+')"></a><span>'+arr[i].name+'</span></div>';
+        }
+        html += '</div>';
+        //上传框
+        layer.open({
+            type: 1,
+            title: '下载病例报告',
+            skin: 'layui-layer-rim', //加上边框
+            area: ['560px', '380px'], //宽高
+            content: html
+        });
+    }
+
+
+    function canvasDownload(imgsrc, name) {
+        let image = new Image();
+        // 解决跨域 Canvas 污染问题
+        image.setAttribute("crossOrigin", "anonymous");
+        image.onload = function() {
+            let canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            let context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0, image.width, image.height);
+            let url = canvas.toDataURL("image/png"); //得到图片的base64编码数据
+            let a = document.createElement("a"); // 生成一个a元素
+            let event = new MouseEvent("click"); // 创建一个单击事件
+            a.download =  name; // 设置图片名称
+            a.href = url; // 将生成的URL设置为a.href属性
+            a.dispatchEvent(event); // 触发a的单击事件
+        };
+        image.src = imgsrc;
+    }
+
+
+
+    function editUploadImg(_this) {
+        $(_this).siblings("i").attr("class","saveUpload");
+        $(_this).siblings("span").text(_this.files[0].name);
+    }
+
+    function editType(value) {
+        if(value){
+            $("#logisticsInfo").show()
+        }else{
+            $("#logisticsInfo").hide()
+        }
+    }
+</script>
+</body>
+</html>

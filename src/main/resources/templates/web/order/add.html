@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+  <meta charset="utf-8" />
+  <title>发布商品</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- SimpleMDE css -->
+  <link th:href="@{/assets/css/vendor/simplemde.min.css}"  rel="stylesheet" type="text/css" />
+
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <!-- Start Content-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+
+                <!-- Checkout Steps -->
+                <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                  <li class="nav-item">
+                    <a href="#billing-information" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0 active">
+                      <i class="mdi mdi-account-circle font-18"></i>
+                      <span class="d-none d-lg-block">商品基本信息</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#shipping-information" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                      <i class="mdi mdi-cash-multiple font-18"></i>
+                      <span class="d-none d-lg-block">图片及视频</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#payment-information" data-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                      <i class="mdi mdi-cash-multiple font-18"></i>
+                      <span class="d-none d-lg-block">促销信息</span>
+                    </a>
+                  </li>
+                </ul>
+
+                <!-- Steps Information -->
+                <form id = "productSave" method="post" novalidate onsubmit="return checkFrom()" th:action="@{/web/product/save}" enctype="multipart/form-data" >
+                  <div class="tab-content">
+                    <!-- Billing Content-->
+                    <div class="tab-pane show active" id="billing-information">
+                      <div class="row">
+                        <div class="col-lg-8">
+                          <h4 class="mt-2">基本信息</h4>
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="name">商品名称</label>
+                                <input class="form-control" type="text" name="name" placeholder="product Name" id="name" required/>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <label for="name">商品主图</label>
+                              <div class="input-group">
+                                <div class="custom-file">
+                                  <input type="file"  name = "productimage"  class="custom-file-input" id="productimage">
+                                  <label class="custom-file-label" for="productimage">上传主图</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+
+                          <div class="row">
+                            <div class="col-6">
+                              <div class="form-group">
+                                <label class="col-form-label">商品分类</label>
+                                <select id="inputStates" onchange="inputStatesValue();" class="form-control">
+                                  <option >--请选择--</option>
+                                  <option th:each="category:${productCategories}" th:value="${category.id}" th:text="${category.name}"></option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="form-group">
+                                <label for="productCategory" class="col-form-label">子类</label>
+                                <select id="productCategory" name="productCategory" class="form-control" required>
+                                  <option value="">--请选择--</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="form-group">
+                                <label for="keyword">关键词</label>
+                                <input class="form-control" type="text" name="keyword" placeholder="product Keyword" id="keyword"  required>
+                              </div>
+                            </div>
+
+                          </div> <!-- end row -->
+
+
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label >是否隐藏价格</label>
+                                <div class="custom-control custom-checkbox">
+                                  <input type="checkbox"  class="custom-control-input"  name="isHideprice" id="isHideprice">
+                                  <label class="custom-control-label" for="isHideprice">隐藏价格</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="priceExplain">价格说明</label>
+                                <input class="form-control" type="text" name = "priceExplain" placeholder="注:如选择隐藏价格,请填写价格说明,如不填写系统默认“面议" id="priceExplain" />
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="SoftwareSize">软件大小</label>
+                                <input class="form-control" type="text" name="SoftwareSize" placeholder="例如：10M" id="SoftwareSize" />
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="SoftwareVersion">软件版本</label>
+                                <input class="form-control" type="text" name="SoftwareVersion" placeholder="SoftwareVersion" id="SoftwareVersion" />
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label >试用包</label>
+                                <div class="input-group">
+                                  <div class="custom-file">
+                                    <input type="file"  name = "ontrialpackage"  class="custom-file-input" id="ontrialPackage">
+                                    <label class="custom-file-label" for="ontrialPackage">上传试用包</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="ontrialPackageUrl">下载地址</label>
+                                <input class="form-control" type="text" name="ontrialPackageUrl"  placeholder="下载地址" id="ontrialPackageUrl" />
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="isShowOntrialPackageUrl">申请试用</label>
+                                <div class="custom-control custom-checkbox mb-2">
+                                  <input type="checkbox" class="custom-control-input" name="isShowOntrialPackageUrl" id="isShowOntrialPackageUrl">
+                                  <label class="custom-control-label" for="isShowOntrialPackageUrl">是否显示</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label >下载包</label>
+                                <div class="input-group">
+                                  <div class="custom-file">
+                                    <input type="file" name="productpackage"  class="custom-file-input" />
+                                    <label class="custom-file-label">上传下载包</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="productPackageUrl">下载地址</label>
+                                <input class="form-control" type="text" name="productPackageUrl" placeholder="下载地址" id="productPackageUrl" />
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="isShowproductPackageUrl">立即下载</label>
+                                <div class="custom-control custom-checkbox mb-2">
+                                  <input type="checkbox" class="custom-control-input" name="isShowproductPackageUrl" id="isShowproductPackageUrl">
+                                  <label class="custom-control-label" for="isShowproductPackageUrl">是否显示</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row">
+
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label>申请演示</label>
+                                <div class="custom-control custom-checkbox mb-2">
+                                  <input type="checkbox" class="custom-control-input" name="isDemonstration" id="isDemonstration">
+                                  <label class="custom-control-label" for="isDemonstration">是否显示</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label>增值服务产品</label>
+                                <div class="custom-control custom-checkbox mb-2">
+                                  <input type="checkbox" class="custom-control-input" name="isAddService" id="isAddService">
+                                  <label class="custom-control-label" for="isAddService">是否为增值服务产品</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4" id="addServiceProduct">
+                              <div class="form-group">
+                                <label>关联增值服务产品</label>
+                                <select id="productId" name="productId" class="form-control">
+                                  <option value="">--请选择--</option>
+                                  <option th:each="product:${isAddServiceProducts}" th:value="${product.id}" th:text="${product.name}"></option>
+                                </select>
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+
+                          <h4 class="mt-4">软件激活方式</h4>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="border p-3 rounded">
+                                <div class="custom-control custom-radio">
+                                  <input type="radio" id="shippingMethodRadio1" name="activationMode"  value="2" class="custom-control-input" checked>
+                                  <label class="custom-control-label font-16 font-weight-bold" for="shippingMethodRadio1">激活码激活</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="border p-3 rounded">
+                                <div class="custom-control custom-radio">
+                                  <input type="radio" id="shippingMethodRadio2" name="activationMode" value="1" class="custom-control-input">
+                                  <label class="custom-control-label font-16 font-weight-bold" for="shippingMethodRadio2">优盘激活</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <h4 class="mt-4">购买方式</h4>
+                          <div class="row" id="ordinary">
+                            <input class="form-control" type="hidden" name="productPurchase" placeholder="购买方式" id="purchase">
+                            <div class="col-3" style="border: 1px solid #e4e4e0; margin-left: 15px;margin-top: 10px;" th:each="purchase,purchaseStart:${purchases}">
+                              <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                  <label th:each="entry:${purchase}" th:text="${entry.key}"></label>
+                                </div>
+                              </div>
+                              <th:block th:with="entrys=${purchase.values()}" >
+                                <th:block th:each="entry:${entrys}" >
+                                  <div class="form-group" th:each="pruch:${entry}" >
+                                    <div class="custom-control custom-checkbox" style="margin-top: 10px;">
+                                      <input type="checkbox" class="custom-control-input" name="purchase" th:id="${pruch.id}">
+                                      <label class="custom-control-label" th:for="${pruch.id}" th:id="'customCheck'+${pruch.id}" th:text="${pruch.name}"></label>
+                                      <input type="number" placeholder="价格" th:id="'price'+${pruch.id}" style="width: 60px;">
+                                    </div>
+                                  </div>
+                                </th:block>
+                              </th:block>
+                            </div>
+                          </div>
+                          <div class="row" id="AddService" style="display: none">
+                            <div class="col-3" style="border: 1px solid #e4e4e0; margin-left: 15px;margin-top: 10px;" th:each="purchase,purchaseStart:${assServicePurchases}">
+                              <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                  <label th:each="entry:${purchase}" th:text="${entry.key}"></label>
+                                </div>
+                              </div>
+                              <th:block th:with="entrys=${purchase.values()}" >
+                                <th:block th:each="entry:${entrys}" >
+                                  <div class="form-group" th:each="pruch:${entry}" >
+                                    <div class="custom-control custom-checkbox" style="margin-top: 10px;">
+                                      <input type="checkbox" class="custom-control-input" name="purchase" th:id="${pruch.id}">
+                                      <label class="custom-control-label" th:for="${pruch.id}" th:id="'customCheck'+${pruch.id}" th:text="${pruch.name}"></label>
+                                      <input type="number" placeholder="价格" th:id="'price'+${pruch.id}" style="width: 60px;">
+                                    </div>
+                                  </div>
+                                </th:block>
+
+                              </th:block>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="form-group mt-3">
+                                <label for="example-textarea">描述:</label>
+                                <textarea class="form-control" id="example-textarea" maxlength="30" rows="3" name="introduction" placeholder="描述"></textarea>
+                              </div>
+                            </div>
+                          </div> <!-- end row -->
+                        </div>
+                        <div class="col-lg-4" th:include="~{incloud/product::product}"></div> <!-- end col -->
+                      </div> <!-- end row-->
+                    </div>
+                    <!-- End Billing Information Content-->
+
+                    <!-- Shipping Content-->
+                    <div class="tab-pane" id="shipping-information">
+                      <div class="row">
+                        <div class="col-lg-8">
+                          <h4 class="mt-2">图片及视频</h4>
+                          <div class="row" th:each="i:${#numbers.sequence(1,5)}" style="margin-top: 20px;">
+                            <div class="col-md-12">
+                              <label>展示图片[[${i}]]</label>
+                              <div class="input-group">
+                                <div class="custom-file">
+                                  <input type="file" name="inputProductImage"  class="custom-file-input" th:id="'inputProductImage'+${i}">
+                                  <label class="custom-file-label" th:for="'inputProductImage'+${i}">上传图片[[${i}]]</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row" style="margin-top: 30px;">
+                            <div class="col-md-12">
+                              <label>展示小视频</label>
+                              <div class="input-group">
+                                <div class="custom-file">
+                                  <input type="file"  name = "productvideo"  class="custom-file-input" id="productVideo">
+                                  <label class="custom-file-label" for="productVideo">上传视频</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- end row-->
+                        </div>
+                        <div class="col-lg-4" th:include="~{incloud/product::product}"></div> <!-- end col -->
+                      </div> <!-- end row-->
+
+                    </div>
+                    <!-- End Shipping Information Content-->
+
+                    <!--&lt;!&ndash; Payment Content&ndash;&gt;-->
+                    <div class="tab-pane" id="payment-information">
+
+                      <!-- start page title -->
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="page-title-box">
+                            <h4 class="page-title">促销</h4>
+                          </div> <!-- end page-title-box -->
+                        </div> <!-- end col-->
+                      </div>
+                      <!-- end page title -->
+
+                      <div class="row">
+                        <div class="col-lg-8">
+                          <div class="card">
+
+                            <div class="card-body">
+                              <h4 class="header-title">促销信息</h4>
+                              <!-- basic summernote-->
+                              <div id="summernote-basic" name="" class="summernote-basic"></div>
+                            </div>
+                            <!-- end card-body -->
+
+                          </div> <!-- end card-->
+
+                        </div> <!-- end col-->
+
+
+                        <div class="col-lg-4" th:include="~{incloud/product::product}"></div>
+
+                        <!-- end col -->
+
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col-8" style="text-align: center; margin-top:20px;">
+                        <button type="submit" class="btn btn-primary btn-success">确定</button>
+                        <button type="button" class="btn btn-primary">返回</button>
+                        <button  type="button" hidden class="btn btn-warning" id = "btn-warning" data-toggle="modal" data-target="#warning-alert-modal">警告</button>
+                      </div>
+                    </div>
+
+                  </div>
+                </form>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col -->
+        </div>
+        <!-- end row-->
+
+      </div>
+      <!-- content -->
+      <!--警告弹窗-->
+      <div id="warning-alert-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-body p-4">
+              <div class="text-center">
+                <i class="dripicons-warning h1 text-warning"></i>
+                <h4 class="mt-2">警告</h4>
+                <p class="mt-3" id = "warningContent"></p>
+              </div>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
+      <!-- Footer Start -->
+      <div th:replace="~{incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+
+  </div> <!-- end wrapper-->
+
+  <!-- ============================================================== -->
+  <!-- End Page content -->
+  <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+
+
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script th:src="@{/assets/js/pages/demo.form-wizard.js}"></script>
+
+<!-- Summernote js -->
+<script th:src="@{/assets/js/vendor/summernote-bs4.min.js}"></script>
+<!-- SimpleMDE js -->
+<!--<script src="https://cdn.bootcss.com/simplemde/1.11.2/simplemde.min.js}"></script>-->
+
+<!-- Summernote demo -->
+<script th:src="@{/assets/js/pages/demo.summernote.js}"></script>
+
+<!--&lt;!&ndash; SimpleMDE demo &ndash;&gt;-->
+<script th:src="@{/assets/js/pages/demo.simplemde.js}"></script>
+
+<script type="text/javascript">
+
+  //单击分类
+  function inputStatesValue() {
+    var id = $('#inputStates') .val();
+    // alert(id);
+
+    // var id = $('#inputStates option:selected') .val();
+    var  productCategoryId  = $('#productCategory')
+    productCategoryId.html("");
+    productCategoryId.append("<option value=''>--请选择--</option>");
+    //加载子类数据
+    $.ajax({
+      type:"GET",
+      url:'[[@{/web/category/queryCategory}]]',
+      data:{id:id},
+      dataType:"json",
+      async: false,
+      success:function(data){
+
+        var html = "";
+        if(data.length>0){
+          for (var i = 0;i<data.length;i++){
+            html = html+ '<option value='+data[i].id+'>'+data[i].name+'</option>';
+          }
+        }
+        productCategoryId.append(html);
+      }
+    });
+
+  }
+
+
+
+  //校验表单提交
+  function checkFrom() {
+
+    var p =/^[1-9](\d+(\.\d{1,2})?)?$/;
+    var p1=/^[0-9](\.\d{1,2})?$/;
+    if ($('#name').val() == "") {
+      $('#warningContent').html('商品名称必填');
+      $("#btn-warning").click();
+      return false;
+    }
+    //
+    if ($('#productimage').val() == "") {
+      $('#warningContent').html('请上传商品logo');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    var productCategoryId = $('#productCategory option:selected') .val();
+    if (productCategoryId == "") {
+      $('#warningContent').html('请选择商品所属分类');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    var size =$('input[name="purchase"]:checked').length;
+    if(size==0){
+      $('#warningContent').html('请设置购买方式');
+      $("#btn-warning").click();
+      return false;
+    }
+
+
+    if ($('#isShowproductPackageUrl').prop('checked')) {
+      var productpackage =  $("input[name='productpackage']").val();
+      var productPackageUrl = $('#productPackageUrl').val();
+      if(productpackage==''&&productPackageUrl==''){
+        $('#warningContent').html('请上传下载安装包或者输入下载包的下载地址！');
+        $("#btn-warning").click();
+        return false;
+      }
+    }
+
+    if ($('#isShowOntrialPackageUrl').prop('checked')) {
+      // var ontrialpackage = $('#ontrialpackage').val();//试用下载包通过id取不到值
+      var ontrialpackage =  $("input[name='ontrialpackage']").val();//通过id取不到值，只能通过name去取值 不晓得什么原因，下载包通过id是可以取到值的
+      var ontrialPackageUrl = $('#ontrialPackageUrl').val();
+      if((ontrialpackage==''||ontrialpackage == undefined)&&((ontrialPackageUrl==''||ontrialPackageUrl == undefined))){
+        $('#warningContent').html('请上传试用包或者请输入试用包的下载地址！');
+        $("#btn-warning").click();
+        return false;
+      }
+    }
+    //
+    var falg = true;
+
+    var chk_value =[];//定义一个数组
+    if ($('#isAddService').prop('checked')) { //判断是否增值服务产品
+      var size =$('#AddService input[name="purchase"]:checked').length;
+      if(size==0){
+        $('#warningContent').html('请设置购买方式');
+        $("#btn-warning").click();
+        return false;
+      }
+      $('#AddService input[name="purchase"]:checked').each(function(){//遍历每一个名字为purchase的复选框，其中选中的执行函数
+        var id= $(this).attr('id');
+        var price = $('#price'+id).val();
+
+        if (price == ""||price<=0) {
+          $('#warningContent').html('【'+$('#customCheck'+id).text()+'】价格输入有误!');
+          $("#btn-warning").click();
+          falg =  false;
+        }
+        var priceValues = id+'&'+price;
+        chk_value.push(priceValues);//将选中的值添加到数组chk_value中
+      });
+    }else{
+      var size =$('#ordinary input[name="purchase"]:checked').length;
+      if(size==0){
+        $('#warningContent').html('请设置购买方式');
+        $("#btn-warning").click();
+        return false;
+      }
+      $('#ordinary input[name="purchase"]:checked').each(function(){//遍历每一个名字为purchase的复选框，其中选中的执行函数
+        var id= $(this).attr('id');
+        var price = $('#price'+id).val();
+
+        if (price == ""||price<=0) {
+          $('#warningContent').html('【'+$('#customCheck'+id).text()+'】价格输入有误!');
+          $("#btn-warning").click();
+          falg =  false;
+        }
+        var priceValues = id+'&'+price;
+        chk_value.push(priceValues);//将选中的值添加到数组chk_value中
+      });
+    }
+    console.log(chk_value.join(','))
+    $('#purchase').val(chk_value.join(','))
+    if (!falg){
+      return falg;
+    }
+
+    var productImageCount = 0;
+
+    $('input[name="inputProductImage"]').each(function(){//遍历每一个上传文件的内容
+      var values = $(this).val();
+      if(values!=''){
+        productImageCount++;
+      }
+
+    });
+    console.log(productImageCount)
+    if(productImageCount<=0){
+      $('#warningContent').html('至少上传一个商品展示图片!');
+      $("#btn-warning").click();
+      return false;
+    }
+    return true;
+  }
+
+  $("#isAddService").change(function() {
+    var ischecked = $(this).prop("checked");
+    if (ischecked){
+      $("#AddService").show();
+      $("#ordinary").hide();
+      $("#addServiceProduct").hide();
+
+    }else {
+      $("#ordinary").show();
+      $("#AddService").hide();
+      $("#addServiceProduct").show();
+    }
+
+  });
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+  <head>
+    <title></title>
+  </head>
+  <body>
+
+    <!--展示下拉框-->
+    <nav th:fragment="status">
+      <p th:case="1">待审核</p>
+      <p th:case="2">已通过</p>
+      <p th:case="3">未通过</p>
+    </nav>
+    <!--查询下拉框-->
+    <nav th:fragment="selectStatus">
+      <div class="form-group ml-2 mb-2">
+        <label class="mr-2">审核状态</label>
+        <select class="custom-select" name="status">
+          <option value="">全部</option>
+          <option th:selected="${status==1}" value="1" >待审核</option>
+          <option th:selected="${status==2}" value="2" >已通过</option>
+          <option th:selected="${status==3}" value="3" >未通过</option>
+        </select>
+      </div>
+    </nav>
+    <!--查询日期时间段-->
+    <nav th:fragment="selectDate">
+      <input type="text" class="form-control"  name ="startDate" data-provide="datepicker" data-date-autoclose="true" th:value="${startDate}">
+      &nbsp;&nbsp;至&nbsp;&nbsp;
+      <input type="text" class="form-control" name ="endDate" data-provide="datepicker" data-date-autoclose="true" th:value="${endDate}">
+    </nav>
+    <!--审核下拉框-->
+    <nav th:fragment="updateStatus">
+      <option  value="2" >通过</option>
+      <option  value="3" >不予通过</option>
+    </nav>
+
+    <!--警告弹窗-->
+    <nav th:fragment="warning">
+      <div id="warning-alert-modal" class="modal fade"  tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-body p-4">
+              <div class="text-center">
+                <i class="dripicons-warning h1 text-warning"></i>
+                <h4 class="mt-2">警告</h4>
+                <p class="mt-3" id = "warningContent"></p>
+              </div>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
+      <button  type="button" hidden class="btn btn-warning" id = "btn-warning" data-toggle="modal" data-target="#warning-alert-modal">警告</button>
+    </nav>
+
+    <!--审核审核弹窗-->
+    <nav th:fragment="updateStatusForm(updateStatusFormUrl)">
+      <div id="edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <div class="modal-body">
+              <div class="text-center mt-2 mb-4">
+                <a class="text-success">
+                  <span>审核</span>
+                </a>
+              </div>
+
+              <form class="pl-3 pr-3" method="post" novalidate onsubmit="return checkFrom()" th:action="@{${updateStatusFormUrl}}" >
+                <input type="hidden" id = "update-id" name="id" />
+                <div class="form-group">
+                  <label >标题名称</label>
+                  <input class="form-control" type="text" id="update-name" readonly  unselectable="on"  name="name" required="">
+                </div>
+
+                <div class="form-group">
+                  <label class="mr-2">审核状态</label>
+                  <select id="adStatus" class="custom-select" name="status">
+                    <option value="">请选择</option>
+                    <option  value="2" >通过</option>
+                    <option  value="3" >不予通过</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="example-textarea">说明:</label>
+                  <textarea class="form-control" id="example-textarea" maxlength="30" rows="3" name="message" placeholder="说明"></textarea>
+                </div>
+
+                <div class="form-group text-center">
+                  <button class="btn btn-primary" type="submit">提交</button>
+                </div>
+
+              </form>
+
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
+    </nav>
+    <!--审核jQuery校验-->
+    <nav th:fragment="updateStatusJquery">
+      <script>
+        //校验表单提交
+        function checkFrom() {
+          var adStatus = $('#adStatus option:selected') .val();
+          if (adStatus == "") {
+            $('#warningContent').html('请选择审核状态');
+            $("#btn-warning").click();
+            return false;
+          }
+          if (adStatus == 3) {
+            if ($('#example-textarea').val() == '') {
+              $('#warningContent').html('不予通过请说明原因');
+              $("#btn-warning").click();
+              return false;
+            }
+          }
+          return true;
+        }
+
+        function updateStatus(id,name){
+          console.log(name)
+          $('#update-id').val(id)
+          $('#update-name').val(name)
+        }
+
+      </script>
+    </nav>
+
+  </body>
+</html>

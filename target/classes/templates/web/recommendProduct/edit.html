@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>发布广告</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/imgCallBack.css}"  rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{web/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-lg-10" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+
+                <form class="needs-validation" novalidate  method="post"  onsubmit="return checkFrom()" th:action="@{/web/recommendProduct/update}"  enctype="multipart/form-data">
+                  <input type="hidden" id="id" name="id" th:value="${recommendProduct.id}">
+<!--                  <div class="form-group mb-3">-->
+<!--                    <label for="title">标题</label>-->
+<!--                    <select name="title" id = "title" class="form-control">-->
+<!--                      <option value="推荐软件" th:selected="${recommendProduct.title=='推荐软件'}">推荐软件</option>-->
+<!--                      <option value="典型病例" th:selected="${recommendProduct.title=='典型病例'}">典型病例</option>-->
+<!--                      <option value="专家评价" th:selected="${recommendProduct.title=='专家评价'}">专家评价</option>-->
+<!--                      <option value="降价促销" th:selected="${recommendProduct.title=='降价促销'}">降价促销</option>-->
+<!--                      <option value="新品上市" th:selected="${recommendProduct.title=='新品上市'}">新品上市</option>-->
+<!--                    </select>-->
+<!--                  </div>-->
+
+                  <div class="form-group mb-3">
+                    <label class="col-form-label">推荐类型</label>
+                    <select name="type" id = "type" class="form-control" onchange="typeChange()">
+                      <option value="" >--请选择--</option>
+                      <option th:selected="${recommendProduct.type==1}" value="1" >推荐软件</option>
+                      <option th:selected="${recommendProduct.type==2}"  value="2" >学术活动</option>
+                      <option th:selected="${recommendProduct.type==3}"  value="3" >典型病例</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>广告图(284*169)</label>
+                    <div class="input-group imgCallBack">
+                      <img class="imgCallBackView" th:src="${recommendProduct.logo}"/>
+                      <div class="custom-file">
+                        <input type="file"  name = "adImage" accept="image/*"  class="custom-file-input"  placeholder="上传新闻图片" id="adImage" onchange="callBackImg(this,'imgCallBackView')">
+                        <label class="custom-file-label" for="adImage">请上传图片/视频(图片284*169)</label>
+                      </div>
+                    </div>
+
+
+
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label class="col-form-label">推荐内容</label>
+                    <select name="productId" id = "productId" class="form-control">
+
+                    </select>
+                  </div>
+
+
+
+
+
+                  <div class="form-group mb-3">
+                    <label for="beginDate">起止时间</label>
+                    <input type="text" class="form-control" th:disabled="${recommendProduct.status==2&&recommendProduct.paymentStatus==2}" id="beginDate" name ="beginDate" th:value="${#dates.format(recommendProduct.beginDate,'MM/dd/yyyy')}" data-provide="datepicker" data-date-autoclose="true" >
+                    &nbsp;&nbsp;至&nbsp;&nbsp;
+                    <input type="text" class="form-control"  th:disabled="${recommendProduct.status==2&&recommendProduct.paymentStatus==2}" id="endDate"  name ="endDate" th:value="${#dates.format(recommendProduct.endDate,'MM/dd/yyyy')}" data-provide="datepicker" data-date-autoclose="true">
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label >描述</label>
+                    <textarea class="form-control" id="example-textarea" rows="3" name="remark" placeholder="描述" maxlength="64" th:text="${recommendProduct.remark}" required></textarea>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label >介绍</label>
+                    <div class="card">
+                      <div class="card-body">
+                        <textarea  id="introduction" name="introduction" rows="10" cols="80" th:utext="${recommendProduct.introduction}"></textarea>
+                      </div>
+                    </div> <!-- end card-->
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:history.back(-1);">返回</button>
+                  </div>
+                </form>
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- content -->
+      <!--警告弹窗-->
+      <th:block th:replace="~{web/incloud/status::warning}"></th:block>
+      <!-- Footer Start -->
+      <div th:replace="~{web/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<!-- Summernote js -->
+<script th:src="@{/assets/js/vendor/summernote-bs4.min.js}"></script>
+<!-- Summernote demo -->
+<script th:src="@{/assets/js/pages/demo.summernote.js}"></script>
+
+
+<!--<script type="text/javascript" th:src="@{/ckeditor/config.js}" ></script>-->
+<!--<link rel="stylesheet" type="text/css" th:href="@{/ckeditor/skins/moono/editor.css}">-->
+<!--<script type="text/javascript" th:src="@{/ckeditor/lang/zh-cn.js}" ></script>-->
+<!--<script type="text/javascript" th:src="@{/ckeditor/styles.js}"></script>-->
+
+<!--<script th:src="@{/ckeditor/ckeditor.js}"></script>-->
+<script th:src="@{/ueditor/ueditor.config.js}"></script>
+<script th:src="@{/ueditor/ueditor.all.js}"></script>
+<script th:src="@{/ueditor/lang/zh-cn/zh-cn.js}"></script>
+
+<script >
+
+  // CKEDITOR.replace( 'introduction' );
+  UE.getEditor('introduction',{initialFrameWidth:'100%',initialFrameHeight:180});
+
+
+
+  var width,height;
+  $("#adImage").change(function (e) {
+    var file, img;
+    var _URL = window.URL || window.webkitURL;
+    if ((file = this.files[0])) {
+      img = new Image();
+      img.onload = function () {
+        width = this.width;
+        height = this.height;
+        console.log("width:"+ this.width+",height"+this.height+"filesize"+ file.size)
+        // callback && callback({"width": this.width, "height": this.height, "filesize": file.size});
+      };
+      img.src = _URL.createObjectURL(file);
+    }
+  });
+  var activeType = [[${recommendProduct.type}]];//选中type
+  var activeID = [[${recommendProduct.productId}]];//选中ID
+  var activePaymentStatus = [[${recommendProduct.paymentStatus}]];//缴费状态
+
+  typeChange(activeType);
+
+  function typeChange(type){
+    var type = type || $("#type").val();
+    if (type==1||type==3){//普通产品
+      queryProducts();
+    }else {//学术活动
+      querylearnings();
+    }
+  }
+
+
+
+
+  //查询该供应商所有产品
+  function queryProducts() {
+    var  productCategoryId  = $('#productCategoryId').val();
+    $.ajax({
+      type:"POST",
+      contentType: "application/json",
+      url:'[[@{/web/product/queryProducts}]]',
+      dataType: "json",
+      data:JSON.stringify({productCategoryId:productCategoryId}),
+      async: false,
+      success:function(data){
+        console.log(data);
+        var html = '<option value="">--请选择--</option>';
+        var data = data.data;
+        for(var i = 0; i < data.length; i++){
+          html += '<option value="'+ data[i].id +'"';
+          if(activeID == data[i].id){
+            html += 'selected="selected"'
+          }
+          html += '>'+ data[i].name +'</option>';
+        }
+        $("#productId").html(html);
+      }
+    });
+  }
+
+
+  //查询该供应商的所有学术活动
+  function querylearnings() {
+    $.ajax({
+      type:"POST",
+      contentType: "application/json",
+      url:'[[@{/web/learning/querylearnings}]]',
+      dataType: "json",
+      async: false,
+      success:function(data){
+        console.log(data)
+        var html = '<option value="">--请选择--</option>';
+        var data = data.data;
+        for(var i = 0; i < data.length; i++){
+          html += '<option value="'+ data[i].id +'"';
+          if(activeID == data[i].id){
+            html += 'selected="selected"'
+          }
+          html += '>'+ data[i].title +'</option>';
+        }
+        $("#productId").html(html);
+      }
+    });
+  }
+
+
+  //提交校验
+  function checkFrom() {
+
+    var adImageVal = $('#adImage').val();
+    if (adImageVal!=''){
+      var ext = adImageVal.substring(adImageVal.lastIndexOf(".")+1).toUpperCase();
+      if(ext != 'PNG' && ext != 'JPG' && ext != 'JPEG' && ext != 'GIF'&&ext != 'png' && ext != 'jpg' && ext != 'jpeg' && ext != 'gif'){
+        $('#warningContent').html('请上传正确格式的图片');
+        $("#btn-warning").click();
+        return false;
+      }
+
+      if(!checkAdPosition(20)){
+        return false;
+      }
+
+    }
+
+
+    var productId = $('#productId option:selected') .val();
+    if (productId == "") {
+      $('#warningContent').html('请选择关联产品');
+      $("#btn-warning").click();
+      return false;
+    }
+
+
+
+    var beginDate=$("#beginDate").val();
+    var start=new Date(beginDate.replace("-", "/").replace("-", "/"));
+    var endDate=$("#endDate").val();q
+    var end=new Date(endDate.replace("-", "/").replace("-", "/"));
+
+    if(beginDate==''||endDate==''){
+      $('#warningContent').html('请输入广告起止时间!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    if(end<start) {
+      $('#warningContent').html('广告截止时间必须大于起始时间!');
+      $("#btn-warning").click();
+      return false;
+    }
+
+    if (activePaymentStatus!=2){   //如果该推荐广告  没有缴费 则判断该时间段是否有人占用
+      var data = isRecommendProduct();
+      console.log(data.status)
+      if (data.status=='400'){
+        $('#warningContent').html(data.msg);
+        $("#btn-warning").click();
+        return false;
+      }
+    }
+
+
+    return true;
+  }
+
+  //校验表单提交
+  function checkAdPosition(id) {
+    var fals = false;
+    // var datas = "{ \"id\": "+username+"}";
+    $.ajax({
+      type:"GET",
+      contentType: "application/json",
+      url:'[[@{/web/ad/check_ad_position}]]',
+      data:{'id':id},
+      dataType: "json",
+      async: false,
+      success:function(data){
+        if (width==data.width&&height==data.height){
+          fals = true;
+        } else {
+          $('#warningContent').html('图片宽高必须是'+data.width+'*'+data.height+'px');
+          $("#btn-warning").click();
+          fals =false;
+        }
+      }
+    });
+    return fals;
+  }
+
+
+  /**
+   * 判断该时间段是否被占用
+   * @returns {*}
+   */
+  function isRecommendProduct() {
+    var isRecommendData ;
+    var  productCategoryId  = $('#productCategoryId').val();
+    var type= $('#type').val();
+    var startDate= $('#beginDate').val();
+    var endDate= $('#endDate').val();
+    $.ajax({
+      type:"POST",
+      contentType: "application/json",
+      url:'[[@{/web/recommendProduct/isRecommendProduct}]]',
+      dataType: "json",
+      data:JSON.stringify({categoryId:productCategoryId,type:type,startDate:startDate,endDate:endDate}),
+      async: false,
+      success:function(data){
+        console.log(data);
+        isRecommendData = data;
+      }
+    });
+    return isRecommendData;
+  }
+
+
+
+</script>
+</body>
+</html>

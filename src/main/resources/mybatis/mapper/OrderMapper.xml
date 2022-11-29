@@ -1,0 +1,1421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.OrderDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Order" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="amount_paid" property="amountPaid" jdbcType="DECIMAL" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+    <result column="consignee" property="consignee" jdbcType="VARCHAR" />
+    <result column="coupon_discount" property="couponDiscount" jdbcType="DECIMAL" />
+    <result column="expire" property="expire" jdbcType="TIMESTAMP" />
+    <result column="fee" property="fee" jdbcType="DECIMAL" />
+    <result column="freight" property="freight" jdbcType="DECIMAL" />
+    <result column="invoice_title" property="invoiceTitle" jdbcType="VARCHAR" />
+    <result column="is_allocated_stock" property="isAllocatedStock" jdbcType="BIT" />
+    <result column="lock_expire" property="lockExpire" jdbcType="TIMESTAMP" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="offset_amount" property="offsetAmount" jdbcType="DECIMAL" />
+    <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+    <result column="payment_method_name" property="paymentMethodName" jdbcType="VARCHAR" />
+    <result column="payment_status" property="paymentStatus" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="point" property="point" jdbcType="BIGINT" />
+    <result column="promotion" property="promotion" jdbcType="VARCHAR" />
+    <result column="promotion_discount" property="promotionDiscount" jdbcType="DECIMAL" />
+    <result column="shipping_method_name" property="shippingMethodName" jdbcType="VARCHAR" />
+    <result column="shipping_status" property="shippingStatus" jdbcType="INTEGER" />
+    <result column="sn" property="sn" jdbcType="VARCHAR" />
+    <result column="tax" property="tax" jdbcType="DECIMAL" />
+    <result column="area" property="area" jdbcType="BIGINT" />
+    <result column="member" property="member" jdbcType="BIGINT" />
+    <result column="operator" property="operator" jdbcType="BIGINT" />
+    <result column="payment_method" property="paymentMethod" jdbcType="BIGINT" />
+    <result column="shipping_method" property="shippingMethod" jdbcType="BIGINT" />
+    <result column="evaluate" property="evaluate" jdbcType="INTEGER" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="paid_date" property="paidDate" jdbcType="TIMESTAMP" />
+    <result column="refunded_date" property="refundedDate" jdbcType="TIMESTAMP" />
+    <result column="hospital" property="hospital" jdbcType="VARCHAR" />
+    <result column="delivery_corp" property="deliveryCorp" jdbcType="VARCHAR" />
+    <result column="delivery_sn" property="deliverySn" jdbcType="VARCHAR" />
+    <result column="is_member_delete" property="isMemberDelete" jdbcType="BIT" />
+    <result column="is_make_invoice" property="isMakeInvoice" jdbcType="BIT" />
+    <result column="type" property="type" jdbcType="BIGINT" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="case_status" property="caseStatus" jdbcType="INTEGER" />
+    <result column="order_invoice_id" property="orderInvoiceId" jdbcType="BIGINT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="receiver_id" property="receiverId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, address, amount_paid, area_name, consignee, coupon_discount,
+    expire, fee, freight, invoice_title, is_allocated_stock, lock_expire, memo, offset_amount,
+    order_status, payment_method_name, payment_status, phone, point, promotion, promotion_discount,
+    shipping_method_name, shipping_status, sn, tax, area, member, operator, payment_method,
+    shipping_method, evaluate, is_deleted, paid_date, refunded_date, hospital, delivery_corp,
+    delivery_sn, is_member_delete, is_make_invoice, type, email, case_status, order_invoice_id,
+    company_id, company_name, receiver_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tf_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+  <!--本月或上月 0代表本月 1代表上月-->
+  <select id="getMonthCountOrder" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(O.id) FROM tf_order O,tf_order_item I
+    WHERE
+    O.id = I.orders
+    <if test="month != null" >
+      AND PERIOD_DIFF( DATE_FORMAT( NOW( ) , '%Y%m' ) , DATE_FORMAT( O.create_date, '%Y%m' ) ) =#{month,jdbcType=BIGINT}
+    </if>
+    <if test="companyId != null" >
+      AND  I.company_receiver = #{companyId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--本周或上周0代表本周 1 代表上周-->
+  <select id="getWeekCountOrder" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(O.id) FROM tf_order O,tf_order_item I
+    WHERE
+    O.id = I.orders
+    <if test="week != null" >
+      AND YEARWEEK(DATE_FORMAT(O.create_date,'%Y-%m-%d'),1) = YEARWEEK(NOW(),#{week,jdbcType=BIGINT})
+    </if>
+    <if test="companyId != null" >
+      AND  I.company_receiver = #{companyId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--今天或昨天 1代表昨天  0代表今天-->
+  <select id="getDayCountOrder" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(O.id) FROM tf_order O,tf_order_item I
+    WHERE
+    O.id = I.orders
+    <if test="day != null" >
+      AND TO_DAYS(NOW()) - TO_DAYS(O.create_date) = #{day,jdbcType=BIGINT}
+    </if>
+    <if test="companyId != null" >
+      AND  I.company_receiver = #{companyId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--今年vs去年订单量-->
+  <select id="getOrderQuantity" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT A.mon, COALESCE(B.countNum,0) AS thisYear ,COALESCE(C.countNum,0) AS lastYear FROM (
+    SELECT @m:=@m+1 mon FROM tf_order_item,
+    (SELECT @m:=0) a LIMIT 12 ) A LEFT JOIN (
+    SELECT
+    MONTH(create_date) createTime,
+    COUNT(id) countNum
+    FROM
+    tf_order_item
+    WHERE YEAR(create_date)=YEAR(NOW()) AND company = #{companyId,jdbcType=BIGINT}
+    GROUP BY
+    MONTH(create_date)
+    ) B ON A.mon = B.createTime LEFT JOIN (
+    SELECT
+    MONTH(create_date) createTime,
+    COUNT(id) countNum
+    FROM
+    tf_order_item
+    WHERE  YEAR(create_date)=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR)) AND company = #{companyId,jdbcType=BIGINT}
+    GROUP BY
+    MONTH(create_date)
+    )C ON A.mon = C.createTime ORDER BY A.mon
+  </select>
+
+  <select id="getOrderPrice" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT A.mon, COALESCE(B.countNum,0) AS thisYear ,COALESCE(C.countNum,0) AS lastYear , CONVERT ( ( ( COALESCE (B.countNum ,0) - COALESCE (C.countNum ,0) ) / COALESCE (C.countNum ,1) ) * 100, DECIMAL ( 10, 2 ) ) AS point FROM (
+    SELECT @m:=@m+1 mon FROM tf_order_item,
+    (SELECT @m:=0) a LIMIT 12 ) A LEFT JOIN (
+    SELECT
+    MONTH(create_date) createTime,
+    SUM(price*quantity) countNum
+    FROM
+    tf_order_item
+    WHERE YEAR(create_date)=YEAR(NOW()) AND company = #{companyId,jdbcType=BIGINT}
+    GROUP BY
+    MONTH(create_date)
+    ) B ON A.mon = B.createTime LEFT JOIN (
+    SELECT
+    MONTH(create_date) createTime,
+    SUM(price*quantity) countNum
+    FROM
+    tf_order_item
+    WHERE  YEAR(create_date)=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR)) AND company = #{companyId,jdbcType=BIGINT}
+    GROUP BY
+    MONTH(create_date)
+    )C ON A.mon = C.createTime ORDER BY A.mon
+  </select>
+
+
+  <select id="getOrderPayment" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+     SELECT O.payment_method_name, COUNT(O.id) AS countPayment FROM tf_order O,tf_order_item OI
+     WHERE O.`id` = OI.`orders` AND O.payment_status = 2
+     AND OI.company = #{companyId,jdbcType=BIGINT} GROUP BY O.payment_method_name
+  </select>
+
+
+  <select id="getOrderShipping" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+     SELECT * FROM (
+        SELECT '已支付' AS status,  COUNT(O.id) AS countPayment FROM tf_order O,tf_order_item OI  WHERE O.`id` = OI.`orders` AND OI.company = #{companyId,jdbcType=BIGINT} AND O.payment_status = 2
+         UNION
+        SELECT '未支付' AS status, COUNT(O.id) AS countPayment FROM tf_order O,tf_order_item OI  WHERE O.`id` = OI.`orders` AND OI.company = #{companyId,jdbcType=BIGINT}  AND O.payment_status = 0
+         UNION
+        SELECT '已退款' AS status, COUNT(O.id) AS countPayment FROM tf_order O,tf_order_item OI  WHERE O.`id` = OI.`orders` AND OI.company = #{companyId,jdbcType=BIGINT}  AND O.payment_status = 4
+         UNION
+        SELECT '未发货' AS status, COUNT(O.id) AS countPayment FROM tf_order O,tf_order_item OI  WHERE O.`id` = OI.`orders` AND OI.company = #{companyId,jdbcType=BIGINT}  AND O.payment_status = 2 AND O.shipping_status = 0
+         UNION
+        SELECT '已发货' AS status, COUNT(O.id) AS countPayment FROM tf_order O,tf_order_item OI  WHERE O.`id` = OI.`orders` AND OI.company = #{companyId,jdbcType=BIGINT}  AND O.payment_status = 2 AND O.shipping_status = 2
+         UNION
+        SELECT '部分发货' AS status, COUNT(O.id) AS countPayment FROM tf_order O,tf_order_item OI  WHERE O.`id` = OI.`orders` AND OI.company = #{companyId,jdbcType=BIGINT} AND O.payment_status = 2 AND O.shipping_status = 1
+        UNION
+        SELECT '已退货' AS status, COUNT(O.id) AS countPayment FROM tf_order O,tf_order_item OI  WHERE O.`id` = OI.`orders` AND OI.company = #{companyId,jdbcType=BIGINT}  AND O.payment_status = 4 AND O.shipping_status = 4
+        ) A
+  </select>
+
+  <select id="thatYearOrder" resultType="java.math.BigDecimal" parameterType="java.util.Map">
+    SELECT COALESCE( B.countNum,0) countNum   FROM (
+    SELECT CONCAT(#{year} ,'-01') AS mon UNION
+    SELECT CONCAT(#{year} ,'-02') AS mon UNION
+    SELECT CONCAT(#{year} ,'-03') AS mon UNION
+    SELECT CONCAT(#{year},'-04')  AS mon UNION
+    SELECT CONCAT(#{year} ,'-05') AS mon UNION
+    SELECT CONCAT(#{year} ,'-06') AS mon UNION
+    SELECT CONCAT(#{year} ,'-07') AS mon UNION
+    SELECT CONCAT(#{year} ,'-08') AS mon UNION
+    SELECT CONCAT(#{year} ,'-09') AS mon UNION
+    SELECT CONCAT(#{year} ,'-10') AS mon UNION
+    SELECT CONCAT(#{year} ,'-11') AS mon UNION
+    SELECT CONCAT(#{year} ,'-12') AS mon
+    ) A LEFT JOIN (
+    SELECT
+    DATE_FORMAT(O.paid_date, '%Y-%m') createTime,
+    SUM(O.amount_paid) countNum
+    FROM
+    tf_order O LEFT JOIN tf_order_item OI ON O.id = OI.orders WHERE O.paid_date IS NOT NULL
+    <if test="companyId != null" >
+      AND  OI.company = #{companyId,jdbcType=BIGINT}
+    </if>
+    GROUP BY
+    DATE_FORMAT(O.paid_date, '%Y-%m')
+    ) B ON A.mon = B.createTime order by A.mon
+  </select>
+
+  <select id="getYearOrder" parameterType="java.util.HashMap"  resultType="java.util.HashMap" >
+    SELECT
+    DATE_FORMAT(O.paid_date, '%Y') year,
+    SUM(O.amount_paid) AS countNum
+    FROM
+    tf_order O
+    LEFT JOIN tf_order_item OI
+    ON O.id = OI.orders
+    WHERE O.paid_date IS NOT NULL
+    <if test="companyId != null" >
+      AND OI.company = #{companyId}
+    </if>
+    GROUP BY DATE_FORMAT(O.paid_date, '%Y')
+    ORDER BY YEAR DESC
+  </select>
+
+  <select id="getamountOrder" parameterType="java.util.HashMap"  resultType="java.util.HashMap" >
+    SELECT O.payment_method_name ,COUNT(O.id) countOrder ,SUM(O.amount_paid) sumOrder  FROM
+    tf_order O LEFT JOIN tf_order_item OI ON O.id = OI.orders
+    WHERE payment_method_name!=''
+    <if test="companyId != null" >
+      AND OI.company = #{companyId}
+    </if>
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS( O.paid_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(O.paid_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( O.paid_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(O.paid_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and O.paid_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY O.payment_method_name
+  </select>
+
+  <select id="getPaymentMethod" parameterType="java.util.HashMap"  resultType="java.lang.Integer" >
+    SELECT COALESCE (B.countNum,0) countNum FROM (
+    SELECT DATE_FORMAT(O.paid_date, '%Y') year  FROM tf_order O LEFT JOIN tf_order_item OI ON O.id = OI.orders
+    WHERE O.paid_date IS NOT NULL
+    <if test="companyId != null" >
+      AND OI.company = #{companyId}
+    </if>
+    GROUP BY year
+    ) A LEFT JOIN (
+    SELECT DATE_FORMAT(O.paid_date, '%Y') year,O.payment_method_name,COUNT(O.id) countNum
+    FROM
+    tf_order O LEFT JOIN tf_order_item OI ON O.id = OI.orders WHERE 1 = 1
+    <if test="companyId != null" >
+      AND OI.company = #{companyId}
+    </if>
+    <if test="payment_method_name != null and payment_method_name!='' " >
+      AND  O.payment_method_name = #{payment_method_name}
+    </if>
+    GROUP BY
+    DATE_FORMAT(O.paid_date, '%Y') ,O.payment_method_name  ORDER BY year
+    ) B ON A.year = B.year ORDER BY A.year
+  </select>
+
+  <select id="getPaymentAmount" resultType="java.math.BigDecimal" parameterType="java.util.HashMap" >
+    SELECT COALESCE (B.sumAmount,0) sumAmount FROM (
+    SELECT DATE_FORMAT(O.paid_date, '%Y') year  FROM tf_order O LEFT JOIN tf_order_item OI ON O.id = OI.orders
+    WHERE O.paid_date IS NOT NULL
+    <if test="companyId != null" >
+      AND OI.company = #{companyId}
+    </if>
+    GROUP BY year
+    ) A LEFT JOIN (
+    SELECT DATE_FORMAT(O.paid_date, '%Y') year,O.payment_method_name,COUNT(O.amount_paid) sumAmount
+    FROM
+    tf_order O LEFT JOIN tf_order_item OI ON O.id = OI.orders WHERE 1 = 1
+    <if test="companyId != null" >
+      AND OI.company = #{companyId}
+    </if>
+    <if test="payment_method_name != null and payment_method_name!='' " >
+      AND  O.payment_method_name = #{payment_method_name}
+    </if>
+    GROUP BY
+    DATE_FORMAT(O.paid_date, '%Y') ,O.payment_method_name  ORDER BY year
+    ) B ON A.year = B.year ORDER BY A.year
+  </select>
+
+
+  <select id="getOrderSourcePie" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT M.province ,COUNT(O.id) AS countOrder FROM tf_order O ,tf_member M WHERE O.member = M.id
+    <if test="companyId != null" >
+      AND O.company_id = #{companyId}
+    </if>
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS( O.create_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(O.create_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( O.create_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(O.create_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and O.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY M.province
+  </select>
+
+
+  <select id="getYearOrderSum" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT A.mon, COALESCE( B.countNum,0) countNum   FROM (
+    SELECT CONCAT(#{year} ,'-01') AS mon UNION
+    SELECT CONCAT(#{year} ,'-02') AS mon UNION
+    SELECT CONCAT(#{year} ,'-03') AS mon UNION
+    SELECT CONCAT(#{year},'-04') AS mon UNION
+    SELECT CONCAT(#{year} ,'-05') AS mon UNION
+    SELECT CONCAT(#{year} ,'-06') AS mon UNION
+    SELECT CONCAT(#{year} ,'-07') AS mon UNION
+    SELECT CONCAT(#{year} ,'-08') AS mon UNION
+    SELECT CONCAT(#{year} ,'-09') AS mon UNION
+    SELECT CONCAT(#{year} ,'-10') AS mon UNION
+    SELECT CONCAT(#{year} ,'-11') AS mon UNION
+    SELECT CONCAT(#{year} ,'-12') AS mon
+    ) A LEFT JOIN (
+    SELECT
+    DATE_FORMAT(create_date, '%Y-%m') createTime,
+    COUNT(id) countNum
+    FROM
+    tf_order WHERE order_status = 2 AND company_id = #{companyId} GROUP BY createTime  ) B ON A.mon = B.createTime ORDER BY A.mon
+  </select>
+
+  <select id="productOrderProportions" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT
+    OI.name,
+    SUM(OI.quantity) AS sumQuantity
+    FROM
+    tf_order_item OI
+    LEFT JOIN tf_order O
+    ON OI.orders = O.id
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND O.company_id = #{companyId}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and O.paid_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    AND O.`order_status` = 2
+    GROUP BY OI.`name`
+  </select>
+
+
+  <select id="getOrderSourceByCity" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT  M.city , COUNT( O.`id`) AS countOrder FROM tf_order O ,tf_member M  WHERE O.member = M.id
+    <if test="companyId != null" >
+      AND O.company_id = #{companyId}
+    </if>
+    GROUP BY M.`city`  ORDER BY countOrder DESC
+  </select>
+
+
+  <select id="getThisWeek" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT B.date ,IFNULL(C.countOrder,0) AS countOrder ,IFNULL(C.sumAmount,0) AS sumAmount FROM  (
+    SELECT @a :=@a + 1 AS `index`, DATE(ADDDATE(CURRENT_DATE, INTERVAL @a DAY)) AS `date`
+    FROM mysql.help_topic,(SELECT @a := 0) temp
+    WHERE @a &lt; 6 - WEEKDAY(CURRENT_DATE)
+    UNION
+    SELECT @s :=@s - 1 AS `index`, DATE(DATE_SUB(CURRENT_DATE, INTERVAL @s DAY)) AS `date`
+    FROM mysql.help_topic,(SELECT @s := WEEKDAY(CURRENT_DATE) + 1) temp
+    WHERE @s > 0
+    ORDER BY `date`) B LEFT JOIN (
+    SELECT DATE_FORMAT(A.create_date,'%Y-%m-%d') AS 'date', COUNT(A.id) AS countOrder ,SUM(A.amount_paid) AS sumAmount FROM   tf_order A  WHERE 1 = 1
+    <if test="companyId != null" >
+      AND A.company_id = #{companyId}
+    </if>
+    GROUP BY  DATE_FORMAT(A.create_date,'%Y-%m-%d')
+    ) C  ON B.date = C.date ORDER BY B.date
+  </select>
+
+  <select id="getLastWeek" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT B.timeDay, IFNULL(C.countOrder,0) AS countOrder ,IFNULL(C.sumAmount,0) AS sumAmount FROM  (
+    SELECT
+    DATE_FORMAT(lastWeek.`timeDay`,'%Y-%m-%d') AS'timeDay'
+    FROM (
+    SELECT DATE_SUB(NOW(),INTERVAL 13 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 12 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 11 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 10 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 9 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 8 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 7 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 6 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 5 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 4 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 3 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 2 DAY) AS'timeDay'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 1 DAY) AS'timeDay'
+    ) AS lastWeek
+    WHERE YEARWEEK(lastWeek.`timeDay`,1) = YEARWEEK(NOW(),1)-1) B LEFT JOIN  (
+    SELECT DATE_FORMAT(A.create_date,'%Y-%m-%d') AS 'date', COUNT(A.id) AS countOrder,SUM(A.amount_paid) AS sumAmount FROM   tf_order A  WHERE 1 = 1
+    <if test="companyId != null" >
+      AND A.company_id = #{companyId}
+    </if>
+    GROUP BY  DATE_FORMAT(A.create_date,'%Y-%m-%d')
+    ) C  ON B.timeDay = C.date
+  </select>
+
+
+  <select id="getThisWeekConversionRate" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+
+    SELECT B.date ,IFNULL(C.productDemonstration/D.countOrder,0) AS conversionRate  FROM  (
+    SELECT @a :=@a + 1 AS `index`, DATE(ADDDATE(CURRENT_DATE, INTERVAL @a DAY)) AS `date`
+    FROM mysql.help_topic,(SELECT @a := 0) temp
+    WHERE @a &lt; 6 - WEEKDAY(CURRENT_DATE)
+    UNION
+    SELECT @s :=@s - 1 AS `index`, DATE(DATE_SUB(CURRENT_DATE, INTERVAL @s DAY)) AS `date`
+    FROM mysql.help_topic,(SELECT @s := WEEKDAY(CURRENT_DATE) + 1) temp
+    WHERE @s > 0
+    ORDER BY `date`) B LEFT JOIN (
+    SELECT DATE_FORMAT(A.create_date,'%Y-%m-%d') AS 'date', COUNT(A.id) AS productDemonstration FROM   tf_demonstration_statistics A  WHERE A.`type` = 0
+    <if test="companyId != null" >
+      AND A.company_id = #{companyId}
+    </if>
+    GROUP BY  DATE_FORMAT(A.create_date,'%Y-%m-%d')
+    ) C  ON B.date = C.date LEFT JOIN (
+    SELECT DATE_FORMAT(A.create_date,'%Y-%m-%d') AS 'date', COUNT(A.id) AS countOrder FROM   tf_order A  WHERE 1 = 1
+    <if test="companyId != null" >
+      AND A.company_id = #{companyId}
+    </if>
+    GROUP BY  DATE_FORMAT(A.create_date,'%Y-%m-%d')
+    ) D ON B.date = D.date
+    ORDER BY B.date
+  </select>
+
+
+  <select id="getLastWeekConversionRate" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+
+    SELECT B.date ,IFNULL(C.productDemonstration/D.countOrder,0) AS conversionRate  FROM  (
+    SELECT
+    DATE_FORMAT(lastWeek.`date`,'%Y-%m-%d') AS'date'
+    FROM (
+    SELECT DATE_SUB(NOW(),INTERVAL 13 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 12 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 11 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 10 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 9 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 8 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 7 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 6 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 5 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 4 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 3 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 2 DAY) AS'date'
+    UNION ALL
+    SELECT DATE_SUB(NOW(),INTERVAL 1 DAY) AS'date'
+    ) AS lastWeek
+    WHERE YEARWEEK(lastWeek.`date`,1) = YEARWEEK(NOW(),1)-1) B LEFT JOIN (
+    SELECT DATE_FORMAT(A.create_date,'%Y-%m-%d') AS 'date', COUNT(A.id) AS productDemonstration FROM   tf_demonstration_statistics A  WHERE A.`type` = 0
+    <if test="companyId != null" >
+      AND A.company_id = #{companyId}
+    </if>
+    GROUP BY  DATE_FORMAT(A.create_date,'%Y-%m-%d')
+    ) C  ON B.date = C.date LEFT JOIN (
+    SELECT DATE_FORMAT(A.create_date,'%Y-%m-%d') AS 'date', COUNT(A.id) AS countOrder FROM   tf_order A  WHERE 1 = 1
+    <if test="companyId != null" >
+      AND A.company_id = #{companyId}
+    </if>
+    GROUP BY  DATE_FORMAT(A.create_date,'%Y-%m-%d')
+    ) D ON B.date = D.date
+    ORDER BY B.date
+
+  </select>
+
+
+
+  <select id="getHospitalOrderBy" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT B.hospital,COUNT(A.id) AS countHospital FROM tf_order A LEFT JOIN tf_member B ON A.`member` = B.`id`
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND A.company_id = #{companyId}
+    </if>
+    GROUP BY B.`hospital`
+  </select>
+
+
+
+  <select id="getOrderprovince" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT A.*, CONCAT( ROUND(A.countCompanyOrder/B.countOrder*100,2),'%') AS proportion  FROM (
+    SELECT COUNT(O.id) AS countCompanyOrder,M.`province`,M.iplat,M.iplng FROM tf_order O LEFT JOIN tf_member M ON O.`member` = M.`id`
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND O.company_id = #{companyId}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      AND O.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY M.`province`
+    ) A,(SELECT COUNT(O.id) AS countOrder FROM tf_order O
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND O.company_id = #{companyId}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      AND O.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    ) B ORDER BY A.countCompanyOrder DESC
+  </select>
+
+  <select id="getSumOrderAmountPaid" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT A.mon, IFNULL(B.sumOrderAmountPaid,0) sumOrderAmountPaid  FROM (
+    SELECT 1 AS mon
+    UNION SELECT 2
+    UNION SELECT 3
+    UNION SELECT 4
+    UNION SELECT 5
+    UNION SELECT 6
+    UNION SELECT 7
+    UNION SELECT 8
+    UNION SELECT 9
+    UNION SELECT 10
+    UNION SELECT 11
+    UNION SELECT 12
+    ) A LEFT JOIN (
+    SELECT SUM(amount_paid) sumOrderAmountPaid ,DATE_FORMAT(create_date,'%m') AS MONTH FROM tf_order
+    WHERE payment_status = 2
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="year != null" >
+      AND DATE_FORMAT(create_date,'%Y') = #{year}
+    </if>
+    GROUP BY DATE_FORMAT(create_date,'%y-%m')
+    ) B ON A.mon = B.month ORDER BY A.mon
+
+  </select>
+
+
+  <select id="getComparativeAnalysisOfSales" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT A.mon, IFNULL(B.sumOrderAmountPaid,0) thisYearOrderAmountPaid ,IFNULL(C.sumOrderAmountPaid,0) lastYearOrderAmountPaid  FROM (
+    SELECT 1 AS mon
+    UNION SELECT 2
+    UNION SELECT 3
+    UNION SELECT 4
+    UNION SELECT 5
+    UNION SELECT 6
+    UNION SELECT 7
+    UNION SELECT 8
+    UNION SELECT 9
+    UNION SELECT 10
+    UNION SELECT 11
+    UNION SELECT 12
+    ) A LEFT JOIN (
+    SELECT SUM(amount_paid) sumOrderAmountPaid ,DATE_FORMAT(create_date,'%m') AS MONTH FROM tf_order
+    WHERE payment_status = 2
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="year != null" >
+      AND DATE_FORMAT(create_date,'%Y') = #{year}
+    </if>
+    GROUP BY DATE_FORMAT(create_date,'%y-%m')
+    ) B ON A.mon = B.month LEFT JOIN (
+    SELECT SUM(amount_paid) sumOrderAmountPaid ,DATE_FORMAT(create_date,'%m') AS MONTH FROM tf_order
+    WHERE payment_status = 2
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="year != null" >
+      AND DATE_FORMAT(create_date,'%Y') = #{year} - 1
+    </if>
+    GROUP BY DATE_FORMAT(create_date,'%y-%m')
+    ) C ON A.mon = C.month ORDER BY A.mon
+  </select>
+
+  <select id="getCountOrders" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT A.mon, IFNULL(B.countOrder,0) countOrder  FROM (
+    SELECT 1 AS mon
+    UNION SELECT 2
+    UNION SELECT 3
+    UNION SELECT 4
+    UNION SELECT 5
+    UNION SELECT 6
+    UNION SELECT 7
+    UNION SELECT 8
+    UNION SELECT 9
+    UNION SELECT 10
+    UNION SELECT 11
+    UNION SELECT 12
+    ) A LEFT JOIN (
+    SELECT COUNT(id) countOrder ,DATE_FORMAT(create_date,'%m') AS MONTH FROM tf_order WHERE 1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="year != null" >
+      AND DATE_FORMAT(create_date,'%Y') = #{year}
+    </if>
+    GROUP BY DATE_FORMAT(create_date,'%y-%m')
+    ) B ON A.mon = B.month ORDER BY A.mon
+  </select>
+
+  <select id="getCountOrderOfSales" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+
+    SELECT A.mon, IFNULL(B.countOrder,0) thisYearCountOrder,IFNULL(C.countOrder,0) lastYearCountOrder  FROM (
+    SELECT 1 AS mon
+    UNION SELECT 2
+    UNION SELECT 3
+    UNION SELECT 4
+    UNION SELECT 5
+    UNION SELECT 6
+    UNION SELECT 7
+    UNION SELECT 8
+    UNION SELECT 9
+    UNION SELECT 10
+    UNION SELECT 11
+    UNION SELECT 12
+    ) A LEFT JOIN (
+    SELECT COUNT(id) countOrder ,DATE_FORMAT(create_date,'%m') AS MONTH FROM tf_order
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="year != null" >
+      AND DATE_FORMAT(create_date,'%Y') = #{year}
+    </if>
+    GROUP BY DATE_FORMAT(create_date,'%y-%m')
+    ) B ON A.mon = B.month LEFT JOIN (
+    SELECT COUNT(id) countOrder ,DATE_FORMAT(create_date,'%m') AS MONTH FROM tf_order
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="year != null" >
+      AND DATE_FORMAT(create_date,'%Y') = #{year} - 1
+    </if>
+    GROUP BY DATE_FORMAT(create_date,'%y-%m')
+    ) C ON A.mon = C.month ORDER BY A.mon
+  </select>
+
+  <select id="getCountRefurnsOrder" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT A.mon, IFNULL(B.countRefurnsOrder,0) countRefurnsOrder FROM (
+    SELECT 1 AS mon
+    UNION SELECT 2
+    UNION SELECT 3
+    UNION SELECT 4
+    UNION SELECT 5
+    UNION SELECT 6
+    UNION SELECT 7
+    UNION SELECT 8
+    UNION SELECT 9
+    UNION SELECT 10
+    UNION SELECT 11
+    UNION SELECT 12
+    ) A LEFT JOIN (
+    SELECT COUNT(id) countRefurnsOrder ,DATE_FORMAT(create_date,'%m') AS MONTH FROM tf_order
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="year != null" >
+      AND DATE_FORMAT(create_date,'%Y') = #{year}
+    </if>
+    and (shipping_status = 3 OR shipping_status = 4) GROUP BY DATE_FORMAT(create_date,'%y-%m')
+    ) B ON A.mon = B.month  ORDER BY A.mon
+
+  </select>
+
+  <select id="getOrderHospital" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT A.*, CONCAT (ROUND(A.countOrderHospital/A.countOrder*100,2),'%') AS proportion FROM (
+    SELECT  hospital , COUNT(id) countOrderHospital ,(SELECT COUNT(id) FROM tf_order
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    ) AS countOrder FROM tf_order
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY hospital
+    ) A ORDER BY A.countOrderHospital DESC
+  </select>
+
+  <select id="getOrderArea" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT A.*, CONCAT (ROUND(A.countAreaHospital/A.countOrder*100,2),'%') AS proportion FROM (
+    SELECT A.name, O.area , COUNT(O.id) countAreaHospital ,(SELECT COUNT(id) FROM tf_order
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    ) AS countOrder FROM tf_order O LEFT JOIN tf_area A ON O.area = A.id
+    WHERE 1 = 1
+    <if test="companyId != null" >
+      AND O.company_id = #{companyId}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and O.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY O.area
+    ) A ORDER BY A.countAreaHospital DESC
+  </select>
+
+  <select id="getOrderSourceCityOrderByDesc" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT A.latLng,A.city, COUNT(A.`id`) AS countOrder FROM (
+    SELECT CONCAT(M.iplat,',',M.iplng)latLng , M.city ,O.`id` FROM tf_order O ,tf_member M  WHERE O.member = M.id
+    <if test="companyId != null" >
+      AND O.company_id = #{companyId}
+    </if>
+    ) A  GROUP BY A.latLng,A.city
+  </select>
+
+  <select id="getProductQuantityOrderByDesc" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT P.name,IFNULL(TRUNCATE(SUM(OI.price*OI.quantity),2),0) AS sumPrice, IFNULL(SUM(OI.quantity),0) sumQuantity FROM tf_product P
+    LEFT JOIN tf_order_item OI ON P.id = OI.`product` WHERE 1 = 1
+    <if test="companyId != null" >
+      AND P.company_id = #{companyId}
+    </if>
+    GROUP BY NAME ORDER BY sumQuantity DESC
+  </select>
+
+  <select id="getOrderSource" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT CONCAT(M.iplat,',',M.iplng)latLng , CONCAT(M.province,' ',M.city) name FROM tf_order O ,tf_member M ,tf_order_item OI
+    WHERE O.member = M.id and O.id = OI.orders
+    <if test="companyId != null" >
+      AND OI.company = #{companyId}
+    </if>
+    GROUP BY M.id
+  </select>
+
+  <select id="getAll" parameterType="java.util.HashMap"  resultType="java.util.HashMap" >
+    SELECT
+    O.*,
+    M.username AS musername,
+    M.name AS mname,
+    C.name as cname
+    FROM
+    tf_order O left join tf_member M on O.`member` = M.`id`
+    left join tf_company C on O.company_id = C.id
+    where 1 = 1
+    <if test="sn != null and sn!='' " >
+      AND O.sn like '%${sn}%'
+    </if>
+    <if test="companyId != null and companyId!='' " >
+      AND O.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="username != null and username!='' " >
+      AND M.username like '%${username}%'
+    </if>
+    <if test="orderStatus == 0" >
+      AND O.payment_status = 0
+    </if>
+    <if test="orderStatus == 1" >
+      AND O.payment_status = 2 AND O.shipping_status = 0
+    </if>
+    <if test="orderStatus == 2" >
+      AND O.payment_status = 2 AND (O.shipping_status = 2 or O.shipping_status = 1)
+    </if>
+    <!--<if test="orderStatus == 3" >
+      AND O.order_status = #{orderStatus,jdbcType=BIGINT}
+    </if>-->
+    <if test="orderStatus == 4" >
+      AND O.order_status = 2
+    </if>
+    <if test="orderStatus == 5" >
+      AND O.order_status = 3
+    </if>
+    <if test="companyId != null" >
+      AND O.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="paymentStatus != null" >
+      AND O.payment_status = #{paymentStatus,jdbcType=BIGINT}
+    </if>
+    <if test="shippingStatus != null" >
+      AND O.shipping_status = #{shippingStatus,jdbcType=BIGINT}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and O.create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="orderType != null" >
+      AND O.type = #{orderType,jdbcType=BIGINT}
+    </if>
+    <if test="orderType == null" >
+      AND O.type != 2
+    </if>
+    group by id
+    ORDER BY O.create_date DESC
+  </select>
+
+  <select id="getStatistics" parameterType="java.util.HashMap"  resultType="java.util.HashMap" >
+    SELECT C.id, C.name,A.orderStatus ,COUNT(A.orderStatus) cOrderStatus FROM tf_company C ,tf_product P ,tf_order_item Oi ,
+    (SELECT id,
+    (
+    CASE
+    WHEN O.order_status = 1 AND O.payment_status = 0 THEN '待付款'
+    WHEN O.order_status = 1 AND O.payment_status = 2 AND O.shipping_status = 0 THEN '待发货'
+    WHEN O.payment_status = 2 AND O.shipping_status = 2 THEN '待收货'
+    WHEN O.order_status = 3 THEN '已取消'
+    WHEN O.order_status = 2 AND O.payment_status = 2  THEN '已完成'
+    WHEN O.order_status = 0 AND O.shipping_status = 0 THEN '未确认'
+    END
+    )
+    AS orderStatus FROM
+    tf_order O ) A
+    WHERE C.id = P.company_id AND P.id = Oi.product AND Oi.orders = A.id
+
+    <if test="orderStatus != null and orderStatus!='' " >
+      AND A.orderStatus = #{orderStatus,jdbcType=VARCHAR}
+    </if>
+    <if test="companyId != null" >
+      AND  C.id = #{companyId,jdbcType=BIGINT}
+    </if>
+    GROUP BY NAME,orderStatus
+  </select>
+
+  <!--供应商首页订单柱状图-->
+  <select id="getHistogramStatistics" parameterType="java.util.HashMap"  resultType="java.util.HashMap" >
+    SELECT DATE_FORMAT(O.create_date,'%Y-%m') AS TIME,COUNT(1) AS satistics FROM tf_order O ,tf_order_item I ,tf_product P
+    WHERE O.id = I.orders AND P.id = I.product
+    <if test="companyId != null" >
+      AND P.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    GROUP BY TIME ORDER BY TIME  DESC LIMIT 12
+  </select>
+
+  <!--  sp管理员首页订单柱状图-->
+  <select id="getMonthData" parameterType="java.util.HashMap"  resultType="java.util.HashMap" >
+    SELECT A.mon, COALESCE( B.price,0) price FROM (
+        SELECT CONCAT(YEAR(NOW()) ,'-01') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-02') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-03') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-04') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-05') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-06') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-07') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-08') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-09') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-10') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-11') AS mon UNION
+        SELECT CONCAT(YEAR(NOW()) ,'-12') AS mon ) A LEFT JOIN (SELECT DATE_FORMAT(paid_date,'%Y-%m') AS TIME, SUM(amount_paid) price FROM `tf_order` WHERE payment_status = 2 GROUP BY TIME) B
+    ON A.mon = B.time ORDER BY A.mon
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Order" >
+    insert into tf_order (id, create_date, modify_date,
+      address, amount_paid, area_name,
+      consignee, coupon_discount, expire,
+      fee, freight, invoice_title,
+      is_allocated_stock, lock_expire, memo,
+      offset_amount, order_status, payment_method_name,
+      payment_status, phone, point,
+      promotion, promotion_discount, shipping_method_name,
+      shipping_status, sn, tax,
+      area, member, operator,
+      payment_method, shipping_method, evaluate,
+      is_deleted, paid_date, refunded_date,
+      hospital, delivery_corp, delivery_sn,
+      is_member_delete, is_make_invoice, type,
+      email, case_status, order_invoice_id,
+      company_id, company_name, receiver_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP},
+      #{address,jdbcType=VARCHAR}, #{amountPaid,jdbcType=DECIMAL}, #{areaName,jdbcType=VARCHAR},
+      #{consignee,jdbcType=VARCHAR}, #{couponDiscount,jdbcType=DECIMAL}, #{expire,jdbcType=TIMESTAMP},
+      #{fee,jdbcType=DECIMAL}, #{freight,jdbcType=DECIMAL}, #{invoiceTitle,jdbcType=VARCHAR},
+      #{isAllocatedStock,jdbcType=BIT}, #{lockExpire,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR},
+      #{offsetAmount,jdbcType=DECIMAL}, #{orderStatus,jdbcType=INTEGER}, #{paymentMethodName,jdbcType=VARCHAR},
+      #{paymentStatus,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{point,jdbcType=BIGINT},
+      #{promotion,jdbcType=VARCHAR}, #{promotionDiscount,jdbcType=DECIMAL}, #{shippingMethodName,jdbcType=VARCHAR},
+      #{shippingStatus,jdbcType=INTEGER}, #{sn,jdbcType=VARCHAR}, #{tax,jdbcType=DECIMAL},
+      #{area,jdbcType=BIGINT}, #{member,jdbcType=BIGINT}, #{operator,jdbcType=BIGINT},
+      #{paymentMethod,jdbcType=BIGINT}, #{shippingMethod,jdbcType=BIGINT}, #{evaluate,jdbcType=INTEGER},
+      #{isDeleted,jdbcType=BIT}, #{paidDate,jdbcType=TIMESTAMP}, #{refundedDate,jdbcType=TIMESTAMP},
+      #{hospital,jdbcType=VARCHAR}, #{deliveryCorp,jdbcType=VARCHAR}, #{deliverySn,jdbcType=VARCHAR},
+      #{isMemberDelete,jdbcType=BIT}, #{isMakeInvoice,jdbcType=BIT}, #{type,jdbcType=BIGINT},
+      #{email,jdbcType=VARCHAR}, #{caseStatus,jdbcType=INTEGER}, #{orderInvoiceId,jdbcType=BIGINT},
+      #{companyId,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, #{receiverId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Order" >
+    insert into tf_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="amountPaid != null" >
+        amount_paid,
+      </if>
+      <if test="areaName != null" >
+        area_name,
+      </if>
+      <if test="consignee != null" >
+        consignee,
+      </if>
+      <if test="couponDiscount != null" >
+        coupon_discount,
+      </if>
+      <if test="expire != null" >
+        expire,
+      </if>
+      <if test="fee != null" >
+        fee,
+      </if>
+      <if test="freight != null" >
+        freight,
+      </if>
+      <if test="invoiceTitle != null" >
+        invoice_title,
+      </if>
+      <if test="isAllocatedStock != null" >
+        is_allocated_stock,
+      </if>
+      <if test="lockExpire != null" >
+        lock_expire,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="offsetAmount != null" >
+        offset_amount,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="paymentMethodName != null" >
+        payment_method_name,
+      </if>
+      <if test="paymentStatus != null" >
+        payment_status,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="point != null" >
+        point,
+      </if>
+      <if test="promotion != null" >
+        promotion,
+      </if>
+      <if test="promotionDiscount != null" >
+        promotion_discount,
+      </if>
+      <if test="shippingMethodName != null" >
+        shipping_method_name,
+      </if>
+      <if test="shippingStatus != null" >
+        shipping_status,
+      </if>
+      <if test="sn != null" >
+        sn,
+      </if>
+      <if test="tax != null" >
+        tax,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="member != null" >
+        member,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="paymentMethod != null" >
+        payment_method,
+      </if>
+      <if test="shippingMethod != null" >
+        shipping_method,
+      </if>
+      <if test="evaluate != null" >
+        evaluate,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="paidDate != null" >
+        paid_date,
+      </if>
+      <if test="refundedDate != null" >
+        refunded_date,
+      </if>
+      <if test="hospital != null" >
+        hospital,
+      </if>
+      <if test="deliveryCorp != null" >
+        delivery_corp,
+      </if>
+      <if test="deliverySn != null" >
+        delivery_sn,
+      </if>
+      <if test="isMemberDelete != null" >
+        is_member_delete,
+      </if>
+      <if test="isMakeInvoice != null" >
+        is_make_invoice,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="caseStatus != null" >
+        case_status,
+      </if>
+      <if test="orderInvoiceId != null" >
+        order_invoice_id,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="receiverId != null" >
+        receiver_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="amountPaid != null" >
+        #{amountPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="areaName != null" >
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="consignee != null" >
+        #{consignee,jdbcType=VARCHAR},
+      </if>
+      <if test="couponDiscount != null" >
+        #{couponDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="expire != null" >
+        #{expire,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="freight != null" >
+        #{freight,jdbcType=DECIMAL},
+      </if>
+      <if test="invoiceTitle != null" >
+        #{invoiceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="isAllocatedStock != null" >
+        #{isAllocatedStock,jdbcType=BIT},
+      </if>
+      <if test="lockExpire != null" >
+        #{lockExpire,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="offsetAmount != null" >
+        #{offsetAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="paymentMethodName != null" >
+        #{paymentMethodName,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentStatus != null" >
+        #{paymentStatus,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        #{point,jdbcType=BIGINT},
+      </if>
+      <if test="promotion != null" >
+        #{promotion,jdbcType=VARCHAR},
+      </if>
+      <if test="promotionDiscount != null" >
+        #{promotionDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="shippingMethodName != null" >
+        #{shippingMethodName,jdbcType=VARCHAR},
+      </if>
+      <if test="shippingStatus != null" >
+        #{shippingStatus,jdbcType=INTEGER},
+      </if>
+      <if test="sn != null" >
+        #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="tax != null" >
+        #{tax,jdbcType=DECIMAL},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=BIGINT},
+      </if>
+      <if test="member != null" >
+        #{member,jdbcType=BIGINT},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=BIGINT},
+      </if>
+      <if test="paymentMethod != null" >
+        #{paymentMethod,jdbcType=BIGINT},
+      </if>
+      <if test="shippingMethod != null" >
+        #{shippingMethod,jdbcType=BIGINT},
+      </if>
+      <if test="evaluate != null" >
+        #{evaluate,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="paidDate != null" >
+        #{paidDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundedDate != null" >
+        #{refundedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hospital != null" >
+        #{hospital,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryCorp != null" >
+        #{deliveryCorp,jdbcType=VARCHAR},
+      </if>
+      <if test="deliverySn != null" >
+        #{deliverySn,jdbcType=VARCHAR},
+      </if>
+      <if test="isMemberDelete != null" >
+        #{isMemberDelete,jdbcType=BIT},
+      </if>
+      <if test="isMakeInvoice != null" >
+        #{isMakeInvoice,jdbcType=BIT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=BIGINT},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="caseStatus != null" >
+        #{caseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="orderInvoiceId != null" >
+        #{orderInvoiceId,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverId != null" >
+        #{receiverId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Order" >
+    update tf_order
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="amountPaid != null" >
+        amount_paid = #{amountPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="areaName != null" >
+        area_name = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="consignee != null" >
+        consignee = #{consignee,jdbcType=VARCHAR},
+      </if>
+      <if test="couponDiscount != null" >
+        coupon_discount = #{couponDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="expire != null" >
+        expire = #{expire,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fee != null" >
+        fee = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="freight != null" >
+        freight = #{freight,jdbcType=DECIMAL},
+      </if>
+      <if test="invoiceTitle != null" >
+        invoice_title = #{invoiceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="isAllocatedStock != null" >
+        is_allocated_stock = #{isAllocatedStock,jdbcType=BIT},
+      </if>
+      <if test="lockExpire != null" >
+        lock_expire = #{lockExpire,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="offsetAmount != null" >
+        offset_amount = #{offsetAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="paymentMethodName != null" >
+        payment_method_name = #{paymentMethodName,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentStatus != null" >
+        payment_status = #{paymentStatus,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        point = #{point,jdbcType=BIGINT},
+      </if>
+      <if test="promotion != null" >
+        promotion = #{promotion,jdbcType=VARCHAR},
+      </if>
+      <if test="promotionDiscount != null" >
+        promotion_discount = #{promotionDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="shippingMethodName != null" >
+        shipping_method_name = #{shippingMethodName,jdbcType=VARCHAR},
+      </if>
+      <if test="shippingStatus != null" >
+        shipping_status = #{shippingStatus,jdbcType=INTEGER},
+      </if>
+      <if test="sn != null" >
+        sn = #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="tax != null" >
+        tax = #{tax,jdbcType=DECIMAL},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=BIGINT},
+      </if>
+      <if test="member != null" >
+        member = #{member,jdbcType=BIGINT},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=BIGINT},
+      </if>
+      <if test="paymentMethod != null" >
+        payment_method = #{paymentMethod,jdbcType=BIGINT},
+      </if>
+      <if test="shippingMethod != null" >
+        shipping_method = #{shippingMethod,jdbcType=BIGINT},
+      </if>
+      <if test="evaluate != null" >
+        evaluate = #{evaluate,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="paidDate != null" >
+        paid_date = #{paidDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundedDate != null" >
+        refunded_date = #{refundedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hospital != null" >
+        hospital = #{hospital,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryCorp != null" >
+        delivery_corp = #{deliveryCorp,jdbcType=VARCHAR},
+      </if>
+      <if test="deliverySn != null" >
+        delivery_sn = #{deliverySn,jdbcType=VARCHAR},
+      </if>
+      <if test="isMemberDelete != null" >
+        is_member_delete = #{isMemberDelete,jdbcType=BIT},
+      </if>
+      <if test="isMakeInvoice != null" >
+        is_make_invoice = #{isMakeInvoice,jdbcType=BIT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=BIGINT},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="caseStatus != null" >
+        case_status = #{caseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="orderInvoiceId != null" >
+        order_invoice_id = #{orderInvoiceId,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverId != null" >
+        receiver_id = #{receiverId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Order" >
+    update tf_order
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      amount_paid = #{amountPaid,jdbcType=DECIMAL},
+      area_name = #{areaName,jdbcType=VARCHAR},
+      consignee = #{consignee,jdbcType=VARCHAR},
+      coupon_discount = #{couponDiscount,jdbcType=DECIMAL},
+      expire = #{expire,jdbcType=TIMESTAMP},
+      fee = #{fee,jdbcType=DECIMAL},
+      freight = #{freight,jdbcType=DECIMAL},
+      invoice_title = #{invoiceTitle,jdbcType=VARCHAR},
+      is_allocated_stock = #{isAllocatedStock,jdbcType=BIT},
+      lock_expire = #{lockExpire,jdbcType=TIMESTAMP},
+      memo = #{memo,jdbcType=VARCHAR},
+      offset_amount = #{offsetAmount,jdbcType=DECIMAL},
+      order_status = #{orderStatus,jdbcType=INTEGER},
+      payment_method_name = #{paymentMethodName,jdbcType=VARCHAR},
+      payment_status = #{paymentStatus,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      point = #{point,jdbcType=BIGINT},
+      promotion = #{promotion,jdbcType=VARCHAR},
+      promotion_discount = #{promotionDiscount,jdbcType=DECIMAL},
+      shipping_method_name = #{shippingMethodName,jdbcType=VARCHAR},
+      shipping_status = #{shippingStatus,jdbcType=INTEGER},
+      sn = #{sn,jdbcType=VARCHAR},
+      tax = #{tax,jdbcType=DECIMAL},
+      area = #{area,jdbcType=BIGINT},
+      member = #{member,jdbcType=BIGINT},
+      operator = #{operator,jdbcType=BIGINT},
+      payment_method = #{paymentMethod,jdbcType=BIGINT},
+      shipping_method = #{shippingMethod,jdbcType=BIGINT},
+      evaluate = #{evaluate,jdbcType=INTEGER},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      paid_date = #{paidDate,jdbcType=TIMESTAMP},
+      refunded_date = #{refundedDate,jdbcType=TIMESTAMP},
+      hospital = #{hospital,jdbcType=VARCHAR},
+      delivery_corp = #{deliveryCorp,jdbcType=VARCHAR},
+      delivery_sn = #{deliverySn,jdbcType=VARCHAR},
+      is_member_delete = #{isMemberDelete,jdbcType=BIT},
+      is_make_invoice = #{isMakeInvoice,jdbcType=BIT},
+      type = #{type,jdbcType=BIGINT},
+      email = #{email,jdbcType=VARCHAR},
+      case_status = #{caseStatus,jdbcType=INTEGER},
+      order_invoice_id = #{orderInvoiceId,jdbcType=BIGINT},
+      company_id = #{companyId,jdbcType=BIGINT},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      receiver_id = #{receiverId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

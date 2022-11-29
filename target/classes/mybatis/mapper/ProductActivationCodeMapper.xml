@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.ProductActivationCodeDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.ProductActivationCode" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="prouct_purchase_id" property="prouctPurchaseId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, code, prouct_purchase_id, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tf_product_activation_code
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="replenishmentStatus" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+    SELECT  A.`purchase_id`, C.`name` AS puName, A.`product_id`, D.name AS pName, A.`price`,A.id, COUNT(B.CODE) AS countCode FROM
+    tf_product_purchase A , tf_product_activation_code B ,tf_purchase C ,tf_product D
+    WHERE
+    A.`id` = B.prouct_purchase_id AND A.`purchase_id` = C.`id` AND D.id = A.`product_id`
+    AND B.`status` = 1
+    <if test="productId!=null ">
+      AND A.`product_id` = #{productId}
+    </if>
+    GROUP BY  A.`purchase_id` , C.`name`, A.`product_id`,D.name,A.`price`,A.id
+  </select>
+  <select id="getNotSale" resultType="com.tongfu.entity.ProductActivationCode"  parameterType="java.util.HashMap">
+    select
+    <include refid="Base_Column_List" />
+    from tf_product_activation_code
+    where 1 = 1
+    <if test="productId!=null ">
+      AND product_id = #{productId}
+    </if>
+    <if test="status!=null ">
+      AND status = #{status}
+    </if>
+    <if test="prouctPurchaseId!=null ">
+      AND prouct_purchase_id = #{prouctPurchaseId}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_product_activation_code
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+    <delete id="deleteProductActivationCode" parameterType="java.lang.Long" >
+      delete from tf_product_activation_code
+      where prouct_purchase_id = #{prouctPurchaseId,jdbcType=BIGINT} and status = 1
+    </delete>
+
+    <insert id="insert" parameterType="com.tongfu.entity.ProductActivationCode" >
+    insert into tf_product_activation_code (id, create_date, modify_date, 
+      code, prouct_purchase_id, status
+      )
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{code,jdbcType=VARCHAR}, #{prouctPurchaseId,jdbcType=BIGINT}, #{status,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.ProductActivationCode" >
+    insert into tf_product_activation_code
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="prouctPurchaseId != null" >
+        prouct_purchase_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="prouctPurchaseId != null" >
+        #{prouctPurchaseId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="insertSelectiveMap" parameterType="java.util.Map" >
+      insert into tf_product_activation_code ( create_date, modify_date,
+    code, prouct_purchase_id, status)
+      values
+      <foreach collection="purchaseCodes" item="item" index="index" separator="," close=";">
+        ( now(), now(),#{item,jdbcType=VARCHAR}, #{prouctPurchaseId,jdbcType=BIGINT},'1')
+      </foreach>
+  </insert>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.ProductActivationCode" >
+    update tf_product_activation_code
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="prouctPurchaseId != null" >
+        prouct_purchase_id = #{prouctPurchaseId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.ProductActivationCode" >
+    update tf_product_activation_code
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      code = #{code,jdbcType=VARCHAR},
+      prouct_purchase_id = #{prouctPurchaseId,jdbcType=BIGINT},
+      status = #{status,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

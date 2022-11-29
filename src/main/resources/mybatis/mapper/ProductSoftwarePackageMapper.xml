@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.ProductSoftwarePackageMapper" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.ProductSoftwarePackage" >
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="version_no" property="versionNo" jdbcType="VARCHAR" />
+    <result column="package_size" property="packageSize" jdbcType="VARCHAR" />
+    <result column="package_url" property="packageUrl" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    product_id, version_no, package_size, package_url, type
+  </sql>
+  <insert id="insert" parameterType="com.tongfu.entity.ProductSoftwarePackage" >
+    insert into tf_product_software_package (product_id, version_no, package_size, 
+      package_url, type)
+    values (#{productId,jdbcType=BIGINT}, #{versionNo,jdbcType=VARCHAR}, #{packageSize,jdbcType=VARCHAR}, 
+      #{packageUrl,jdbcType=VARCHAR}, #{type,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.ProductSoftwarePackage" >
+    insert into tf_product_software_package
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="versionNo != null" >
+        version_no,
+      </if>
+      <if test="packageSize != null" >
+        package_size,
+      </if>
+      <if test="packageUrl != null" >
+        package_url,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="versionNo != null" >
+        #{versionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="packageSize != null" >
+        #{packageSize,jdbcType=VARCHAR},
+      </if>
+      <if test="packageUrl != null" >
+        #{packageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+    <insert id="insertSelectiveMap">
+      insert into tf_product_software_package (product_id, version_no, package_size,
+      package_url, type)
+      values
+      <foreach collection="productSoftwarPacaages" item="item" index="index" separator=",">
+        (#{productId,jdbcType=BIGINT}, #{item.version_no,jdbcType=VARCHAR}, #{item.package_size,jdbcType=VARCHAR},
+        #{item.package_url,jdbcType=VARCHAR}, #{item.type,jdbcType=BIGINT})
+      </foreach>
+    </insert>
+
+    <delete id="deleteProductSoftwarePackage" parameterType="java.lang.Long" >
+      delete from tf_product_software_package
+      where product_id = #{productId,jdbcType=BIGINT}
+    </delete>
+
+    <select id="getProductSoftwarePackages" resultType="com.tongfu.entity.ProductSoftwarePackage" parameterType="java.util.HashMap">
+    select
+    <include refid="Base_Column_List" />
+    from tf_product_software_package
+    where product_id = #{productId,jdbcType=BIGINT}
+    </select>
+</mapper>

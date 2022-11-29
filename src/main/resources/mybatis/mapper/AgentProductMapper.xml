@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.AgentProductMapper" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.AgentProduct" >
+    <result column="agent_id" property="agentId" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tongfu.entity.AgentProduct" >
+    insert into tf_agent_product (agent_id, product_id)
+    values (#{agentId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.AgentProduct" >
+    insert into tf_agent_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="agentId != null" >
+        agent_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="agentId != null" >
+        #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+    <insert id="insertMap">
+      insert into tf_agent_product (agent_id, product_id) values
+      <foreach collection="productIds" item="item" index="index" separator=",">
+        (#{agentId,jdbcType=BIGINT}, #{item,jdbcType=BIGINT})
+      </foreach>
+    </insert>
+</mapper>

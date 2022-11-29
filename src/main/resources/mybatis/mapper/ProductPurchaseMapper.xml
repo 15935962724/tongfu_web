@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.ProductPurchaseDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.ProductPurchase" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="orders" property="orders" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="VARCHAR" />
+    <result column="purchase_id" property="purchaseId" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, orders, product_id, purchase_id, price
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tf_product_purchase
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAll" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tf_product_purchase
+    where 1 = 1
+    <if test="productId!=null ">
+      and product_id = #{productId}
+    </if>
+    <if test="purchaseId!=null">
+      and  purchase_id = #{purchaseId}
+    </if>
+  </select>
+
+  <select id="getProductPurchaseId"  parameterType="java.util.HashMap" resultType="java.lang.Long">
+    SELECT id FROM `tf_product_purchase`
+    WHERE 1 = 1
+    <if test="productId!=null ">
+      AND product_id = #{productId}
+    </if>
+    <if test="purchaseId!=null ">
+      AND purchase_id = #{purchaseId}
+    </if>
+  </select>
+
+  <select id="getPurchases" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT A.id, A.purchase_id,B.name,A.price FROM tf_product_purchase A ,tf_purchase B
+    WHERE A.purchase_id = B.id
+    <if test="productId!=null ">
+      AND A.product_id = #{productId}
+    </if>
+  </select>
+
+  <select id="getPurchasesLackStock" parameterType="java.util.HashMap" resultType="java.lang.Long">
+
+    SELECT
+    C.id as product_id
+    FROM tf_product C LEFT JOIN (
+    SELECT * FROM (
+    (SELECT
+    prouct_purchase_id,
+    COUNT(id) AS countId
+    FROM
+    `tf_product_activation_code`
+    GROUP BY prouct_purchase_id) A
+    LEFT JOIN `tf_product_purchase` B
+    ON B.id = A.prouct_purchase_id)
+    ) D ON C.`id` = D.product_id
+    WHERE (D.countId &lt; 5 OR D.countId IS NULL) AND C.is_add_service = 1
+      <if test="companyId!=null ">
+        AND C.`company_id` = #{companyId}
+      </if>
+    GROUP BY C.id
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_product_purchase
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="deleteByProductId" parameterType="java.lang.Long" >
+    delete from tf_product_purchase
+    where product_id = #{productId,jdbcType=BIGINT}
+  </delete>
+
+
+
+  <insert id="insert" parameterType="com.tongfu.entity.ProductPurchase" >
+    insert into tf_product_purchase (id, orders, product_id, 
+      purchase_id, price)
+    values (#{id,jdbcType=BIGINT}, #{orders,jdbcType=INTEGER}, #{productId,jdbcType=VARCHAR}, 
+      #{purchaseId,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL})
+  </insert>
+
+  <insert id="insertMap" parameterType="java.util.Map" >
+    insert into tf_product_purchase ( orders, product_id,
+      purchase_id, price)
+    values
+    <foreach collection="purchasePrices" item="item" index="index" separator="," close=";">
+
+      ( '0', #{productId,jdbcType=VARCHAR},
+      #{item.purchaseId,jdbcType=VARCHAR}, #{item.price,jdbcType=DECIMAL})
+
+    </foreach>
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.tongfu.entity.ProductPurchase" useGeneratedKeys="true" keyProperty="id" keyColumn="id"  >
+    insert into tf_product_purchase
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orders != null" >
+        orders,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="purchaseId != null" >
+        purchase_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orders != null" >
+        #{orders,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseId != null" >
+        #{purchaseId,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.ProductPurchase" >
+    update tf_product_purchase
+    <set >
+      <if test="orders != null" >
+        orders = #{orders,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseId != null" >
+        purchase_id = #{purchaseId,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.ProductPurchase" >
+    update tf_product_purchase
+    set orders = #{orders,jdbcType=INTEGER},
+      product_id = #{productId,jdbcType=VARCHAR},
+      purchase_id = #{purchaseId,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

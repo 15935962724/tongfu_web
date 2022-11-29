@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>媒体报道</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <!-- Start Content-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-lg-10" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+
+                <form class="needs-validation" novalidate  method="post" onsubmit="return checkFrom()" th:action="@{/web/media/update}"  enctype="multipart/form-data">
+                  <div class="form-group mb-3">
+                    <label for="title">标题</label>
+                    <input type="hidden" class="form-control" id="id" name="id" th:value="${media.id}" required>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="title" th:value="${media.title}" required>
+                    <div class="invalid-feedback">
+                      标题
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>媒体报道主图</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file"  name = "mediaLogo"  class="custom-file-input"  placeholder="媒体报道主图" id="inputGroupFile04">
+                        <label class="custom-file-label" for="inputGroupFile04">媒体报道主图</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--   <div class="form-group mb-3">
+                       <label for="title">关键词</label>
+                       <input type="text" class="form-control" id="keyword" name="keyword" placeholder="多个关键词请用逗号隔开">
+                       <div class="invalid-feedback">
+                         标题
+                       </div>
+                     </div>-->
+
+                  <div class="form-group mb-3">
+                    <label for="title">来源</label>
+                    <input type="text" class="form-control" id="datasource" name="datasource" th:value="${media.datasource}" placeholder="新闻来源">
+                    <div class="invalid-feedback">
+                      标题
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="inputState" class="input-group">排序</label>
+                    <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
+                      <span class="input-group-btn input-group-prepend">
+                      </span>
+                      <input data-toggle="touchspin" id="inputState" name="orders" data-bts-max="500" value="0" data-btn-vertical="true" type="text" th:value="${media.orders}" class="form-control">
+                      <span class="input-group-btn input-group-append">
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label >内容</label>
+                    <div class="card">
+                      <div class="card-body">
+                        <!-- basic summernote-->
+                        <input type="hidden" id="content"  name="content"/>
+                        <div id="summernote-basic"class="summernote-basic" th:utext="${media.content}" ></div>
+                      </div>
+                      <!-- end card-body -->
+                    </div> <!-- end card-->
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:history.back(-1);">返回</button>
+                  </div>
+                </form>
+
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+      </div>
+      <!-- content -->
+
+      <!-- Footer Start -->
+      <div th:replace="~{incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+
+  </div> <!-- end wrapper-->
+
+  <!-- ============================================================== -->
+  <!-- End Page content -->
+  <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+
+
+
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+
+
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<!-- Summernote js -->
+<script th:src="@{/assets/js/vendor/summernote-bs4.min.js}"></script>
+<!-- Summernote demo -->
+<script th:src="@{/assets/js/pages/demo.summernote.js}"></script>
+
+<script >
+
+  //提交校验
+  function checkFrom() {
+    // alert($('.summernote-basic').summernote('code'))
+    $('#content').val($('.summernote-basic').summernote('code'))
+    return true;
+  }
+
+
+
+
+</script>
+
+</body>
+
+</html>

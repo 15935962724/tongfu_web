@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>新闻发布</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/imgCallBack.css}"  rel="stylesheet" type="text/css" />
+  <script src="https://cdn.bootcss.com/xlsx/0.11.5/xlsx.core.min.js"></script>
+
+  <style>
+    .custom-checkbox ul li{
+      float: left;
+      padding-left: 30px;
+      list-style: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{web/incloud/left::left}"></div>
+    <div class="content-page">
+      <div class="content">
+        <div class="row">
+          <div class="col-lg-10" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+
+                <form class="needs-validation" novalidate  method="post" th:action="@{/web/journalism/update}"  enctype="multipart/form-data">
+                  <input type="hidden" class="form-control" id="id" name="id" th:value="${journalism.id}" required>
+                  <div class="form-group mb-3">
+                    <label for="title">标题</label>
+                    <input type="text" class="form-control" id="title" name="title" th:value="${journalism.title}" placeholder="title" required>
+                    <div class="invalid-feedback">
+                      请输入标题
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>新闻图片(680*400)</label>
+
+                    <div class="input-group imgCallBack">
+                      <img class="imgCallBackView" th:src="@{${journalism.logo}}" src="/assets/img/addImg.png"/>
+                      <div class="custom-file">
+                        <input type="file"  name = "journalismLogo" accept="image/*"  class="custom-file-input"  placeholder="上传新闻图片" id="inputGroupFile04" onchange="callBackImg(this,'imgCallBackView')">
+                        <label class="custom-file-label" for="inputGroupFile04">请上传新闻图片(680*400)</label>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="title">关键词</label>
+                    <input type="text" class="form-control" id="keyword" name="keyword" th:value="${journalism.keyword}" placeholder="多个关键词请用逗号隔开">
+                    <div class="invalid-feedback">
+                      标题
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="title">来源</label>
+                    <input type="text" class="form-control" id="datasource" name="datasource" th:value="${journalism.datasource}" placeholder="新闻来源">
+                    <div class="invalid-feedback">
+                      标题
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="inputState" class="input-group">排序</label>
+                    <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
+                      <span class="input-group-btn input-group-prepend">
+                      </span>
+                      <input data-toggle="touchspin" id="inputState" name="orders" th:value="${journalism.orders}"  data-bts-max="500" value="0" data-btn-vertical="true" type="text" class="form-control">
+                      <span class="input-group-btn input-group-append">
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="">推送至</label>
+                    <div class="custom-control custom-checkbox">
+                      <ul>
+                        <li th:each="category :${categoryList}" >
+                          <input type="checkbox" class="custom-control-input" name="categoryIds" th:checked="${categoryIds.contains(category.id)}" th:id="categoryIds+${category.id}" th:value="${category.id}" >
+                          <label class="custom-control-label" th:for="categoryIds+${category.id}" >[[${category.name}]]</label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="introduce">描述</label>
+                    <textarea class="form-control" id="introduce" rows="3" maxlength="200" name="introduce" th:text="${journalism.introduce}" placeholder="描述"></textarea>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label >内容</label>
+                    <div class="card">
+                      <div class="card-body">
+                        <textarea  id="summernote-basic" name="content" rows="10" cols="80" th:utext="${journalism.content}"></textarea>
+                      </div>
+                      <!-- end card-body -->
+                    </div> <!-- end card-->
+                  </div>
+
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:history.back(-1);">返回</button>
+                  </div>
+                </form>
+
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+      </div>
+      <!-- content -->
+
+      <!-- Footer Start -->
+      <div th:replace="~{web/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+
+  </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script th:src="@{/assets/js/pages/demo.form-wizard.js}"></script>
+
+<script th:src="@{/ueditor/ueditor.config.js}"></script>
+<script th:src="@{/ueditor/ueditor.all.js}"></script>
+<script th:src="@{/ueditor/lang/zh-cn/zh-cn.js}"></script>
+
+<!--&lt;!&ndash;&lt;!&ndash; SimpleMDE demo &ndash;&gt;&ndash;&gt;-->
+<!--<script th:src="@{/assets/js/pages/demo.simplemde.js}"></script>-->
+
+<script >
+
+  UE.getEditor('summernote-basic',{initialFrameWidth:'100%',initialFrameHeight:180});
+
+
+  //图片回显
+  function callBackImg(_this,name) {
+    var file = _this.files[0];
+    console.log(file);
+    //判断文件格式
+    if (file.type != 'image/png' && file.type != 'image/jpeg' && file.type != 'image/gif') {
+      alert("图片格式不正确");
+      $("."+name).attr("src","/assets/img/addImg.png");
+      return false;
+    }
+    //读取图片
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    //构造Image对象，获取 Image对象
+    //onload在读取完毕后触发
+    reader.onload = function() {
+      //获取读取的URL
+      var imgURL = this.result;
+      $("."+name).attr("src",imgURL)
+    }
+  }
+</script>
+
+</body>
+
+</html>

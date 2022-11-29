@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>邮件订阅</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+  <!-- App css -->
+  <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+  <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+</head>
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{admin/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-3">积分设置</h4>
+
+                <form class="needs-validation" novalidate  method="post" th:action="@{/admin/email/send}">
+                  <div class="form-group mb-3">
+                    <label for="title">主题</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="主题" required>
+                    <div class="invalid-feedback">
+                      主题
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="example-textarea">内容</label>
+                    <textarea class="form-control" id="example-textarea" maxlength="300" rows="3" name="content" placeholder="内容"></textarea>
+                    <div class="invalid-feedback">
+                      内容
+                    </div>
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">发送</button>
+                    <button type="button" class="btn btn-primary">返回</button>
+                  </div>
+                </form>
+              </div>
+              <!-- end card-body -->
+            </div>
+            <!-- end card-->
+          </div>
+          <!-- end col-->
+        </div>
+        <!-- end row -->
+
+      </div>
+      <!-- Footer Start -->
+      <div th:replace="~{admin/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+  </div> <!-- end wrapper-->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script th:src="@{/assets/js/vendor/dropzone.min.js}"></script>
+<!-- File upload js -->
+<script th:src="@{/assets/js/ui/component.fileupload.js}"></script>
+
+</body>
+
+</html>

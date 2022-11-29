@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" >
+    <head>
+        <meta charset="utf-8" />
+        <title>主页</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+        <meta content="Coderthemes" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+        <!-- third party css -->
+        <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+        <!-- third party css end -->
+        <!-- App css -->
+        <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+        <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+        <link href="assets/css/newCss.css" th:href="@{/assets/css/newCss.css}"  rel="stylesheet" type="text/css" />
+
+
+    </head>
+
+    <body>
+        <div th:include="~{web/incloud/top::top}"></div>
+
+        <!-- end Topbar -->
+
+        <div class="container-fluid">
+
+            <!-- Begin page -->
+            <div class="wrapper">
+
+                <!-- ========== Left Sidebar Start ========== -->
+                <!--<div th:replace="~{incloud/top::topbar}"></div>-->
+                <div th:replace="~{web/incloud/left::left}"></div>
+
+                    <!--<div class="content-page" th:include="~{web/incloud/shop_main::shop_main}"></div>-->
+                        <div class="content-page">
+
+                            <div class="content">
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 class="newIndex_Title">待处理</h4>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <div class="card newCard" style="background: linear-gradient(45deg, #289ffe 21%, #bfdff9 100%);">
+                                            <div class="newCard_Title">
+                                                <div class="">
+                                                    申请演示
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="newCard_Content">
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        待演示
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        123<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                                <span></span>
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        已演示
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        123<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%
+<!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="card newCard" style="background: linear-gradient(45deg, #e71f19 21%, #fbc8c7 100%);">
+                                            <div class="newCard_Title">
+                                                <div class="">
+                                                    申请试用
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="newCard_Content">
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        待处理
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        123<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                                <span></span>
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        已处理
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        123<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="card newCard" style="background: linear-gradient(45deg, #000 21%, #a1a0a0 100%);">
+                                            <div class="newCard_Title">
+                                                <div class="">
+                                                    产品咨询
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="newCard_Content">
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        待回复
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        123<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                                <span></span>
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        已回复
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        123<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 class="newIndex_Title">数据分析</h4>
+                                    </div>
+                                </div>
+
+
+
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    全国销售地区统计
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                                <div id="map-chart" class="col-lg-12 apex-charts" style="height: 300px"></div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    全国城市排名
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="line-chart7" class="col-lg-12 apex-charts"></div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    今日品牌关注度
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="line-chart" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品访问数量
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="line-chart2" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品订单数量
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="line-chart3" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品销售额
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="line-chart4" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品订单转化率
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="line-chart5" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    医院使用排名
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="line-chart6" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品销量前三名
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <table class="table table-striped dt-responsive nowrap" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>销售排名</th>
+                                                            <th>产品名称</th>
+                                                            <th>销量</th>
+                                                            <th>销售额</th>
+                                                            <th>剩余库存</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>1</th>
+                                                            <th>IQQA-3D DOCTOR</th>
+                                                            <th>13</th>
+                                                            <th>&yen;2660</th>
+                                                            <th>20</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>2</th>
+                                                            <th>IQQA-Chest TomoSynthesis CAD</th>
+                                                            <th>10</th>
+                                                            <th>&yen;2260</th>
+                                                            <th>18</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>3</th>
+                                                            <th>IQQA 多模态三维影像 肝局部功能全量化分析系统</th>
+                                                            <th>8</th>
+                                                            <th>&yen;1800</th>
+                                                            <th>12</th>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品销量后三名
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <table class="table table-striped dt-responsive nowrap" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>销售排名</th>
+                                                            <th>产品名称</th>
+                                                            <th>销量</th>
+                                                            <th>销售额</th>
+                                                            <th>剩余库存</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>32</th>
+                                                            <th>IQQA®-BodyImaging Kidney</th>
+                                                            <th>13</th>
+                                                            <th>&yen;900</th>
+                                                            <th>20</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>31</th>
+                                                            <th>IQQA-3D肝脏评估和治疗计划增值服务</th>
+                                                            <th>10</th>
+                                                            <th>&yen;700</th>
+                                                            <th>18</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>30</th>
+                                                            <th>IQQA-3D肝脏评估和治疗计划辅助系统©</th>
+                                                            <th>8</th>
+                                                            <th>&yen;400</th>
+                                                            <th>12</th>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                <!-- start page title -->
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="page-title-box">
+                                            <div class="page-title-right">
+                                                <form id="index" th:action="@{/web/main}">
+                                                    <input type="hidden" id="data" name="date">
+                                                </form>
+                                                <ol class="breadcrumb m-0">
+                                                    <li class="breadcrumb-item"><a href="javascript: void(0);" onclick="mains('月')" th:style="${date=='月'?'':'color: #83757d;'}">月</a></li>
+                                                    <li class="breadcrumb-item"><a href="javascript: void(0);" onclick="mains('周')" th:style="${date=='周'?'':'color: #83757d;'}">周</a></li>
+                                                    <li class="breadcrumb-item active" ><a href="javascript: void(0);" onclick="mains('日')" th:style="${date=='日'?'':'color: #83757d;'}">日</a></li>
+                                                </ol>
+                                            </div>
+                                            <h4 class="page-title">待处理(<label style="color: red;">待补货<a th:href="@{/web/product/statistics}">[[${lackStockCount}]]</a></label>)</h4>
+                                        </div> <!-- end page-title-box -->
+                                    </div> <!-- end col-->
+                                </div>
+                                <!-- end page title -->
+
+                                <div class="row">
+                                    <div class="col-xl-12">
+
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-6">
+                                                                <a th:href="@{/web/demonstrationStatistics/list(type=0)}" ><h3 class="text-muted font-weight-normal mt-0">申请演示</h3></a>
+<!--                                                                <h3 class="my-2 py-1">[[${countDemonstrationStatistics0}]]</h3>-->
+                                                                <h3 class="my-2 py-1">86</h3>
+                                                                <p class="mb-0 text-muted">
+                                                                    <span th:class="${riseOrFallDemonstrationStatistics0>=0?'text-success mr-2':'text-danger mr-2'}" class="text-danger mr-2"><i th:class="${riseOrFallDemonstrationStatistics0>=0?'mdi mdi-arrow-up-bold':'mdi mdi-arrow-down-bold'}"></i> [[${riseOrFallDemonstrationStatistics0}]]%</span>
+                                                                    <span class="text-nowrap" th:text="${riseOrFallDemonstrationStatistics0>=0?'上涨(同比上月)':'下跌(同比上月)'}" ></span>
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="text-right">
+                                                                    <div id="campaign-sent-chart"></div>
+                                                                </div>
+                                                                <div style="margin-top: 29px;text-align: right;">季 月 <span style="color: #0072cd">周</span></div>
+                                                            </div>
+                                                        </div> <!-- end row-->
+                                                    </div> <!-- end card-body -->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-6">
+                                                                <a th:href="@{/web/demonstrationStatistics/list(type=1)}"><h3 class="text-muted font-weight-normal mt-0">免费试用</h3></a>
+<!--                                                                <h3 class="my-2 py-1">[[${countDemonstrationStatistics1}]]</h3>-->
+                                                                <h3 class="my-2 py-1">54</h3>
+                                                                <p class="mb-0 text-muted">
+                                                                    <span th:class="${riseOrFallDemonstrationStatistics1>=0?'text-success mr-2':'text-danger mr-2'}" class="text-danger mr-2"><i th:class="${riseOrFallDemonstrationStatistics1>=0?'mdi mdi-arrow-up-bold':'mdi mdi-arrow-down-bold'}"></i> [[${riseOrFallDemonstrationStatistics1}]]%</span>
+                                                                    <span class="text-nowrap" th:text="${riseOrFallDemonstrationStatistics1>=0?'上涨(同比上月)':'下跌(同比上月)'}" ></span>
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="text-right">
+                                                                    <div id="new-leads-chart"></div>
+                                                                </div>
+                                                                <div style="margin-top: 29px;text-align: right;">季 月 <span style="color: #0072cd">周</span></div>
+                                                            </div>
+                                                        </div> <!-- end row-->
+                                                    </div> <!-- end card-body -->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-6">
+                                                                <a th:href="@{/web/message/list}"><h3 class="text-muted font-weight-normal mt-0">咨询</h3></a>
+<!--                                                                <h3 class="my-2 py-1">[[${productMessageCount}]]</h3>-->
+                                                                <h3 class="my-2 py-1">112</h3>
+                                                                <p class="mb-0 text-muted">
+                                                                    <span th:class="${riseOrFallproductMessageCount>=0?'text-success mr-2':'text-danger mr-2'}" class="text-danger mr-2"><i th:class="${riseOrFallproductMessageCount>=0?'mdi mdi-arrow-up-bold':'mdi mdi-arrow-down-bold'}"></i> [[${riseOrFallproductMessageCount}]]%</span>
+                                                                    <span class="text-nowrap" th:text="${riseOrFallproductMessageCount>=0?'上涨(同比上月)':'下跌(同比上月)'}" ></span>
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="text-right">
+                                                                    <div id="deals-chart"></div>
+                                                                </div>
+                                                                <div style="margin-top: 29px;text-align: right;">季 月 <span style="color: #0072cd">周</span></div>
+                                                            </div>
+                                                        </div> <!-- end row-->
+                                                    </div> <!-- end card-body -->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+                                        </div> <!-- end row -->
+                                    </div> <!-- end col -->
+                                    <!-- end col -->
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="page-title-box">
+                                            <div class="page-title-right">
+                                            </div>
+                                            <h4 class="page-title">统计</h4>
+                                        </div> <!-- end page-title-box -->
+                                    </div> <!-- end col-->
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xl-12">
+
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-6">
+                                                                <a th:href="@{/web/product/statistics}" ><h3 class="text-muted font-weight-normal mt-0">产品访问量</h3></a>
+<!--                                                                <h3 class="my-2 py-1">[[${countProduct}]]</h3>-->
+                                                                <h3 class="my-2 py-1">412</h3>
+                                                                <p class="mb-0 text-muted">
+                                                                    <span th:class="${riseOrFallProduct>=0?'text-success mr-2':'text-danger mr-2'}" class="text-danger mr-2"><i th:class="${riseOrFallProduct>=0?'mdi mdi-arrow-up-bold':'mdi mdi-arrow-down-bold'}"></i> [[${riseOrFallProduct}]]%</span>
+                                                                    <span class="text-nowrap" th:text="${riseOrFallProduct>=0?'上涨(同比上月)':'下跌(同比上月)'}" ></span>
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="text-right">
+                                                                    <div id="campaign-sent-charts"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div> <!-- end row-->
+                                                    </div> <!-- end card-body -->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-6">
+                                                                <a th:href="@{/web/order/statistics}"><h3 class="text-muted font-weight-normal mt-0">订单量</h3></a>
+<!--                                                                <h3 class="my-2 py-1">[[${countOrder}]]</h3>-->
+                                                                <h3 class="my-2 py-1">24</h3>
+                                                                <p class="mb-0 text-muted">
+                                                                    <span th:class="${riseOrFallOrder>=0?'text-success mr-2':'text-danger mr-2'}" class="text-danger mr-2"><i th:class="${riseOrFallOrder>=0?'mdi mdi-arrow-up-bold':'mdi mdi-arrow-down-bold'}"></i> [[${riseOrFallOrder}]]%</span>
+                                                                    <span class="text-nowrap" th:text="${riseOrFallOrder>=0?'上涨(同比上月)':'下跌(同比上月)'}" ></span>
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="text-right">
+                                                                    <div id="new-leads-charts"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div> <!-- end row-->
+                                                    </div> <!-- end card-body -->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-6">
+                                                                <h3 class="text-muted font-weight-normal mt-0">下载次数</h3>
+<!--                                                                <h3 class="my-2 py-1">[[${countDownloadStatistics}]]</h3>-->
+                                                                <h3 class="my-2 py-1">29</h3>
+                                                                <p class="mb-0 text-muted">
+                                                                    <span th:class="${riseOrFallDownloadStatistics>=0?'text-success mr-2':'text-danger mr-2'}" class="text-danger mr-2"><i th:class="${riseOrFallDownloadStatistics>=0?'mdi mdi-arrow-up-bold':'mdi mdi-arrow-down-bold'}"></i> [[${riseOrFallDownloadStatistics}]]%</span>
+                                                                    <span class="text-nowrap" th:text="${riseOrFallDownloadStatistics>=0?'上涨(同比上月)':'下跌(同比上月)'}" ></span>
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="text-right">
+                                                                    <div id="deals-charts"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div> <!-- end row-->
+                                                    </div> <!-- end card-body -->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+                                        </div> <!-- end row -->
+                                    </div> <!-- end col -->
+                                    <!-- end col -->
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xl-12">
+
+                                        <div class="row">
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="product">
+                                                                <a th:href="@{/web/product/list}" ><i class="mdi mdi-baby-buggy widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Customers">产品</h5>
+                                                        <p class="mb-0 text-muted">产品数量[[${productCount}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${statusProductCount}]] </p>
+                                                        <p class="mb-0 text-muted">下架产品[[${marketableProductCount}]]</p>
+                                                        <p class="mb-0 text-muted">上架产品[[${upperShelfProductCount}]] </p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="ad">
+                                                                <a th:href="@{/web/ad/list}" ><i class="mdi mdi-book-open-page-variant widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Customers">广告</h5>
+                                                        <p class="mb-0 text-muted">广告数量[[${adCouont}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${toExamineAdCouont}]] </p>
+                                                        <p class="mb-0 text-muted">在展示[[${toShowAdCouont}]]</p>
+                                                        <p class="mb-0 text-muted">已过期[[${toOverdueadCouont}]] </p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="journalism">
+                                                                <a th:href="@{/web/journalism/list}"><i class="mdi mdi-bank widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Orders">新闻</h5>
+                                                        <p class="mb-0 text-muted">新闻数量[[${journalismCount}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${toExamineJournalismCouont}]] </p>
+                                                        <p class="mb-0 text-muted">在展示[[${toShowJournalismCouont}]]</p>
+                                                        <p class="mb-0 text-muted">点击量[[${hitsJournalismCouont}]]</p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                        </div> <!-- end row -->
+                                    </div> <!-- end col -->
+                                    <!-- end col -->
+                                </div>
+                                <!-- end row -->
+                                <!-- end row -->
+
+                                <div class="row">
+                                    <div class="col-xl-12">
+
+                                        <div class="row">
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="learning">
+                                                                <a th:href="@{/web/learning/list}" ><i class="mdi mdi-car-parking-lights widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Customers">学术活动</h5>
+                                                        <p class="mb-0 text-muted">学术活动数量[[${learngingMap.count_learning}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${learngingMap.stay_status}]] </p>
+                                                        <p class="mb-0 text-muted">在展示[[${learngingMap.already_status}]] </p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="media">
+                                                                <a th:href="@{/web/media/list}" ><i class="mdi mdi-contactless-payment widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Customers">媒体报道</h5>
+                                                        <p class="mb-0 text-muted">媒体报道数量[[${mediaMap.count_media}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${mediaMap.stay_status}]] </p>
+                                                        <p class="mb-0 text-muted">在展示[[${mediaMap.already_status}]]</p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="exhibition">
+                                                                <a th:href="@{/web/exhibition/list}"><i class="mdi mdi-barley widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Orders">展会展览</h5>
+                                                        <p class="mb-0 text-muted">展会展览总数[[${exhibitionMap.count_exhibition}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${exhibitionMap.stay_status}]] </p>
+                                                        <p class="mb-0 text-muted">在展示[[${exhibitionMap.already_status}]]</p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                        </div> <!-- end row -->
+                                    </div> <!-- end col -->
+                                    <!-- end col -->
+                                </div>
+
+                            </div> <!-- content -->
+                            <!-- Footer Start -->
+                            <div th:replace="~{web/incloud/footer::footer}"></div>
+
+                        </div>
+
+                    <!-- content-page -->
+                <!-- Left Sidebar End -->
+            </div> <!-- end wrapper-->
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- END Container -->
+
+        <div class="rightbar-overlay"></div>
+        <!-- /Right-bar -->
+        <!-- App js -->
+        <script th:src="@{/assets/js/app.min.js}"></script>
+        <!-- third party js -->
+        <script th:src="@{/assets/js/vendor/Chart.bundle.min.js}"></script>
+        <script th:src="@{/assets/js/vendor/jquery-jvectormap-1.2.2.min.js}"></script>
+        <script th:src="@{/assets/js/vendor/jquery-jvectormap-cn-mill.js}"></script>
+        <!-- third party js ends -->
+        <!-- demo app -->
+        <script  th:src="@{/assets/js/pages/demo.dashboard.js}"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+        <!-- Todo js -->
+        <script th:src="@{/assets/js/ui/component.todo.js}"></script>
+        <!-- demo app -->
+        <!--<script th:src="@{/assets/js/pages/demo.dashboard-crm.js}"></script>-->
+        <script type="text/javascript" >
+
+            function mains(data) {
+                // alert(data)
+                $('#data').val(data);
+                $('#index').submit();
+
+            }
+
+        </script>
+        <script th:inline="javascript" type="text/javascript" >
+            $(function(){
+
+                var demonstrationStatistic0 = [[${demonstrationStatisticList0}]];
+                console.log(demonstrationStatistic0.length)
+                var data = [];
+                var labels = [];
+                for (var i = 0;i<demonstrationStatistic0.length;i++){
+                    data.push(demonstrationStatistic0[i].satistics);
+                    labels.push(i+1);
+                }
+
+
+                var lineCharOptions = {
+                    chart: {
+                        height: 200,
+                        type: "line",
+                        zoom: {
+                            enabled: !1
+                        },
+                        toolbar: {
+                            show: !1
+                        },
+                    },
+                    dataLabels: {
+                        enabled: !1
+                    },
+                    colors: ["#289ffe","#e71f19"],
+                    stroke: {
+                        width: [2,2],
+                        curve: "straight"
+                    },
+                    series: [{
+                        name: "本周",
+                        data: [28, 29, 33, 36, 32, 32, 33]
+                    }, {
+                        name: "上周",
+                        data: [12, 11, 14, 18, 17, 13, 13]
+                    }],
+                    grid: {
+                        row: {
+                            colors: ["transparent", "transparent"],
+                            opacity: .2
+                        },
+                        borderColor: "#f1f3fa"
+                    },
+                    yaxis: {
+                        show: !1
+                    },
+                    xaxis: {
+                        categories: ["1", "2", "3", "4", "5", "6", "7"]
+                    },
+                    tooltip: {
+                        custom: function(e) {
+                            return '<div class="arrow_box">' +
+                                '<span>本周：' + e.series[0][e.dataPointIndex] + '</span><br/>' +
+                                '<span>上周：' + e.series[1][e.dataPointIndex] + '</span>' +
+                                '</div>'
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                toolbar: {
+                                    show: !1
+                                }
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#line-chart"), lineCharOptions).render();
+                var lineCharOptions2 = {
+                    chart: {
+                        height: 200,
+                        type: "bar",
+                        zoom: {
+                            enabled: !1
+                        },
+                        toolbar: {
+                            show: !1
+                        },
+                    },
+                    dataLabels: {
+                        enabled: !1
+                    },
+                    labels: ['本周', '上周'],
+                    colors: ["#289ffe","#e71f19"],
+                    stroke: {
+                        width: [2,2],
+                        curve: "straight"
+                    },
+                    series: [{
+                        name: "本周",
+                        data: [28, 29, 33, 36, 32, 32, 33]
+                    }, {
+                        name: "上周",
+                        data: [12, 11, 14, 18, 17, 13, 13]
+                    }],
+                    grid: {
+                        row: {
+                            colors: ["transparent", "transparent"],
+                            opacity: .2
+                        },
+                        borderColor: "#f1f3fa"
+                    },
+                    yaxis: {
+                        show: !1
+                    },
+                    xaxis: {
+                        categories: ["1", "2", "3", "4", "5", "6", "7"]
+                    },
+                    tooltip: {
+                        custom: function(e) {
+                            return '<div class="arrow_box">' +
+                                '<span>本周：' + e.series[0][e.dataPointIndex] + '</span><br/>' +
+                                '<span>上周：' + e.series[1][e.dataPointIndex] + '</span>' +
+                                '</div>'
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                toolbar: {
+                                    show: !1
+                                }
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#line-chart2"), lineCharOptions2).render();
+                new ApexCharts(document.querySelector("#line-chart3"), lineCharOptions).render();
+                new ApexCharts(document.querySelector("#line-chart4"), lineCharOptions2).render();
+                new ApexCharts(document.querySelector("#line-chart5"), lineCharOptions).render();
+
+                var pieCharOptions = {
+                    chart: {
+                        height: 200,
+                        type: "donut"
+                    },
+                    series: [44, 55, 41],
+                    legend: {
+                        show: !0,
+                        position: "bottom",
+                        horizontalAlign: "center",
+                        verticalAlign: "middle",
+                        floating: !1,
+                        fontSize: "14px",
+                        offsetX: 0,
+                        offsetY: -10
+                    },
+                    labels: ["一级医院", "二级医院", "三级医院"],
+                    colors: ["#289ffe","#e71f19","#000"],
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                height: 240
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#line-chart6"), pieCharOptions).render();
+
+                var pieCharOptions2 = {
+                    chart: {
+                        height: 300,
+                        type: "donut"
+                    },
+                    series: [44, 55, 41],
+                    legend: {
+                        show: !0,
+                        position: "bottom",
+                        horizontalAlign: "center",
+                        verticalAlign: "middle",
+                        floating: !1,
+                        fontSize: "14px",
+                        offsetX: 0,
+                        offsetY: -10
+                    },
+                    labels: ["上海", "北京", "广州"],
+                    colors: ["#289ffe","#e71f19","#000"],
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                height: 240
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#line-chart7"), pieCharOptions2).render();
+
+
+
+
+
+                $("#map-chart").vectorMap({
+                            map: "cn_mill",
+                            normalizeFunction: "polynomial",
+                            hoverOpacity: .7,
+                            hoverColor: !1,
+                            regionStyle: {initial: {fill: '#289ffe'}},
+                            markerStyle: {
+                                initial: {
+                                    r: 9,
+                                    fill: '#e71f19',
+                                    "fill-opacity": .9,
+                                    stroke: "#fff",
+                                    "stroke-width": 7,
+                                    "stroke-opacity": .4
+                                }, hover: {stroke: "#fff", "fill-opacity": 1, "stroke-width": 1.5}
+                            },
+                            backgroundColor: "transparent",
+                            markers: [{
+                                    name: "北京市：55单",
+                                    latLng: [
+                                        39.90469,
+                                        116.40717
+                                    ]
+                             },{
+                                name: "上海市：44单",
+                                latLng: [
+                                    31.50000,
+                                    121.43333
+                                ]
+                            },{
+                                name: "广州市：41单",
+                                latLng: [
+                                    23.16667,
+                                    113.23333
+                                ]
+                            }],
+                            zoomOnScroll: !1
+                        });
+
+
+
+
+                var options1 = {
+                    chart: {type: "bar", height: 60, sparkline: {enabled: !0}},
+                    plotOptions: {bar: {columnWidth: "60%"}},
+                    colors: [randomColor()],
+                    // series: [{data: [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54,99]}],
+                    // labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12],
+                    series: [{data: data}],
+                    labels: labels,
+                    xaxis: {crosshairs: {width: 1}},
+                    tooltip: {
+                        fixed: {enabled: !1}, x: {show: !1}, y: {
+                            title: {
+                                formatter: function (e) {
+                                    return ""
+                                }
+                            }
+                        }, marker: {show: !1}
+                    }
+                };
+                new ApexCharts(document.querySelector("#campaign-sent-chart"), options1).render();
+
+
+                var demonstrationStatisticList1 = [[${demonstrationStatisticList1}]];
+                console.log(demonstrationStatisticList1.length)
+                 data = [];
+                for (var i = 0;i<demonstrationStatisticList1.length;i++){
+                    data.push(demonstrationStatisticList1[i].satistics);
+                }
+
+                var options2 = {
+                    chart: {type: "line", height: 60, sparkline: {enabled: !0}},
+                    series: [{data: data}],
+                    stroke: {width: 2, curve: "smooth"},
+                    markers: {size: 0},
+                    colors: [randomColor()],
+                    tooltip: {
+                        fixed: {enabled: !1}, x: {show: !1}, y: {
+                            title: {
+                                formatter: function (e) {
+                                    return ""
+                                }
+                            }
+                        }, marker: {show: !1}
+                    }
+                };
+                new ApexCharts(document.querySelector("#new-leads-chart"), options2).render();
+
+                var messageStatisticList = [[${messageStatisticList}]];
+                console.log(messageStatisticList.length)
+                data = [];
+                labels = [];
+                for (var i = 0;i<messageStatisticList.length;i++){
+                    data.push(messageStatisticList[i].satistics);
+                    labels.push(i+1);
+                }
+                var options3 = {
+                    chart: {type: "bar", height: 60, sparkline: {enabled: !0}},
+                    plotOptions: {bar: {columnWidth: "60%"}},
+                    colors: [randomColor()],
+                    series: [{data: data}],
+                    labels: labels,
+                    xaxis: {crosshairs: {width: 1}},
+                    tooltip: {
+                        fixed: {enabled: !1}, x: {show: !1}, y: {
+                            title: {
+                                formatter: function (e) {
+                                    return ""
+                                }
+                            }
+                        }, marker: {show: !1}
+                    }
+                };
+                new ApexCharts(document.querySelector("#deals-chart"), options3).render();
+
+
+
+                var options4 = {
+                    chart: {type: "bar", height: 60, sparkline: {enabled: !0}},
+                    plotOptions: {bar: {columnWidth: "60%"}},
+                    colors: [randomColor()],
+                    series: [{data: data}],
+                    labels: labels,
+                    xaxis: {crosshairs: {width: 1}},
+                    tooltip: {
+                        fixed: {enabled: !1}, x: {show: !1}, y: {
+                            title: {
+                                formatter: function (e) {
+                                    return ""
+                                }
+                            }
+                        }, marker: {show: !1}
+                    }
+                };
+                new ApexCharts(document.querySelector("#booked-revenue-chart"), options4).render();
+
+                var productstatisicHistogram = [[${productstatisicHistogram}]];
+                console.log(productstatisicHistogram.length)
+                data = [];
+                labels = [];
+                for (var i = 0;i<productstatisicHistogram.length;i++){
+                    data.push(productstatisicHistogram[i].satistics);
+                    labels.push(i+1);
+                }
+                var options5 = {
+                    chart: {type: "bar", height: 60, sparkline: {enabled: !0}},
+                    plotOptions: {bar: {columnWidth: "60%"}},
+                    colors: [randomColor()],
+                    series: [{data: data}],
+                    labels: labels,
+                    xaxis: {crosshairs: {width: 1}},
+                    tooltip: {
+                        fixed: {enabled: !1}, x: {show: !1}, y: {
+                            title: {
+                                formatter: function (e) {
+                                    return ""
+                                }
+                            }
+                        }, marker: {show: !1}
+                    }
+                };
+                new ApexCharts(document.querySelector("#campaign-sent-charts"), options5).render();
+
+                var orderHistogramStatistics = [[${orderHistogramStatistics}]];
+                console.log(orderHistogramStatistics.length)
+                data = [];
+                labels = [];
+                for (var i = 0;i<orderHistogramStatistics.length;i++){
+                    data.push(orderHistogramStatistics[i].satistics);
+                    labels.push(i+1);
+                }
+                var options6 = {
+                    chart: {type: "line", height: 60, sparkline: {enabled: !0}},
+                    series: [{data: data}],
+                    stroke: {width: 2, curve: "smooth"},
+                    markers: {size: 0},
+                    colors: [randomColor()],
+                    tooltip: {
+                        fixed: {enabled: !1}, x: {show: !1}, y: {
+                            title: {
+                                formatter: function (e) {
+                                    return ""
+                                }
+                            }
+                        }, marker: {show: !1}
+                    }
+                };
+                new ApexCharts(document.querySelector("#new-leads-charts"), options6).render();
+
+
+                var downloadHistogramStatistics = [[${downloadHistogramStatistics}]];
+                console.log(downloadHistogramStatistics.length)
+                data = [];
+                labels = [];
+                for (var i = 0;i<downloadHistogramStatistics.length;i++){
+                    data.push(downloadHistogramStatistics[i].satistics);
+                    labels.push(i+1);
+                }
+
+                var options7 = {
+                    chart: {type: "bar", height: 60, sparkline: {enabled: !0}},
+                    plotOptions: {bar: {columnWidth: "60%"}},
+                    colors: [randomColor()],
+                    series: [{data: data}],
+                    labels: labels,
+                    xaxis: {crosshairs: {width: 1}},
+                    tooltip: {
+                        fixed: {enabled: !1}, x: {show: !1}, y: {
+                            title: {
+                                formatter: function (e) {
+                                    return ""
+                                }
+                            }
+                        }, marker: {show: !1}
+                    }
+                };
+                new ApexCharts(document.querySelector("#deals-charts"), options7).render();
+
+                var options = {
+                    chart: {height: 320, type: "radialBar"},
+                    colors: ["#ffbc00", "#727cf5", "#0acf97"],
+                    series: [86, 36, 50],
+                    labels: ["Total Sent", "Reached", "Opened"],
+                    plotOptions: {radialBar: {track: {margin: 8}}}
+                };
+                (chart = new ApexCharts(document.querySelector("#dash-campaigns-chart"), options)).render();
+                var chart;
+                options = {
+                    chart: {height: 336, type: "line", toolbar: {show: !1}},
+                    stroke: {curve: "smooth", width: 2},
+                    series: [{
+                        name: "Total Revenue",
+                        type: "area",
+                        data: [44, 55, 31, 47, 31, 43, 26, 41, 31, 47, 33, 43]
+                    }, {name: "Total Pipeline", type: "line", data: [55, 69, 45, 61, 43, 54, 37, 52, 44, 61, 43, 56]}],
+                    fill: {type: "solid", opacity: [.35, 1]},
+                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    markers: {size: 0},
+                    colors: ["#0acf97", "#fa5c7c"],
+                    yaxis: [{title: {text: "Revenue (USD)"}, min: 0}],
+                    tooltip: {
+                        shared: !0, intersect: !1, y: {
+                            formatter: function (e) {
+                                return void 0 !== e ? e.toFixed(0) + "k" : e
+                            }
+                        }
+                    },
+                    grid: {borderColor: "#f1f3fa"},
+                    legend: {fontSize: "14px", fontFamily: "14px", offsetY: -10},
+                    responsive: [{breakpoint: 600, options: {yaxis: {show: !1}, legend: {show: !1}}}]
+                };
+                (chart = new ApexCharts(document.querySelector("#dash-revenue-chart"), options)).render();
+
+                /*随机颜色*/
+                function randomColor() {
+                    var color = "";
+                    for (var i = 0; i < 6; i++) {
+                        color += (Math.random() * 16 | 0).toString(16);
+                    }
+                    return "#" + color;
+                }
+
+            });
+        </script>
+    </body>
+</html>

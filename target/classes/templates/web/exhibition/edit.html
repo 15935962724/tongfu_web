@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>展会展览</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/imgCallBack.css}"  rel="stylesheet" type="text/css" />
+  <script src="https://cdn.bootcss.com/xlsx/0.11.5/xlsx.core.min.js"></script>
+  <style>
+    .custom-checkbox ul li{
+      float: left;
+      padding-left: 30px;
+      list-style: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <!-- Start Content-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{web/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-lg-10" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+
+                <form class="needs-validation" novalidate  method="post" onsubmit="return checkFrom()" th:action="@{/web/exhibition/update}"  enctype="multipart/form-data">
+                  <div class="form-group mb-3">
+                    <label for="title">标题</label>
+                    <input type="hidden" class="form-control" id="id" name="id" th:value="${exhibition.id}" required>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="title" th:value="${exhibition.title}" required>
+                    <div class="invalid-feedback">
+                      标题
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>会议展览主图(360*210)</label>
+
+
+
+
+                    <div class="input-group imgCallBack">
+                      <img class="imgCallBackView"  th:src="@{${exhibition.logo}}" src="/assets/img/addImg.png"/>
+                      <div class="custom-file">
+                        <input type="file"  name = "exhibitionLogo" accept="image/*" class="custom-file-input"  placeholder="媒体报道主图" id="inputGroupFile04" onchange="callBackImg(this,'imgCallBackView')">
+                        <label class="custom-file-label" for="inputGroupFile04">会议展览主图</label>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="holdingTime">举行时间</label>
+                    <br/>
+                    <input type="text" class="form-control" id="holdingTime" name="yearTime" style="width: 45%; display: inline" th:value="${#dates.format(exhibition.holdingTime,'MM/dd/yyyy')}"data-provide="datepicker"  placeholder="举行时间">
+                    <input type="text" class="form-control" data-toggle="timepicker" name="minutesTime"  th:value="${#dates.format(exhibition.holdingTime,'HH:mm:ss')}"  style="width: 45%;display: inline"  data-show-meridian="false">
+                    <div class="invalid-feedback">
+                      举行时间
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="address">举行地点</label>
+                    <input type="text" class="form-control" id="address" name="address" th:value="${exhibition.address}" placeholder="举行地点">
+                    <div class="invalid-feedback">
+                      标题
+                    </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="">推送至</label>
+                    <div class="custom-control custom-checkbox">
+                      <ul>
+                        <li th:each="category :${categoryList}" >
+                          <input type="checkbox" class="custom-control-input" name="categoryIds" th:checked="${categoryIds.contains(category.id)}" th:id="categoryIds+${category.id}" th:value="${category.id}" >
+                          <label class="custom-control-label" th:for="categoryIds+${category.id}" >[[${category.name}]]</label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <!--<div class="form-group mb-3">-->
+                    <!--<label for="address">报名入口/更多信息</label>-->
+                    <!--<input type="text" class="form-control" id="signupEntrance" name="signupEntrance" th:value="${exhibition.signupEntrance}"  placeholder="报名入口/更多信息">-->
+                    <!--<div class="invalid-feedback">-->
+                      <!--报名入口/更多信息-->
+                    <!--</div>-->
+                  <!--</div>-->
+
+                  <!--<div class="form-group mb-3">-->
+                    <!--<label for="phone">咨询电话</label>-->
+                    <!--<input type="text" class="form-control" id="phone" name="phone" th:value="${exhibition.phone}" placeholder="资讯电话">-->
+                    <!--<div class="invalid-feedback">-->
+                      <!--标题-->
+                    <!--</div>-->
+                  <!--</div>-->
+
+                  <div class="form-group mb-3">
+                    <label for="introduce">描述</label>
+                    <textarea class="form-control" id="introduce" rows="3" maxlength="200" name="introduce" th:text="${exhibition.introduce}" placeholder="描述"></textarea>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label >内容</label>
+                    <div class="card">
+                      <div class="card-body">
+                        <!-- basic summernote-->
+                        <textarea  id="summernote-basic" name="content" rows="10" cols="80" th:utext="${exhibition.content}"></textarea>
+                      </div>
+                      <!-- end card-body -->
+                    </div> <!-- end card-->
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:history.back(-1);">返回</button>
+                  </div>
+                </form>
+
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+      </div>
+      <!-- content -->
+
+      <!-- Footer Start -->
+      <div th:replace="~{web/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+
+  </div> <!-- end wrapper-->
+
+  <!-- ============================================================== -->
+  <!-- End Page content -->
+  <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+
+
+
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script th:src="@{/assets/js/pages/demo.form-wizard.js}"></script>
+<script th:src="@{/ueditor/ueditor.config.js}"></script>
+<script th:src="@{/ueditor/ueditor.all.js}"></script>
+<script th:src="@{/ueditor/lang/zh-cn/zh-cn.js}"></script>
+
+<script >
+  UE.getEditor('summernote-basic',{initialFrameWidth:'100%',initialFrameHeight:180});
+
+
+
+
+  //图片回显
+  function callBackImg(_this,name) {
+    var file = _this.files[0];
+    console.log(file);
+    //判断文件格式
+    if (file.type != 'image/png' && file.type != 'image/jpeg' && file.type != 'image/gif') {
+      alert("图片格式不正确");
+      $("."+name).attr("src","/assets/img/addImg.png");
+      return false;
+    }
+    //读取图片
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    //构造Image对象，获取 Image对象
+    //onload在读取完毕后触发
+    reader.onload = function() {
+      //获取读取的URL
+      var imgURL = this.result;
+      $("."+name).attr("src",imgURL)
+    }
+  }
+
+
+</script>
+</body>
+
+</body>
+
+</html>

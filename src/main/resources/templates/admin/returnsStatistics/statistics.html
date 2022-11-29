@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>退货统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+    <!--<link th:href="@{/assets/css/datePicker/daterangepicker.css}"  rel="stylesheet" type="text/css" />-->
+
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <script src="../../static/assets/js/vendor/jquery-jvectormap-cn-mill.js"></script>
+
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <!-- Start Content-->
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{admin/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+
+            <div class="content">
+
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">今年  vs  往年(退货量统计)</h4>
+                                <div id="all-mixed" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">每年退货量统计</h4>
+                                <div id="distributed-column" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+                </div>
+                <!-- end row-->
+
+                <div class="row">
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">每年退款额统计</h4>
+                                <div id="previous-year-amount" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">今年  vs  往年(退款额统计)</h4>
+                                <div id="refunds-amount-year-previous" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+                </div>
+
+                <div class="row">
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">供应商退货统计</h4>
+                                <input class="datePicker" id="returnsCompanyInput" />
+                                <div id="returns-year-company" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">供应商退款统计</h4>
+                                <input class="datePicker" id="refurnsCompanysInput" />
+                                <div id="refunds-year-companys" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+                </div>
+
+            </div>
+            <!-- Footer Start -->
+            <div th:replace="~{admin/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+    </div> <!-- end wrapper-->
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+<!-- third party js -->
+<script src="assets/js/vendor/Chart.bundle.min.js" th:src="@{/assets/js/vendor/Chart.bundle.min.js}"></script>
+<script src="assets/js/vendor/jquery-jvectormap-1.2.2.min.js" th:src="@{/assets/js/vendor/jquery-jvectormap-1.2.2.min.js}"></script>
+<script src="assets/js/vendor/jquery-jvectormap-cn-mill.js" th:src="@{/assets/js/vendor/jquery-jvectormap-cn-mill.js}"></script>
+<!--<script th:src="@{/assets/js/datePicker/moment.min.js}"></script>-->
+<!--<script th:src="@{/assets/js/datePicker/daterangepicker.min.js}"></script>-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+<!-- third party end -->
+
+<!--<script th:src="@{/assets/js/pages/demo.apex-mixed.js}"></script>-->
+
+<script th:inline="javascript" type="text/javascript">
+
+    //页面加载就调用
+    $(function(){
+
+        var mapList = [[${mapList}]];
+
+        var colors = [];
+        var data = [];
+        var categories = [];
+        var returnsAmountData = [];
+
+        console.log([[${series}]])
+        for (var i = 0;i<mapList.length;i++){
+            colors.push(randomColor());
+            data.push(mapList[i].countNum);
+            categories.push(mapList[i].year);
+        }
+
+        //今年  vs  往年(退货量统计)
+        var allMixedOptions = {
+            chart: {height: 380, type: "line", stacked: !1, toolbar: {show: !1}},
+            stroke: {width: [0, 2, 4], curve: "smooth"},
+            plotOptions: {bar: {columnWidth: "50%"}},
+            colors: colors,
+            // series: [
+            //     {"name": "Team A", "type": "column", "data": [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]},
+            //     {"name": "Team B","type": "area", "data": [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]},
+            //     {name: "Team C", type: "line", data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]}],
+            series:[[${series}]],
+            fill: {
+                opacity: [.85, .25, 1],
+                gradient: {
+                    inverseColors: !1,
+                    shade: "light",
+                    type: "vertical",
+                    opacityFrom: .85,
+                    opacityTo: .55,
+                    stops: [0, 100, 100, 100]
+                }
+            },
+            // labels: ["01/01/2003", "02/01/2003", "03/01/2003", "04/01/2003", "05/01/2003", "06/01/2003", "07/01/2003", "08/01/2003", "09/01/2003", "10/01/2003", "11/01/2003"],
+            markers: {size: 0},
+            legend: {offsetY: -10},
+            xaxis: {
+                categories: [" 01", " 02", " 03", " 04", " 05", " 06", " 07", " 08", " 09 ", " 10", " 11", " 12"]
+                // categories: labelsPrice
+            },
+            yaxis: {title: {text: "退货量"}},
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+                y: {
+                    formatter: function(value,{ seriesIndex, dataPointIndex, w }) {
+                        console.log(w.config.series[seriesIndex].value)
+                        console.log(value)
+                        return value ;
+                    }
+                }
+            },
+            grid: {borderColor: "#f1f3fa"}
+        };
+        var allMixed = new ApexCharts(document.querySelector("#all-mixed"), allMixedOptions);
+        allMixed.render();
+
+
+
+
+        //每年退货量统计
+        var distributedColumnOptions = {
+            chart: {
+                height: 380, type: "bar", toolbar: {show: !1}, events: {
+                    click: function (o, e, t) {
+                        console.log(o, e, t)
+                    }
+                }
+            },
+            colors: colors,
+            plotOptions: {bar: {columnWidth: "45%", distributed: !0}},
+            dataLabels: {enabled: !1},
+            series: [{"name": "退货量", "data": data}],
+            xaxis: {
+                categories: categories,
+                labels: {style: {colors: colors, fontSize: "14px"}}
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+            },
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var distributedColumn = new ApexCharts(document.querySelector("#distributed-column"), distributedColumnOptions);
+        distributedColumn.render();
+
+        var yearReturnsAmount = [[${yearReturnsAmounts}]];
+
+        var yearReturnsColors = [];
+        var yearReturnsData = [];
+        var yearReturnsCategories = [];
+
+        for (var i = 0;i<yearReturnsAmount.length;i++){
+            yearReturnsColors.push(randomColor());
+            yearReturnsData.push(yearReturnsAmount[i].countNum);
+            yearReturnsCategories.push(yearReturnsAmount[i].year);
+        }
+
+
+        //每年退款额统计
+        var previousYearAmountOptions = {
+            chart: {
+                height: 380, type: "bar", toolbar: {show: !1}, events: {
+                    click: function (o, e, t) {
+                        console.log(o, e, t)
+                    }
+                }
+            },
+            colors: yearReturnsColors,
+            plotOptions: {bar: {columnWidth: "45%", distributed: !0}},
+            dataLabels: {enabled: !1},
+            series: [{"name": "退款额", "data": yearReturnsData}],
+            xaxis: {
+                categories: yearReturnsCategories,
+                labels: {style: {colors: yearReturnsColors, fontSize: "14px"}}
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+            },
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var previousYearAmountColumn = new ApexCharts(document.querySelector("#previous-year-amount"), previousYearAmountOptions);
+        previousYearAmountColumn.render();
+
+
+        //统计退货供应商
+        console.log(yearReturnsData+'.....'+yearReturnsCategories)
+
+        var returnsCompanys = [[${returnsCompany}]];
+
+        var returnsCompanysColors = [];
+        var returnsCompanysData = [];
+        var returnsCompanysCategories = [];
+
+        for (var i = 0;i<returnsCompanys.length;i++){
+            returnsCompanysColors.push(randomColor());
+            returnsCompanysData.push(returnsCompanys[i].countId);
+            returnsCompanysCategories.push(returnsCompanys[i].company);
+        }
+        var returnsCompanyUrl = [[@{/admin/returnsStatistics/returnsCompany}]];
+        var returnsYearCompanyOptions = {
+            chart: {
+                height: 380,
+                type: "bar",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        customIcons: [{
+                            icon: '<img src="../../assets/img/day.png" width="20">',
+                            index: 0,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("按日统计")
+                                provinces = returnDate(returnsCompanyUrl,1);
+                                var dayColor = [];
+                                var daySeries = [];
+                                var dayLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    dayColor.push(randomColor());
+                                    dayLabels.push(provinces[i].company);
+                                    daySeries.push(provinces[i].countId);
+                                }
+                                returnsYearCompanyColumn.updateOptions({
+                                    series: [{"name": "退款额", "data": daySeries}],
+                                    labels: dayLabels,
+                                    colors: dayColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/week.png" width="20">',
+                            index: 1,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(returnsCompanyUrl,2);
+                                var weekColor = [];
+                                var weekSeries = [];
+                                var weekLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    weekColor.push(randomColor());
+                                    weekLabels.push(provinces[i].company);
+                                    weekSeries.push(provinces[i].countId);
+                                }
+                                returnsYearCompanyColumn.updateOptions({
+                                    series: [{"name": "退款额", "data": weekSeries}],
+                                    labels: weekLabels,
+                                    colors: weekColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/month.png" width="20">',
+                            index: 2,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(returnsCompanyUrl,3);
+                                var monthColor = [];
+                                var monthSeries = [];
+                                var monthLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    monthColor.push(randomColor());
+                                    monthLabels.push(provinces[i].company);
+                                    monthSeries.push(provinces[i].countId);
+                                }
+                                returnsYearCompanyColumn.updateOptions({
+                                    series: [{"name": "退款额", "data": monthSeries}],
+                                    labels: monthLabels,
+                                    colors: monthColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/year.png" width="20">',
+                            index: 3,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(returnsCompanyUrl,4);
+                                var yearColor = [];
+                                var yearSeries = [];
+                                var yearLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    yearColor.push(randomColor());
+                                    yearLabels.push(provinces[i].company);
+                                    yearSeries.push(provinces[i].countId);
+                                }
+                                returnsYearCompanyColumn.updateOptions({
+                                    series: [{"name": "退款额", "data": yearSeries}],
+                                    labels: yearLabels,
+                                    colors: yearColor,
+                                })
+                            }
+                        },{
+                            icon: '<p class="apexChartsDatePicker"><img src="../../assets/img/datePicker.png" width="20"></p>',
+                            index: 4,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log(1)
+                                $('#returnsCompanyInput').click()
+                            }
+                        }]
+                    }
+                }
+            },
+            colors: returnsCompanysColors,
+            plotOptions: {bar: {columnWidth: "45%", distributed: !0}},
+            dataLabels: {enabled: !1},
+            series: [{"name": "退款额", "data": returnsCompanysData}],
+            xaxis: {
+                categories: returnsCompanysCategories,
+                labels: {style: {colors: returnsCompanysColors, fontSize: "14px"}}
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+            },
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var returnsYearCompanyColumn = new ApexCharts(document.querySelector("#returns-year-company"), returnsYearCompanyOptions);
+        returnsYearCompanyColumn.render();
+
+
+
+        //今年  vs  往年(退款额统计)refunds-amount-year-previous
+        var refundsAmountYearPreviousOptions = {
+            chart: {height: 380, type: "line", stacked: !1, toolbar: {show: !1}},
+            stroke: {width: [0, 2, 4], curve: "smooth"},
+            plotOptions: {bar: {columnWidth: "50%"}},
+            colors: colors,
+            // series: [
+            //     {"name": "Team A", "type": "column", "data": [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]},
+            //     {"name": "Team B","type": "area", "data": [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]},
+            //     {name: "Team C", type: "line", data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]}],
+            series:[[${refundsJsonArray}]],
+            fill: {
+                opacity: [.85, .25, 1],
+                gradient: {
+                    inverseColors: !1,
+                    shade: "light",
+                    type: "vertical",
+                    opacityFrom: .85,
+                    opacityTo: .55,
+                    stops: [0, 100, 100, 100]
+                }
+            },
+            // labels: ["01/01/2003", "02/01/2003", "03/01/2003", "04/01/2003", "05/01/2003", "06/01/2003", "07/01/2003", "08/01/2003", "09/01/2003", "10/01/2003", "11/01/2003"],
+            markers: {size: 0},
+            legend: {offsetY: -10},
+            xaxis: {
+                categories: [" 01", " 02", " 03", " 04", " 05", " 06", " 07", " 08", " 09 ", " 10", " 11", " 12"]
+                // categories: labelsPrice
+            },
+            yaxis: {title: {text: "退款额"}},
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+                y: {
+                    formatter: function(value,{ seriesIndex, dataPointIndex, w }) {
+                        console.log(w.config.series[seriesIndex].value)
+                        console.log(value)
+                        return value ;
+                    }
+                }
+            },
+            grid: {borderColor: "#f1f3fa"}
+        };
+        var refundsAmountYearPreviousMixed = new ApexCharts(document.querySelector("#refunds-amount-year-previous"), refundsAmountYearPreviousOptions);
+        refundsAmountYearPreviousMixed.render();
+
+
+        //所有退款的供应商
+        var refundsCompany = [[${refundsCompany}]];
+
+        var refundsCompanysColors = [];
+        var refundsCompanysData = [];
+        var refundsCompanysCategories = [];
+
+        for (var i = 0;i<refundsCompany.length;i++){
+            refundsCompanysColors.push(randomColor());
+            refundsCompanysData.push(refundsCompany[i].sumAmount);
+            refundsCompanysCategories.push(refundsCompany[i].company);
+        }
+        var refundsYearCompanyUrl = [[@{/admin/returnsStatistics/refundsCompany}]];
+        var refundsYearCompanyOptions = {
+            chart: {
+                height: 380,
+                type: "bar",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        customIcons: [{
+                            icon: '<img src="../../assets/img/day.png" width="20">',
+                            index: 0,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("按日统计")
+                                provinces = returnDate(refundsYearCompanyUrl,1);
+                                var dayColor = [];
+                                var daySeries = [];
+                                var dayLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    dayColor.push(randomColor());
+                                    dayLabels.push(provinces[i].company);
+                                    daySeries.push(provinces[i].sumAmount);
+                                }
+                                refundsYearCompanyColumn.updateOptions({
+                                    series: [{"name": "退款额", "data": daySeries}],
+                                    labels: dayLabels,
+                                    colors: dayColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/week.png" width="20">',
+                            index: 1,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(refundsYearCompanyUrl,2);
+                                var weekColor = [];
+                                var weekSeries = [];
+                                var weekLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    weekColor.push(randomColor());
+                                    weekLabels.push(provinces[i].company);
+                                    weekSeries.push(provinces[i].sumAmount);
+                                }
+                                refundsYearCompanyColumn.updateOptions({
+                                    series: [{"name": "退款额", "data": weekSeries}],
+                                    labels: weekLabels,
+                                    colors: weekColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/month.png" width="20">',
+                            index: 2,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(refundsYearCompanyUrl,3);
+                                var monthColor = [];
+                                var monthSeries = [];
+                                var monthLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    monthColor.push(randomColor());
+                                    monthLabels.push(provinces[i].company);
+                                    monthSeries.push(provinces[i].sumAmount);
+                                }
+                                refundsYearCompanyColumn.updateOptions({
+                                    series: [{"name": "退款额", "data": monthSeries}],
+                                    labels: monthLabels,
+                                    colors: monthColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/year.png" width="20">',
+                            index: 3,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = returnDate(refundsYearCompanyUrl,4);
+                                var yearColor = [];
+                                var yearSeries = [];
+                                var yearLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    yearColor.push(randomColor());
+                                    yearLabels.push(provinces[i].company);
+                                    yearSeries.push(provinces[i].sumAmount);
+                                }
+                                refundsYearCompanyColumn.updateOptions({
+                                    series: [{"name": "退款额", "data": yearSeries}],
+                                    labels: yearLabels,
+                                    colors: yearColor,
+                                })
+                            }
+                        },{
+                            icon: '<p class="apexChartsDatePicker"><img src="../../assets/img/datePicker.png" width="20"></p>',
+                            index: 4,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log(1)
+                                $('#refurnsCompanysInput').click()
+                            }
+                        }]
+                    }
+                }
+            },
+            colors: refundsCompanysColors,
+            plotOptions: {bar: {columnWidth: "45%", distributed: !0}},
+            dataLabels: {enabled: !1},
+            series: [{"name": "退款额", "data": refundsCompanysData}],
+            xaxis: {
+                categories: refundsCompanysCategories,
+                labels: {style: {colors: refundsCompanysColors, fontSize: "14px"}}
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+            },
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var refundsYearCompanyColumn = new ApexCharts(document.querySelector("#refunds-year-companys"), refundsYearCompanyOptions);
+        refundsYearCompanyColumn.render();
+
+
+        //日期选择配置
+        var locale = {
+            "format": 'YYYY-MM-DD',
+            "separator": " - ",
+            "applyLabel": "确定",
+            "cancelLabel": "取消",
+            "fromLabel": "起始时间",
+            "toLabel": "结束时间'",
+            "customRangeLabel": "自定义",
+            "weekLabel": "W",
+            "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+            "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            "firstDay": 1
+        };
+        var chartNumber = [
+            {
+                "id": "returnsCompanyInput",
+                "name": returnsYearCompanyColumn,
+                "url": [[@{/admin/returnsStatistics/returnsCompany}]]
+        },{
+            "id": "refurnsCompanysInput",
+            "name": refundsYearCompanyColumn,
+            "url": [[@{/admin/returnsStatistics/refundsCompany}]]
+        }];
+        for(var i = 0; i < chartNumber.length; i++){
+            $('#'+chartNumber[i].id).daterangepicker({
+                'locale': locale,
+                "alwaysShowCalendars": true,
+                "startDate": new Date(),
+                "endDate": new Date(),
+                "opens": "right",
+            });
+            $('#'+chartNumber[i].id).on('apply.daterangepicker', function(ev, picker) {
+                var elementID = this.id;
+                var data;
+                chartNumber.forEach(function (e) {
+                    if(e.id == elementID){
+                        return data = e;
+                    }
+                });
+                provinces = returnDate(data.url,null,picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'));
+                var dateColor = [];
+                var dateSeries = [];
+                var dateLabels = [];
+                for (var i = 0;i<provinces.length;i++){
+                    dateColor.push(randomColor());
+                    dateLabels.push(provinces[i].company);
+                    if(data.id == "returnsCompanyInput"){
+                        dateSeries.push(provinces[i].countId);
+                    }else{
+                        dateSeries.push(provinces[i].sumAmount);
+                    }
+                };
+                dateSeries = [{"name": "退款量", "data": dateSeries}];
+                data.name.updateOptions({
+                    series: dateSeries,
+                    labels: dateLabels,
+                    colors: dateColor,
+                })
+            });
+        }
+
+        //自定义查询使用公共方法
+        function returnDate(url,type,startDate,endDate) {
+            var returnDates;
+            $.ajax({
+                type:"POST",
+                url:url,
+            data:{type:type,startDate:startDate,endDate:endDate},
+            dataType:"json",
+                async: false,
+                success:function (data) {
+                console.log(data.data);
+                returnDates =  data.data;
+            },
+            error:function(data){
+                console.log(data.responseJSON);
+            }
+        });
+            if(returnDates.length == 0){
+                alert("该时间段暂无数据！");
+                return undefined;
+            }else{
+                return returnDates;
+            }
+        }
+
+
+        /*随机颜色*/
+        function randomColor() {
+            var r = Math.floor(Math.random()*256);
+            var g = Math.floor(Math.random()*256);
+            var b = Math.floor(Math.random()*256);
+            if(r < 16){
+                r = "0"+r.toString(16);
+            }else{
+                r = r.toString(16);
+            }
+            if(g < 16){
+                g = "0"+g.toString(16);
+            }else{
+                g = g.toString(16);
+            }
+            if(b < 16){
+                b = "0"+b.toString(16);
+            }else{
+                b = b.toString(16);
+            }
+            return "#"+r+g+b;
+        }
+
+    });
+
+</script>
+
+
+</body>
+</html>

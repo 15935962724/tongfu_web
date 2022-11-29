@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>首页关于我们</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+  <meta content="Coderthemes" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon"  th:href="@{/assets/images/favicon.ico}" >
+  <link th:href="@{/assets/css/vendor/summernote-bs4.css}" rel="stylesheet" type="text/css" />
+  <!-- App css -->
+  <link th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+  <link th:href="@{/assets/css/imgCallBack.css}"  rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+  <!-- Begin page -->
+  <div class="wrapper">
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <!-- Start Content-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div th:replace="~{admin/incloud/left::left}"></div>
+    <!-- Left Sidebar End -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <div class="row">
+          <div class="col-lg-8" style="margin: 0 auto;">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="header-title mb-3">添加knowHow</h2>
+
+                <form class="needs-validation" novalidate  method="post" onsubmit="return checkFrom()" th:action="@{/admin/aboutus/update}"  enctype="multipart/form-data">
+                  <input type="hidden" id="id" name="id" th:value="${aboutus.id}"/>
+                  <div class="form-group mb-3">
+                    <label for="title">标题</label>
+                    <input type="text" class="form-control" id="title" name="title" th:value="${aboutus.title}" placeholder="title" required>
+                    <div class="invalid-feedback">
+                      标题必填
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>logo(200*200)</label>
+
+
+                    <div class="input-group imgCallBack">
+                      <img class="imgCallBackView" th:src="@{/assets/img/addImg.png}" src="/assets/img/addImg.png"/>
+                      <div class="custom-file">
+                        <input type="file"  name = "aboutusImage"  class="custom-file-input" id="aboutusImage" onchange="callBackImg(this,'imgCallBackView')">
+                        <label class="custom-file-label" for="aboutusImage">上传logo(200*200)</label>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="inputState" class="input-group">排序</label>
+                    <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
+                                                          <span class="input-group-btn input-group-prepend">
+                                                          </span>
+                      <input data-toggle="touchspin" id="inputState" name="orders" data-bts-max="500" value="1" data-btn-vertical="true" type="text" th:value="${aboutus.orders}" class="form-control">
+                      <span class="input-group-btn input-group-append">
+                                                          </span>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="introduce">描述</label>
+                    <textarea class="form-control" id="introduce" rows="3" name="introduce" placeholder="简介" th:text="${aboutus.introduce}"></textarea>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label >内容</label>
+                    <div class="card">
+                      <div class="card-body">
+                        <!-- basic summernote-->
+                        <textarea  id="summernote-basic" name="content" rows="10" cols="80" th:utext="${aboutus.content}"></textarea>
+                      </div>
+                      <!-- end card-body -->
+                    </div> <!-- end card-->
+                  </div>
+
+                  <div class="button-list" style="text-align: center">
+                    <button type="submit" class="btn btn-primary btn-success">确定</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:history.back(-1);">返回</button>
+                  </div>
+                </form>
+
+              </div> <!-- end card-body-->
+            </div> <!-- end card-->
+          </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+      </div>
+      <!-- content -->
+      <!--警告弹窗-->
+      <th:block th:replace="~{admin/incloud/status::warning}"></th:block>
+      <!-- Footer Start -->
+      <div th:replace="~{admin/incloud/footer::footer}"></div>
+      <!-- end Footer -->
+    </div> <!-- content-page -->
+
+  </div> <!-- end wrapper-->
+
+  <!-- ============================================================== -->
+  <!-- End Page content -->
+  <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+<div class="rightbar-overlay"></div>
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script th:src="@{/assets/js/pages/demo.form-wizard.js}"></script>
+<script th:src="@{/ueditor/ueditor.config.js}"></script>
+<script th:src="@{/ueditor/ueditor.all.js}"></script>
+<script th:src="@{/ueditor/lang/zh-cn/zh-cn.js}"></script>
+
+<script >
+  UE.getEditor('summernote-basic',{initialFrameWidth:'100%',initialFrameHeight:180});
+
+
+  var width,height;
+  $("#aboutusImage").change(function (e) {
+    var file, img;
+    var _URL = window.URL || window.webkitURL;
+    if ((file = this.files[0])) {
+      img = new Image();
+      img.onload = function () {
+        width = this.width;
+        height = this.height;
+        console.log("width:"+ this.width+",height"+this.height+"filesize"+ file.size)
+        // callback && callback({"width": this.width, "height": this.height, "filesize": file.size});
+      };
+      img.src = _URL.createObjectURL(file);
+    }
+  });
+
+
+  //图片回显
+  function callBackImg(_this,name) {
+    var file = _this.files[0];
+    console.log(file);
+    //判断文件格式
+    if (file.type != 'image/png' && file.type != 'image/jpeg' && file.type != 'image/gif') {
+      alert("图片格式不正确");
+      $("."+name).attr("src","/assets/img/addImg.png");
+      return false;
+    }
+    //读取图片
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    //构造Image对象，获取 Image对象
+    //onload在读取完毕后触发
+    reader.onload = function() {
+      //获取读取的URL
+      var imgURL = this.result;
+      $("."+name).attr("src",imgURL)
+    }
+  }
+  /**
+   * 保单提交校验
+   * @returns {boolean}
+   */
+  function checkFrom() {
+    if ($('#aboutusImage').get(0).files[0]) {
+      if (width != 200 && height != 200) {
+        $('#warningContent').html('图片宽高必须是200*200px');
+        $("#btn-warning").click();
+        return false;
+      }
+    }
+    return true;
+  }
+
+</script>
+</body>
+
+</html>

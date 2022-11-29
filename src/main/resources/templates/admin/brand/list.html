@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+    <meta charset="utf-8" />
+    <title>Hyper - Responsive Bootstrap 4 Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css -->
+    <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+    <script>
+
+        function showMsg(msg, callback) {
+            Modal.alert({
+                title: '提示',
+                msg: msg,
+                btnok: '确定'
+            }).on(function (e) {
+                console.log("AAAAAAAAAAAAAa" );
+            });
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <!-- Start Content-->
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+            <div class="content">
+
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-lg-8">
+                                        <form id="list" th:action="@{/web/brand/list}" class="form-inline">
+                                            <input type="hidden" id="pageNum" name="pageNum" th:value="${page.pageNum}" />
+                                            <input type="hidden" id="pageSize" name="pageSize" th:value="${page.pageSize}" /><div class="form-group mx-sm-3 mb-2">
+                                            <label for="status-select" class="mr-2">每页显示</label>
+                                            <select class="custom-select" id="selectPageSize">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                        </div>
+                                            <div class="form-group mb-2">
+                                                <label for="name" class="mr-2">品牌名称</label>
+                                                <input type="search" class="form-control" name="name" th:value="${name}" id="name" placeholder="用户名">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-lg-right">
+                                            <button type="button" onclick="$('#list').submit();" id = "search" class="btn btn-light mb-2">搜索</button>
+                                            <a th:href="@{/web/brand/add}" ><button type="button" class="btn btn-danger mb-2 mr-2"><i class="mdi mdi-basket mr-1"></i>添加</button></a>
+
+                                        </div>
+                                    </div><!-- end col-->
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-centered mb-0">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>logo</th>
+                                            <th>品牌名称</th>
+                                            <th>排序</th>
+                                            <th>创建日期</th>
+                                            <th style="width: 125px;">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="brand ,brandStart :${page.list}">
+                                            <td th:text="${brandStart.index+1}"></td>
+                                            <td class="sorting_1">
+                                                <img th:src="@{${brand.logo}}" alt="contact-img" title="contact-img" class="rounded mr-3" height="48">
+                                            </td>
+                                            <td th:text="${brand.name}"></td>
+                                            <td th:text="${brand.orders}"></td>
+                                            <td  th:text="${#dates.format(brand.createDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <td>
+                                                <a th:href="@{/web/brand/edit(id=${brand.id})}" class="action-icon"> <i class="mdi mdi-account-card-details"></i></a>
+                                                <a href="javascript:void(0);" class="action-icon" style="color: red"> <i class="mdi mdi-delete"></i></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- end card-body-->
+                        </div> <!-- end card-->
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row-->
+
+                <div th:replace="~{incloud/page::page}"></div>
+
+            </div> <!-- content -->
+
+            <!-- Footer Start -->
+            <div th:replace="~{incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+
+    </div> <!-- end wrapper-->
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+
+<!-- Right Sidebar -->
+<div class="right-bar">
+
+    <div class="rightbar-title">
+        <a href="javascript:void(0);" class="right-bar-toggle float-right">
+            <i class="dripicons-cross noti-icon"></i>
+        </a>
+        <h5 class="m-0">Settings</h5>
+    </div>
+
+    <div class="slimscroll-menu rightbar-content">
+
+        <!-- Settings -->
+        <hr class="mt-0" />
+        <h5 class="pl-3">Basic Settings</h5>
+        <hr class="mb-0" />
+
+        <div class="p-3">
+            <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="notifications-check" checked>
+                <label class="custom-control-label" for="notifications-check">Notifications</label>
+            </div>
+
+            <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="api-access-check">
+                <label class="custom-control-label" for="api-access-check">API Access</label>
+            </div>
+
+            <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="auto-updates-check" checked>
+                <label class="custom-control-label" for="auto-updates-check">Auto Updates</label>
+            </div>
+
+            <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="online-status-check" checked>
+                <label class="custom-control-label" for="online-status-check">Online Status</label>
+            </div>
+
+            <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="auto-payout-check">
+                <label class="custom-control-label" for="auto-payout-check">Auto Payout</label>
+            </div>
+
+        </div>
+
+
+        <!-- Timeline -->
+        <hr class="mt-0" />
+        <h5 class="pl-3">Recent Activity</h5>
+        <hr class="mb-0" />
+        <div class="pl-2 pr-2">
+            <div class="timeline-alt">
+                <div class="timeline-item">
+                    <i class="mdi mdi-upload bg-info-lighten text-info timeline-icon"></i>
+                    <div class="timeline-item-info">
+                        <a href="#" class="text-info font-weight-bold mb-1 d-block">You sold an item</a>
+                        <small>Paul Burgess just purchased “Hyper - Admin Dashboard”!</small>
+                        <p class="mb-0 pb-2">
+                            <small class="text-muted">5 minutes ago</small>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <i class="mdi mdi-airplane bg-primary-lighten text-primary timeline-icon"></i>
+                    <div class="timeline-item-info">
+                        <a href="#" class="text-primary font-weight-bold mb-1 d-block">Product on the Bootstrap Market</a>
+                        <small>Dave Gamache added
+                            <span class="font-weight-bold">Admin Dashboard</span>
+                        </small>
+                        <p class="mb-0 pb-2">
+                            <small class="text-muted">30 minutes ago</small>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <i class="mdi mdi-microphone bg-info-lighten text-info timeline-icon"></i>
+                    <div class="timeline-item-info">
+                        <a href="#" class="text-info font-weight-bold mb-1 d-block">Robert Delaney</a>
+                        <small>Send you message
+                            <span class="font-weight-bold">"Are you there?"</span>
+                        </small>
+                        <p class="mb-0 pb-2">
+                            <small class="text-muted">2 hours ago</small>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <i class="mdi mdi-upload bg-primary-lighten text-primary timeline-icon"></i>
+                    <div class="timeline-item-info">
+                        <a href="#" class="text-primary font-weight-bold mb-1 d-block">Audrey Tobey</a>
+                        <small>Uploaded a photo
+                            <span class="font-weight-bold">"Error.jpg"</span>
+                        </small>
+                        <p class="mb-0 pb-2">
+                            <small class="text-muted">14 hours ago</small>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <i class="mdi mdi-upload bg-info-lighten text-info timeline-icon"></i>
+                    <div class="timeline-item-info">
+                        <a href="#" class="text-info font-weight-bold mb-1 d-block">You sold an item</a>
+                        <small>Paul Burgess just purchased “Hyper - Admin Dashboard”!</small>
+                        <p class="mb-0 pb-2">
+                            <small class="text-muted">1 day ago</small>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+
+
+<!-- App js -->
+<script src="assets/js/app.min.js" th:src="@{/assets/js/app.min.js}"></script>
+
+<!-- third party js -->
+<script src="assets/js/vendor/jquery.dataTables.min.js" th:src="@{/assets/js/vendor/jquery.dataTables.min.js}"></script>
+<script src="assets/js/vendor/dataTables.bootstrap4.js" th:src="@{/assets/js/vendor/dataTables.bootstrap4.js}"></script>
+<script src="assets/js/vendor/dataTables.responsive.min.js" th:src="@{/assets/js/vendor/dataTables.responsive.min.js}"></script>
+<script src="assets/js/vendor/responsive.bootstrap4.min.js" th:src="@{/assets/js/vendor/responsive.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/dataTables.buttons.min.js" th:src="@{/assets/js/vendor/dataTables.buttons.min.js}"></script>
+<script src="assets/js/vendor/buttons.bootstrap4.min.js" th:src="@{/assets/js/vendor/buttons.bootstrap4.min.js}"></script>
+<script src="assets/js/vendor/buttons.html5.min.js" th:src="@{/assets/js/vendor/buttons.html5.min.js}"></script>
+<script src="assets/js/vendor/buttons.flash.min.js" th:src="@{/assets/js/vendor/buttons.flash.min.js}"></script>
+<script src="assets/js/vendor/buttons.print.min.js" th:src="@{/assets/js/vendor/buttons.print.min.js}"></script>
+<script src="assets/js/vendor/dataTables.keyTable.min.js" th:src="@{/assets/js/vendor/dataTables.keyTable.min.js}"></script>
+<script src="assets/js/vendor/dataTables.select.min.js" th:src="@{/assets/js/vendor/dataTables.select.min.js}"></script>
+<!-- third party js ends -->
+
+<!-- demo app -->
+<script src="assets/js/pages/demo.datatable-init.js" th:src="@{/assets/js/pages/demo.datatable-init.js}"></script>
+<!-- end demo js-->
+<script th:src="@{/assets/js/list.js}"></script>
+</body>
+</html>

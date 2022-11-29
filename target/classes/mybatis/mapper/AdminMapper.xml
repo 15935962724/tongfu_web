@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.AdminDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Admin" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="department" property="department" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="is_enabled" property="isEnabled" jdbcType="BIT" />
+    <result column="is_locked" property="isLocked" jdbcType="BIT" />
+    <result column="locked_date" property="lockedDate" jdbcType="TIMESTAMP" />
+    <result column="login_date" property="loginDate" jdbcType="TIMESTAMP" />
+    <result column="login_failure_count" property="loginFailureCount" jdbcType="INTEGER" />
+    <result column="login_ip" property="loginIp" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="type" property="type" jdbcType="BIGINT" />
+    <result column="is_system" property="isSystem" jdbcType="BIT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, department, email, is_enabled, is_locked, locked_date,
+    login_date, login_failure_count, login_ip, name, password, username, is_deleted,
+    type, is_system, company_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tf_admin
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByUserName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tf_admin
+    where BINARY username = #{username,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select A.* FROM tf_admin A
+    where 1 = 1
+    <if test="companyId!=null">
+      and A.company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type==0">
+      and A.company_id is null
+    </if>
+    <if test="type==1">
+      and A.company_id is not null
+    </if>
+    <if test="username!=null and username !='' ">
+      and A.username like '%${username}%'
+    </if>
+    <if test="name!=null and name !=''">
+      and A.name like '%${name}%'
+    </if>
+    <if test="email!=null and email !='' ">
+      and A.email like '%${email}%'
+    </if>
+    <if test="isSystem!=null ">
+      and  A.is_system = #{isSystem}
+    </if>
+  </select>
+
+    <select id="getCompanyAdmin"  resultMap="BaseResultMap" parameterType="java.util.HashMap">
+      select
+      <include refid="Base_Column_List" />
+      from tf_admin
+      where 1 = 1
+      <if test="username!=null and username !='' ">
+        and username = #{username,jdbcType=VARCHAR}
+      </if>
+      <if test="type!=null ">
+        and type = #{type,jdbcType=BIGINT}
+      </if>
+      <if test="companyId!=null ">
+        and company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+    </select>
+
+    <select id="getCompanyAdminAll" resultType="java.util.Map" parameterType="java.util.HashMap" >
+      select A.* ,C.`name` AS companyName FROM tf_admin A LEFT JOIN tf_company C ON A.`company_id` = C.`id`
+      where 1 = 1
+      <if test="companyId!=null">
+        and A.company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+      <if test="type==0">
+        and A.company_id is null
+      </if>
+      <if test="type==1">
+        and A.company_id is not null
+      </if>
+      <if test="username!=null and username !='' ">
+        and A.username like '%${username}%'
+      </if>
+      <if test="name!=null and name !=''">
+        and A.name like '%${name}%'
+      </if>
+      <if test="email!=null and email !='' ">
+        and A.email like '%${email}%'
+      </if>
+      <if test="isSystem!=null ">
+        and  A.is_system = #{isSystem}
+      </if>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_admin
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Admin" >
+    insert into tf_admin (id, create_date, modify_date,
+      department, email, is_enabled,
+      is_locked, locked_date, login_date,
+      login_failure_count, login_ip, name,
+      password, username, is_deleted,
+      type, is_system, company_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP},
+      #{department,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{isEnabled,jdbcType=BIT},
+      #{isLocked,jdbcType=BIT}, #{lockedDate,jdbcType=TIMESTAMP}, #{loginDate,jdbcType=TIMESTAMP},
+      #{loginFailureCount,jdbcType=INTEGER}, #{loginIp,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT},
+      #{type,jdbcType=BIGINT}, #{isSystem,jdbcType=BIT}, #{companyId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Admin" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+    insert into tf_admin
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="isEnabled != null" >
+        is_enabled,
+      </if>
+      <if test="isLocked != null" >
+        is_locked,
+      </if>
+      <if test="lockedDate != null" >
+        locked_date,
+      </if>
+      <if test="loginDate != null" >
+        login_date,
+      </if>
+      <if test="loginFailureCount != null" >
+        login_failure_count,
+      </if>
+      <if test="loginIp != null" >
+        login_ip,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="isSystem != null" >
+        is_system,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnabled != null" >
+        #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="isLocked != null" >
+        #{isLocked,jdbcType=BIT},
+      </if>
+      <if test="lockedDate != null" >
+        #{lockedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginDate != null" >
+        #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFailureCount != null" >
+        #{loginFailureCount,jdbcType=INTEGER},
+      </if>
+      <if test="loginIp != null" >
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=BIGINT},
+      </if>
+      <if test="isSystem != null" >
+        #{isSystem,jdbcType=BIT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Admin" >
+    update tf_admin
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnabled != null" >
+        is_enabled = #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="isLocked != null" >
+        is_locked = #{isLocked,jdbcType=BIT},
+      </if>
+      <if test="lockedDate != null" >
+        locked_date = #{lockedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginDate != null" >
+        login_date = #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFailureCount != null" >
+        login_failure_count = #{loginFailureCount,jdbcType=INTEGER},
+      </if>
+      <if test="loginIp != null" >
+        login_ip = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=BIGINT},
+      </if>
+      <if test="isSystem != null" >
+        is_system = #{isSystem,jdbcType=BIT},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateCompanyAdmin" parameterType="com.tongfu.entity.Admin" >
+    update tf_admin
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnabled != null" >
+        is_enabled = #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="isLocked != null" >
+        is_locked = #{isLocked,jdbcType=BIT},
+      </if>
+      <if test="lockedDate != null" >
+        locked_date = #{lockedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginDate != null" >
+        login_date = #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFailureCount != null" >
+        login_failure_count = #{loginFailureCount,jdbcType=INTEGER},
+      </if>
+      <if test="loginIp != null" >
+        login_ip = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=BIGINT},
+      </if>
+      <if test="isSystem != null" >
+        is_system = #{isSystem,jdbcType=BIT},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Admin" >
+    update tf_admin
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      department = #{department,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      is_enabled = #{isEnabled,jdbcType=BIT},
+      is_locked = #{isLocked,jdbcType=BIT},
+      locked_date = #{lockedDate,jdbcType=TIMESTAMP},
+      login_date = #{loginDate,jdbcType=TIMESTAMP},
+      login_failure_count = #{loginFailureCount,jdbcType=INTEGER},
+      login_ip = #{loginIp,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      type = #{type,jdbcType=BIGINT},
+      is_system = #{isSystem,jdbcType=BIT},
+      company_id = #{companyId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateAdmin" parameterType="com.tongfu.entity.Admin" >
+    update tf_admin
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      department = #{department,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      is_enabled = #{isEnabled,jdbcType=BIT},
+      is_locked = #{isLocked,jdbcType=BIT},
+      locked_date = #{lockedDate,jdbcType=TIMESTAMP},
+      login_date = #{loginDate,jdbcType=TIMESTAMP},
+      login_failure_count = #{loginFailureCount,jdbcType=INTEGER},
+      login_ip = #{loginIp,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      type = #{type,jdbcType=BIGINT},
+      is_system = #{isSystem,jdbcType=BIT},
+      company_id = #{companyId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

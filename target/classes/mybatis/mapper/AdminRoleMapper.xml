@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.AdminRoleDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.AdminRole" >
+    <id column="admins" property="admins" jdbcType="BIGINT" />
+    <id column="roles" property="roles" jdbcType="BIGINT" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tongfu.entity.AdminRole" >
+    delete from tf_admin_role
+    where admins = #{admins,jdbcType=BIGINT}
+      and roles = #{roles,jdbcType=BIGINT}
+  </delete>
+    <delete id="deleteByPrimaryAdminId" parameterType="java.lang.Long" >
+      delete from tf_admin_role
+      where admins = #{adminId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.tongfu.entity.AdminRole" >
+    insert into tf_admin_role (admins, roles)
+    values (#{admins,jdbcType=BIGINT}, #{roles,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.AdminRole" >
+    insert into tf_admin_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="admins != null" >
+        admins,
+      </if>
+      <if test="roles != null" >
+        roles,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="admins != null" >
+        #{admins,jdbcType=BIGINT},
+      </if>
+      <if test="roles != null" >
+        #{roles,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select * from tf_admin_role
+    where 1 = 1
+    <if test="role!=null">
+      and roles = #{role}
+    </if>
+    <if test="adminId!=null">
+      and admins = #{adminId}
+    </if>
+  </select>
+
+
+
+</mapper>

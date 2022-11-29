@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+  <head>
+    <title></title>
+  </head>
+  <body>
+
+  <!--警告弹窗-->
+  <nav th:fragment="warning">
+
+    <div id="warning-alert-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog  modal-sm">
+        <div class="modal-content">
+          <div class="text-center p-4">
+            <i class="dripicons-warning h1 text-warning"></i>
+            <h4 class="mt-2">警告</h4>
+            <p class="mt-3" id = "warningContent"></p>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+    <button type="button" hidden class="btn btn-danger"  id = "btn-warning" data-toggle="modal" data-target="#warning-alert-modal">删除</button>
+
+  </nav>
+
+    <!--删除弹窗-->
+    <nav th:fragment="deleteMode">
+      <div id="danger-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-danger">
+              <h4 class="modal-title" id="danger-header-modalLabel">警告提示</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <h5 class="mt-0">删除警告</h5>
+              <p>你确定要删除么？</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" onclick="method()">确定</button>
+              <button type="button" class="btn btn-light" id="close" data-dismiss="modal">取消</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
+      <button type="button" hidden class="btn btn-danger"  id = "deletePaymentMethod" data-toggle="modal" data-target="#danger-header-modal">删除</button>
+    </nav>
+    <!--审核jQuery校验-->
+    <nav th:fragment="deleteModeJquery">
+      <script>
+        //删除
+        var deleteId,deleteUrl;
+        function deleteMethod(id,url) {
+          $('#deletePaymentMethod').click();
+          deleteId = id;
+          deleteUrl =  url;
+        }
+
+
+        function method() {
+          var datas = "{ \"id\": "+deleteId+"}";
+          $.ajax({
+            type:"POST",
+            contentType: "application/json",
+            url:deleteUrl,
+            data:datas,
+            dataType: "json",
+            async: false,
+            success:function(data){
+              console.log(data)
+              $('#close').click();
+              if (data.status==200){
+                $('#tr_'+deleteId).remove();
+                var num = $("table tbody tr.text-lg-center").length;
+                $(".totalNum").text(" 总共 "+num+"条")
+              }else {
+                $('#btn-warning').click();
+                $('#warningContent').text(data.msg);
+              }
+              return ;
+            }
+          });
+        }
+      </script>
+    </nav>
+
+  </body>
+</html>

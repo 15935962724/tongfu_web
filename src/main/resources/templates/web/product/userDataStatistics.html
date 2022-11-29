@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" >
+<head>
+    <meta charset="utf-8" />
+    <title>品牌数据统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/newCss.css" th:href="@{/assets/css/newCss.css}"  rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{web/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{web/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+
+            <div class="content">
+
+
+
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    医院排名分析
+                                </div>
+                                <div class="date" data-toggle="date-picker"><img src="../../assets/img/datePicker.png" width="20"></div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+
+                                <div class="newCard_Content_List">
+                                <table class="table table-striped dt-responsive nowrap" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>排名</th>
+                                            <th>医院名称</th>
+                                            <th>订单量</th>
+                                            <th>占比量</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="hospital ,hospitalStart: ${orderHospital}">
+                                        <td>[[${hospitalStart.index+1}]]</td>
+                                        <td>[[${hospital.hospital}]]</td>
+                                        <td>[[${hospital.countOrderHospital}]]</td>
+                                        <td>[[${hospital.proportion}]]</td>
+                                    </tr>
+
+
+                                    </tbody>
+
+                                </table>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    城市排名分析
+                                </div>
+                                <div class="date" data-toggle="date-picker"><img src="../../assets/img/datePicker.png" width="20"></div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+
+                                <div class="newCard_Content_List">
+                                <table class="table table-striped dt-responsive nowrap" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>排名</th>
+                                        <th>城市名称</th>
+                                        <th>所属省份</th>
+                                        <th>订单量</th>
+                                        <th>占比量</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="area,areaStart:${orderArea}">
+                                            <td>[[${areaStart.index+1}]]</td>
+                                            <td>[[${area.name}]]</td>
+                                            <td>[[${area.areaName}]]</td>
+                                            <td>[[${area.countAreaHospital}]]</td>
+                                            <td>[[${area.proportion}]]</td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    用户来源分析
+                                </div>
+                                <div id="UserAnalysisDate" class="date" data-toggle="date-picker"><img src="../../assets/img/datePicker.png" width="20"></div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="UserAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 card newCard" style="color: #333;">
+                            <div class="col-lg-12 newCard_Title">
+                                <div class="">
+                                    用户搜索分析
+                                </div>
+                                <div id="UserSearchAnalysisDate" class="date" data-toggle="date-picker"><img src="../../assets/img/datePicker.png" width="20"></div>
+                            </div>
+                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                <div id="UserSearchAnalysis" class="col-lg-12 apex-charts"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+            </div>
+
+            <!-- Footer Start -->
+            <div th:replace="~{web/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+    </div> <!-- end wrapper-->
+
+</div>
+</body>
+</html>
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+<script th:src="@{/assets/js/vendor/jquery-jvectormap-1.2.2.min.js}"></script>
+<script th:src="@{/assets/js/vendor/jquery-jvectormap-cn-mill.js}"></script>
+<script th:inline="javascript" type="text/javascript">
+
+
+
+    //var url = '/web/product/searchVisit';//ajax 请求路径， startDate   endDate
+
+    //用户来源分析
+    console.log('用户来源分析');
+    console.log([[${countMemberSource}]]);
+    var countMemberSource = [[${countMemberSource}]];
+    var UserAnalysisData = [];
+    var UserAnalysisLabels = [];
+    for(var i = 0; i < countMemberSource.length; i++){
+        UserAnalysisData.push(countMemberSource[i].countMemberSource);
+        UserAnalysisLabels.push(countMemberSource[i].source);
+    }
+    var UserAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "donut"
+        },
+        series: UserAnalysisData,
+        legend: {
+            show: !0,
+            position: "bottom",
+            horizontalAlign: "center",
+            verticalAlign: "middle",
+            floating: !1,
+            fontSize: "14px",
+            offsetX: 0,
+            offsetY: -10
+        },
+        // tooltip: {
+        //     custom: function(e) {
+        //         return '<div class="arrow_box">' +
+        //             '<span>' + pieRankingLabels[e.seriesIndex] + '：'+ pieRankingSeries[e.seriesIndex] +'单</span>' +
+        //             '</div>'
+        //     }
+        // },
+        labels: UserAnalysisLabels,
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    height: 240
+                },
+                legend: {
+                    show: !1
+                }
+            }
+        }]
+    };
+    var UserAnalysisOptionsApex = new ApexCharts(document.querySelector("#UserAnalysis"), UserAnalysisOptions);
+    UserAnalysisOptionsApex.render();
+
+    //用户搜索分析
+    console.log('用户搜索分析');
+    console.log([[${memberSearch}]]);
+    var memberSearch = [[${memberSearch}]];
+    var UserSearchAnalysisData = [];
+    var UserSearchAnalysisLabels = [];
+    for(var i = 0; i < memberSearch.length; i++){
+        UserSearchAnalysisData.push(memberSearch[i].countHits);
+        UserSearchAnalysisLabels.push(memberSearch[i].NAME);
+    }
+    var UserSearchAnalysisOptions = {
+        chart: {
+            height: 350,
+            type: "donut"
+        },
+        series: UserSearchAnalysisData,
+        legend: {
+            show: !0,
+            position: "bottom",
+            horizontalAlign: "center",
+            verticalAlign: "middle",
+            floating: !1,
+            fontSize: "14px",
+            offsetX: 0,
+            offsetY: -10
+        },
+        // tooltip: {
+        //     custom: function(e) {
+        //         return '<div class="arrow_box">' +
+        //             '<span>' + pieRankingLabels[e.seriesIndex] + '：'+ pieRankingSeries[e.seriesIndex] +'单</span>' +
+        //             '</div>'
+        //     }
+        // },
+        labels: UserSearchAnalysisLabels,
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    height: 240
+                },
+                legend: {
+                    show: !1
+                }
+            }
+        }]
+    };
+    var UserSearchAnalysisApex = new ApexCharts(document.querySelector("#UserSearchAnalysis"), UserSearchAnalysisOptions);
+    UserSearchAnalysisApex.render();
+
+
+
+
+    $('#UserAnalysisDate').on('apply.daterangepicker', function(ev, picker) {
+        getYearData(picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'),'UserAnalysis');
+    });
+    $('#UserSearchAnalysisDate').on('apply.daterangepicker', function(ev, picker) {
+        getYearData(picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'),'UserSearchAnalysis');
+    });
+
+    function getYearData(start,end,Dom) {
+        $.ajax({
+            type:"POST",
+            url: [[@{/web/product/searchVisit}]],
+        data:{
+            startDate: start,
+                endDate: end
+        },
+        dataType:"json",
+            async: false,
+            success:function(data) {
+            console.log(data);
+            if(Dom == 'SalesComparison'){
+                var data = data.data.comparativeAnalysisOfSales;
+                var This = [];
+                var Last = [];
+                for(var i = 0; i < data.length; i++){
+                    This.push(data[i].thisYearOrderAmountPaid);
+                    Last.push(data[i].lastYearOrderAmountPaid);
+                }
+                SalesComparisonApex.updateOptions({
+                    series: [{
+                        name: year + "年",
+                        data: This
+                    }, {
+                        name: year-1 + "年",
+                        data: Last
+                    }]
+                });
+            }
+        },
+        error:function(data){
+            console.log(data.responseJSON);
+        }
+    });
+    }
+
+</script>

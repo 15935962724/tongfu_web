@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tongfu>
+	<!--<setting name="siteName" value="SHARE社区"/>
+	<setting name="siteUrl" value="http://www.cb365.com.cn"/>  
+	<setting name="logo" value="/share/upload/image/logo.gif"/>  
+	<setting name="hotSearch" value="有机,绿色,健康"/>  
+	<setting name="address" value="北京"/>  
+	<setting name="phone" value="400-8888888"/>  
+	<setting name="zipCode" value="400000"/>  
+	<setting name="email" value="service@share.net"/>  
+	<setting name="certtext" value="京ICP备15063886号-1"/>-->
+	<!--短信设置接口-->
+	<setting name="shortMessageUrl" value="https://openapi.miaodiyun.com/distributor/sendSMS"/>
+	<!--开发者主账号（ACCOUNT SID）。开发者账号唯一标识符。-->
+	<setting name="accountSid" value="6998eca293f9ab9ae822a556dca9affc"/>
+	<!-- 子账户ID，具体查看用户中心 短信配置中值，验证码通知和营销不一样。-->
+	<setting name="accountId" value="572584"/>
+	<!-- 秘钥 AUTH TOKEN -->
+	<setting name="authToken" value="d22b144c1de959e4d3c72fbcd9df8d27"/>
+    <!--会员注册赠送积分-->
+    <setting name="memberRegisterPoint" value="100"/>
+    <!--购买软件赠送积分-->
+    <setting name="purchaseProductPoint" value="10"/>
+	<!--   学术活动首页收费类型   -->
+	<setting name="type" value="1"/>
+	<!--学术活动首页收费价格-->
+	<setting name="price" value="0.01"/>
+	 
+
+</tongfu>

@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.MemberDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Member" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="birth" property="birth" jdbcType="TIMESTAMP" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="is_enabled" property="isEnabled" jdbcType="BIT" />
+    <result column="is_locked" property="isLocked" jdbcType="BIT" />
+    <result column="locked_date" property="lockedDate" jdbcType="TIMESTAMP" />
+    <result column="login_failure_count" property="loginFailureCount" jdbcType="INTEGER" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="point" property="point" jdbcType="BIGINT" />
+    <result column="register_ip" property="registerIp" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="zip_code" property="zipCode" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="BIGINT" />
+    <result column="member_rank" property="memberRank" jdbcType="BIGINT" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="card_id" property="cardId" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="regtype" property="regtype" jdbcType="INTEGER" />
+    <result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="license" property="license" jdbcType="VARCHAR" />
+    <result column="iplat" property="iplat" jdbcType="VARCHAR" />
+    <result column="arealnglat" property="arealnglat" jdbcType="VARCHAR" />
+    <result column="iplng" property="iplng" jdbcType="VARCHAR" />
+    <result column="nation" property="nation" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="adcode" property="adcode" jdbcType="VARCHAR" />
+    <result column="hospital" property="hospital" jdbcType="VARCHAR" />
+    <result column="department" property="department" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="wb_id" property="wbId" jdbcType="VARCHAR" />
+    <result column="qq_id" property="qqId" jdbcType="VARCHAR" />
+    <result column="system" property="system" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, address, amount, balance, birth, email, gender, is_enabled,
+    is_locked, locked_date, login_failure_count, mobile, name, password, phone, point,
+    register_ip, username, zip_code, area, member_rank, logo, card_id, remarks, is_deleted,
+    type, regtype, credit_code, company, license, iplat, arealnglat, iplng, nation, province,
+    city, district, adcode, hospital, department, open_id, nick_name, wb_id, qq_id, system,
+    source
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tf_member
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAll" resultType="com.tongfu.entity.Member">
+    select
+    <include refid="Base_Column_List" />
+    FROM tf_member
+    where 1 = 1
+    <if test="username!=null and username !='' ">
+      and username like '%${username}%'
+    </if>
+    <if test="name!=null and name !=''">
+      and name like '%${name}%'
+    </if>
+    <if test="phone!=null and phone !=''">
+      and phone like '%${phone}%'
+    </if>
+    <if test="email!=null and email !=''">
+      and email like '%${email}%'
+    </if>
+    <if test="type!=null and type != ''">
+      and type = #{type,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="thatyearRegister" resultType="java.lang.Integer" parameterType="java.util.Map">
+    SELECT COALESCE( B.countNum,0) countNum   FROM (
+    SELECT CONCAT(#{year} ,'-01') AS mon UNION
+    SELECT CONCAT(#{year} ,'-02') AS mon UNION
+    SELECT CONCAT(#{year} ,'-03') AS mon UNION
+    SELECT CONCAT(#{year},'-04') AS mon UNION
+    SELECT CONCAT(#{year} ,'-05') AS mon UNION
+    SELECT CONCAT(#{year} ,'-06') AS mon UNION
+    SELECT CONCAT(#{year} ,'-07') AS mon UNION
+    SELECT CONCAT(#{year} ,'-08') AS mon UNION
+    SELECT CONCAT(#{year} ,'-09') AS mon UNION
+    SELECT CONCAT(#{year} ,'-10') AS mon UNION
+    SELECT CONCAT(#{year} ,'-11') AS mon UNION
+    SELECT CONCAT(#{year} ,'-12') AS mon
+    ) A LEFT JOIN (
+    SELECT
+    DATE_FORMAT(create_date, '%Y-%m') createTime,
+    COUNT(id) countNum
+    FROM
+    tf_member
+    GROUP BY
+    DATE_FORMAT(create_date, '%Y-%m')
+    ) B ON A.mon = B.createTime order by A.mon
+
+  </select>
+
+  <!--每年的注册人数-->
+  <select id="getYearRegister" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT
+		DATE_FORMAT(create_date, '%Y') year , COUNT(id) AS countNum
+	FROM
+	    tf_member
+	GROUP BY
+	      DATE_FORMAT(create_date, '%Y') ORDER BY year DESC
+  </select>
+
+  <!--根据注册系统统计 按年分组-->
+  <select id="getSystemRegister" resultType="java.lang.Integer" parameterType="java.util.Map">
+     SELECT COALESCE (B.countNum,0) countNum FROM (
+    SELECT DATE_FORMAT(create_date, '%Y') YEAR  FROM tf_member GROUP BY YEAR
+	      ) A LEFT JOIN (SELECT DATE_FORMAT(create_date, '%Y') YEAR,system,COUNT(id) countNum
+	FROM
+	    tf_member WHERE  system = #{system}
+	GROUP BY
+	      DATE_FORMAT(create_date, '%Y') ,system  ORDER BY YEAR
+	    ) B ON A.year = B.year ORDER BY A.year
+  </select>
+
+
+  <!--根据注册地区统计 按年分组-->
+  <select id="getProvinceRegister" resultType="java.lang.Integer" parameterType="java.util.Map">
+     SELECT COALESCE (B.countNum,0) countNum FROM (
+    SELECT DATE_FORMAT(create_date, '%Y') YEAR  FROM tf_member GROUP BY YEAR
+	      ) A LEFT JOIN (SELECT DATE_FORMAT(create_date, '%Y') YEAR,province,COUNT(id) countNum
+	FROM
+	    tf_member WHERE  province = #{province}
+	GROUP BY
+	      DATE_FORMAT(create_date, '%Y') ,province  ORDER BY YEAR
+	    ) B ON A.year = B.year ORDER BY A.year
+  </select>
+
+  <!--根据注册来源统计 按年分组-->
+  <select id="getSourceRegister" resultType="java.lang.Integer" parameterType="java.util.Map">
+     SELECT COALESCE (B.countNum,0) countNum FROM (
+    SELECT DATE_FORMAT(create_date, '%Y') YEAR  FROM tf_member GROUP BY YEAR
+	      ) A LEFT JOIN (SELECT DATE_FORMAT(create_date, '%Y') YEAR,source,COUNT(id) countNum
+	FROM
+	    tf_member WHERE  source = #{source}
+	GROUP BY
+	      DATE_FORMAT(create_date, '%Y') ,source  ORDER BY YEAR
+	    ) B ON A.year = B.year ORDER BY A.year
+  </select>
+
+  <!--根据系统统计注册用户数-->
+  <select id="getSystems" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT system,COUNT(id) countNum FROM tf_member
+    where 1 = 1 and system is not null
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS( create_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(create_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( create_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(create_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY system
+  </select>
+
+  <!--根据地区统计用户注册数-->
+  <select id="getProvince" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT province,COUNT(id) countNum FROM tf_member
+    where 1 = 1
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS( create_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(create_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( create_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(create_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY province
+  </select>
+
+  <!--根据来源统计用户注册数-->
+  <select id="getSource" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT source,COUNT(id) countNum FROM tf_member
+    where 1 = 1 and source is not null
+    <if test="type == 1" >
+      AND  TO_DAYS( NOW( ) ) - TO_DAYS( create_date) &lt;= 1
+    </if>
+    <if test="type == 2" >
+      AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(create_date)
+    </if>
+    <if test="type == 3" >
+      AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( create_date, '%Y%m' ) ) = 1
+    </if>
+    <if test="type == 4" >
+      AND year(create_date)=year(date_sub(now(),interval 1 year))
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY source
+  </select>
+
+  <!--本月或上月 0代表本月 1代表上月-->
+  <select id="getMonthCountMember" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM tf_member
+    WHERE 1 = 1
+    <if test="month != null" >
+      AND PERIOD_DIFF( DATE_FORMAT( NOW( ) , '%Y%m' ) , DATE_FORMAT( create_date, '%Y%m' ) ) =#{month,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--本周或上周0代表本周 1 代表上周-->
+  <select id="getWeekCountMember" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM tf_member
+    WHERE 1 = 1
+    <if test="week != null" >
+      AND YEARWEEK(DATE_FORMAT(create_date,'%Y-%m-%d'),1) = YEARWEEK(NOW(),#{week,jdbcType=BIGINT})
+    </if>
+  </select>
+
+  <!--今天或昨天 1代表昨天  0代表今天-->
+  <select id="getDayCountMember" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM tf_member
+    WHERE 1 = 1
+    <if test="day != null" >
+      AND TO_DAYS(NOW()) - TO_DAYS(create_date) = #{day,jdbcType=BIGINT}
+    </if>
+  </select>
+
+
+  <select id="getCountMemberSource" resultType="java.util.Map" parameterType="java.util.Map"  >
+
+    SELECT M.`source`,SUM(A.countMember) AS countMemberSource  FROM  (
+    SELECT member,COUNT(1) AS countMember FROM `tf_product_statistics`
+    WHERE  1 = 1
+    <if test="companyId != null" >
+      AND company_id = #{companyId}
+    </if>
+    <if test="startDate != null and endDate !=null " >
+      and create_date BETWEEN #{startDate,jdbcType=TIMESTAMP}  AND #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    GROUP BY member
+    ) A LEFT JOIN tf_member M  ON M.id = A.member GROUP BY source
+
+  </select>
+
+
+
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_member
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Member" >
+    insert into tf_member (id, create_date, modify_date,
+      address, amount, balance,
+      birth, email, gender,
+      is_enabled, is_locked, locked_date,
+      login_failure_count, mobile, name,
+      password, phone, point,
+      register_ip, username, zip_code,
+      area, member_rank, logo,
+      card_id, remarks, is_deleted,
+      type, regtype, credit_code,
+      company, license, iplat,
+      arealnglat, iplng, nation,
+      province, city, district,
+      adcode, hospital, department,
+      open_id, nick_name, wb_id,
+      qq_id, system, source
+      )
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP},
+      #{address,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL},
+      #{birth,jdbcType=TIMESTAMP}, #{email,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER},
+      #{isEnabled,jdbcType=BIT}, #{isLocked,jdbcType=BIT}, #{lockedDate,jdbcType=TIMESTAMP},
+      #{loginFailureCount,jdbcType=INTEGER}, #{mobile,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{point,jdbcType=BIGINT},
+      #{registerIp,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{zipCode,jdbcType=VARCHAR},
+      #{area,jdbcType=BIGINT}, #{memberRank,jdbcType=BIGINT}, #{logo,jdbcType=VARCHAR},
+      #{cardId,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT},
+      #{type,jdbcType=INTEGER}, #{regtype,jdbcType=INTEGER}, #{creditCode,jdbcType=VARCHAR},
+      #{company,jdbcType=VARCHAR}, #{license,jdbcType=VARCHAR}, #{iplat,jdbcType=VARCHAR},
+      #{arealnglat,jdbcType=VARCHAR}, #{iplng,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR},
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR},
+      #{adcode,jdbcType=VARCHAR}, #{hospital,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR},
+      #{openId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{wbId,jdbcType=VARCHAR},
+      #{qqId,jdbcType=VARCHAR}, #{system,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Member" >
+    insert into tf_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="birth != null" >
+        birth,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="isEnabled != null" >
+        is_enabled,
+      </if>
+      <if test="isLocked != null" >
+        is_locked,
+      </if>
+      <if test="lockedDate != null" >
+        locked_date,
+      </if>
+      <if test="loginFailureCount != null" >
+        login_failure_count,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="point != null" >
+        point,
+      </if>
+      <if test="registerIp != null" >
+        register_ip,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="zipCode != null" >
+        zip_code,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="memberRank != null" >
+        member_rank,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="cardId != null" >
+        card_id,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="regtype != null" >
+        regtype,
+      </if>
+      <if test="creditCode != null" >
+        credit_code,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="license != null" >
+        license,
+      </if>
+      <if test="iplat != null" >
+        iplat,
+      </if>
+      <if test="arealnglat != null" >
+        arealnglat,
+      </if>
+      <if test="iplng != null" >
+        iplng,
+      </if>
+      <if test="nation != null" >
+        nation,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="adcode != null" >
+        adcode,
+      </if>
+      <if test="hospital != null" >
+        hospital,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="openId != null" >
+        open_id,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="wbId != null" >
+        wb_id,
+      </if>
+      <if test="qqId != null" >
+        qq_id,
+      </if>
+      <if test="system != null" >
+        system,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="birth != null" >
+        #{birth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="isEnabled != null" >
+        #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="isLocked != null" >
+        #{isLocked,jdbcType=BIT},
+      </if>
+      <if test="lockedDate != null" >
+        #{lockedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFailureCount != null" >
+        #{loginFailureCount,jdbcType=INTEGER},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        #{point,jdbcType=BIGINT},
+      </if>
+      <if test="registerIp != null" >
+        #{registerIp,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=BIGINT},
+      </if>
+      <if test="memberRank != null" >
+        #{memberRank,jdbcType=BIGINT},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="cardId != null" >
+        #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="regtype != null" >
+        #{regtype,jdbcType=INTEGER},
+      </if>
+      <if test="creditCode != null" >
+        #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="license != null" >
+        #{license,jdbcType=VARCHAR},
+      </if>
+      <if test="iplat != null" >
+        #{iplat,jdbcType=VARCHAR},
+      </if>
+      <if test="arealnglat != null" >
+        #{arealnglat,jdbcType=VARCHAR},
+      </if>
+      <if test="iplng != null" >
+        #{iplng,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="adcode != null" >
+        #{adcode,jdbcType=VARCHAR},
+      </if>
+      <if test="hospital != null" >
+        #{hospital,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="wbId != null" >
+        #{wbId,jdbcType=VARCHAR},
+      </if>
+      <if test="qqId != null" >
+        #{qqId,jdbcType=VARCHAR},
+      </if>
+      <if test="system != null" >
+        #{system,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Member" >
+    update tf_member
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="birth != null" >
+        birth = #{birth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="isEnabled != null" >
+        is_enabled = #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="isLocked != null" >
+        is_locked = #{isLocked,jdbcType=BIT},
+      </if>
+      <if test="lockedDate != null" >
+        locked_date = #{lockedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFailureCount != null" >
+        login_failure_count = #{loginFailureCount,jdbcType=INTEGER},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        point = #{point,jdbcType=BIGINT},
+      </if>
+      <if test="registerIp != null" >
+        register_ip = #{registerIp,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        zip_code = #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=BIGINT},
+      </if>
+      <if test="memberRank != null" >
+        member_rank = #{memberRank,jdbcType=BIGINT},
+      </if>
+      <if test="logo != null" >
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="cardId != null" >
+        card_id = #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="regtype != null" >
+        regtype = #{regtype,jdbcType=INTEGER},
+      </if>
+      <if test="creditCode != null" >
+        credit_code = #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="license != null" >
+        license = #{license,jdbcType=VARCHAR},
+      </if>
+      <if test="iplat != null" >
+        iplat = #{iplat,jdbcType=VARCHAR},
+      </if>
+      <if test="arealnglat != null" >
+        arealnglat = #{arealnglat,jdbcType=VARCHAR},
+      </if>
+      <if test="iplng != null" >
+        iplng = #{iplng,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        nation = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        district = #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="adcode != null" >
+        adcode = #{adcode,jdbcType=VARCHAR},
+      </if>
+      <if test="hospital != null" >
+        hospital = #{hospital,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="wbId != null" >
+        wb_id = #{wbId,jdbcType=VARCHAR},
+      </if>
+      <if test="qqId != null" >
+        qq_id = #{qqId,jdbcType=VARCHAR},
+      </if>
+      <if test="system != null" >
+        system = #{system,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Member" >
+    update tf_member
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      balance = #{balance,jdbcType=DECIMAL},
+      birth = #{birth,jdbcType=TIMESTAMP},
+      email = #{email,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=INTEGER},
+      is_enabled = #{isEnabled,jdbcType=BIT},
+      is_locked = #{isLocked,jdbcType=BIT},
+      locked_date = #{lockedDate,jdbcType=TIMESTAMP},
+      login_failure_count = #{loginFailureCount,jdbcType=INTEGER},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      point = #{point,jdbcType=BIGINT},
+      register_ip = #{registerIp,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      zip_code = #{zipCode,jdbcType=VARCHAR},
+      area = #{area,jdbcType=BIGINT},
+      member_rank = #{memberRank,jdbcType=BIGINT},
+      logo = #{logo,jdbcType=VARCHAR},
+      card_id = #{cardId,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      type = #{type,jdbcType=INTEGER},
+      regtype = #{regtype,jdbcType=INTEGER},
+      credit_code = #{creditCode,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      license = #{license,jdbcType=VARCHAR},
+      iplat = #{iplat,jdbcType=VARCHAR},
+      arealnglat = #{arealnglat,jdbcType=VARCHAR},
+      iplng = #{iplng,jdbcType=VARCHAR},
+      nation = #{nation,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      district = #{district,jdbcType=VARCHAR},
+      adcode = #{adcode,jdbcType=VARCHAR},
+      hospital = #{hospital,jdbcType=VARCHAR},
+      department = #{department,jdbcType=VARCHAR},
+      open_id = #{openId,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      wb_id = #{wbId,jdbcType=VARCHAR},
+      qq_id = #{qqId,jdbcType=VARCHAR},
+      system = #{system,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

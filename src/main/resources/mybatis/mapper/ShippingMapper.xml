@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.ShippingDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.Shipping" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="receiving_name" property="receivingName" jdbcType="VARCHAR" />
+    <result column="receiving_phone" property="receivingPhone" jdbcType="VARCHAR" />
+    <result column="receiving_email" property="receivingEmail" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+    <result column="consignee" property="consignee" jdbcType="VARCHAR" />
+    <result column="delivery_corp" property="deliveryCorp" jdbcType="VARCHAR" />
+    <result column="delivery_corp_code" property="deliveryCorpCode" jdbcType="VARCHAR" />
+    <result column="delivery_corp_url" property="deliveryCorpUrl" jdbcType="VARCHAR" />
+    <result column="freight" property="freight" jdbcType="DECIMAL" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="shipping_method" property="shippingMethod" jdbcType="VARCHAR" />
+    <result column="sn" property="sn" jdbcType="VARCHAR" />
+    <result column="tracking_no" property="trackingNo" jdbcType="VARCHAR" />
+    <result column="zip_code" property="zipCode" jdbcType="VARCHAR" />
+    <result column="orders" property="orders" jdbcType="BIGINT" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="operator_phone" property="operatorPhone" jdbcType="VARCHAR" />
+    <result column="operator_area" property="operatorArea" jdbcType="VARCHAR" />
+    <result column="operator_address" property="operatorAddress" jdbcType="VARCHAR" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, modify_date, receiving_name, receiving_phone, receiving_email, address, 
+    area_name, consignee, delivery_corp, delivery_corp_code, delivery_corp_url, freight, 
+    memo, operator, shipping_method, sn, tracking_no, zip_code, orders, is_deleted, operator_phone, 
+    operator_area, operator_address, weight
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tf_shipping
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tf_shipping
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tongfu.entity.Shipping" >
+    insert into tf_shipping (id, create_date, modify_date, 
+      receiving_name, receiving_phone, receiving_email, 
+      address, area_name, consignee, 
+      delivery_corp, delivery_corp_code, delivery_corp_url, 
+      freight, memo, operator, 
+      shipping_method, sn, tracking_no, 
+      zip_code, orders, is_deleted, 
+      operator_phone, operator_area, operator_address, 
+      weight)
+    values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{receivingName,jdbcType=VARCHAR}, #{receivingPhone,jdbcType=VARCHAR}, #{receivingEmail,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{areaName,jdbcType=VARCHAR}, #{consignee,jdbcType=VARCHAR}, 
+      #{deliveryCorp,jdbcType=VARCHAR}, #{deliveryCorpCode,jdbcType=VARCHAR}, #{deliveryCorpUrl,jdbcType=VARCHAR}, 
+      #{freight,jdbcType=DECIMAL}, #{memo,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
+      #{shippingMethod,jdbcType=VARCHAR}, #{sn,jdbcType=VARCHAR}, #{trackingNo,jdbcType=VARCHAR}, 
+      #{zipCode,jdbcType=VARCHAR}, #{orders,jdbcType=BIGINT}, #{isDeleted,jdbcType=BIT}, 
+      #{operatorPhone,jdbcType=VARCHAR}, #{operatorArea,jdbcType=VARCHAR}, #{operatorAddress,jdbcType=VARCHAR}, 
+      #{weight,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tongfu.entity.Shipping"  useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+    insert into tf_shipping
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="receivingName != null" >
+        receiving_name,
+      </if>
+      <if test="receivingPhone != null" >
+        receiving_phone,
+      </if>
+      <if test="receivingEmail != null" >
+        receiving_email,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="areaName != null" >
+        area_name,
+      </if>
+      <if test="consignee != null" >
+        consignee,
+      </if>
+      <if test="deliveryCorp != null" >
+        delivery_corp,
+      </if>
+      <if test="deliveryCorpCode != null" >
+        delivery_corp_code,
+      </if>
+      <if test="deliveryCorpUrl != null" >
+        delivery_corp_url,
+      </if>
+      <if test="freight != null" >
+        freight,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="shippingMethod != null" >
+        shipping_method,
+      </if>
+      <if test="sn != null" >
+        sn,
+      </if>
+      <if test="trackingNo != null" >
+        tracking_no,
+      </if>
+      <if test="zipCode != null" >
+        zip_code,
+      </if>
+      <if test="orders != null" >
+        orders,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="operatorPhone != null" >
+        operator_phone,
+      </if>
+      <if test="operatorArea != null" >
+        operator_area,
+      </if>
+      <if test="operatorAddress != null" >
+        operator_address,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receivingName != null" >
+        #{receivingName,jdbcType=VARCHAR},
+      </if>
+      <if test="receivingPhone != null" >
+        #{receivingPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="receivingEmail != null" >
+        #{receivingEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="areaName != null" >
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="consignee != null" >
+        #{consignee,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryCorp != null" >
+        #{deliveryCorp,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryCorpCode != null" >
+        #{deliveryCorpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryCorpUrl != null" >
+        #{deliveryCorpUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="freight != null" >
+        #{freight,jdbcType=DECIMAL},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="shippingMethod != null" >
+        #{shippingMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="sn != null" >
+        #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="trackingNo != null" >
+        #{trackingNo,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orders != null" >
+        #{orders,jdbcType=BIGINT},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="operatorPhone != null" >
+        #{operatorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorArea != null" >
+        #{operatorArea,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorAddress != null" >
+        #{operatorAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tongfu.entity.Shipping" >
+    update tf_shipping
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receivingName != null" >
+        receiving_name = #{receivingName,jdbcType=VARCHAR},
+      </if>
+      <if test="receivingPhone != null" >
+        receiving_phone = #{receivingPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="receivingEmail != null" >
+        receiving_email = #{receivingEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="areaName != null" >
+        area_name = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="consignee != null" >
+        consignee = #{consignee,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryCorp != null" >
+        delivery_corp = #{deliveryCorp,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryCorpCode != null" >
+        delivery_corp_code = #{deliveryCorpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryCorpUrl != null" >
+        delivery_corp_url = #{deliveryCorpUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="freight != null" >
+        freight = #{freight,jdbcType=DECIMAL},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="shippingMethod != null" >
+        shipping_method = #{shippingMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="sn != null" >
+        sn = #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="trackingNo != null" >
+        tracking_no = #{trackingNo,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        zip_code = #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orders != null" >
+        orders = #{orders,jdbcType=BIGINT},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="operatorPhone != null" >
+        operator_phone = #{operatorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorArea != null" >
+        operator_area = #{operatorArea,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorAddress != null" >
+        operator_address = #{operatorAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tongfu.entity.Shipping" >
+    update tf_shipping
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      receiving_name = #{receivingName,jdbcType=VARCHAR},
+      receiving_phone = #{receivingPhone,jdbcType=VARCHAR},
+      receiving_email = #{receivingEmail,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      area_name = #{areaName,jdbcType=VARCHAR},
+      consignee = #{consignee,jdbcType=VARCHAR},
+      delivery_corp = #{deliveryCorp,jdbcType=VARCHAR},
+      delivery_corp_code = #{deliveryCorpCode,jdbcType=VARCHAR},
+      delivery_corp_url = #{deliveryCorpUrl,jdbcType=VARCHAR},
+      freight = #{freight,jdbcType=DECIMAL},
+      memo = #{memo,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      shipping_method = #{shippingMethod,jdbcType=VARCHAR},
+      sn = #{sn,jdbcType=VARCHAR},
+      tracking_no = #{trackingNo,jdbcType=VARCHAR},
+      zip_code = #{zipCode,jdbcType=VARCHAR},
+      orders = #{orders,jdbcType=BIGINT},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      operator_phone = #{operatorPhone,jdbcType=VARCHAR},
+      operator_area = #{operatorArea,jdbcType=VARCHAR},
+      operator_address = #{operatorAddress,jdbcType=VARCHAR},
+      weight = #{weight,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

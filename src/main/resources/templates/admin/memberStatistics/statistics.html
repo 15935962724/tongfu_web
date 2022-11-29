@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8" />
+    <title>用户统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+    <!-- third party css end -->
+    <!-- App css -->
+    <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+    <!--<link th:href="@{/assets/css/datePicker/daterangepicker.css}"  rel="stylesheet" type="text/css" />-->
+
+
+
+</head>
+
+<body>
+
+<!-- Topbar Start -->
+<div th:replace="~{admin/incloud/top::top}"></div>
+<!-- end Topbar -->
+
+
+<div class="container-fluid">
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <!-- Start Content-->
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div th:replace="~{admin/incloud/left::left}"></div>
+        <!-- Left Sidebar End -->
+
+        <div class="content-page">
+
+            <div class="content">
+
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">今年  vs  往年(用户注册)</h4>
+                                <div id="all-mixed" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">每年用户注册</h4>
+                                <div id="distributed-column" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+                </div>
+                <!-- end row-->
+
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">根据系统区分用户每年注册</h4>
+                                <div id="stacked-column" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body"  style="height: 451px;">
+                                <h4 class="header-title">系统分布</h4>
+                                <input class="datePicker" id="systemDatePicker" />
+                                <div id="system-simple-pie" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body" style="height: 451px;">
+                                <h4 class="header-title">根据来源统计用户注册数</h4>
+                                <input class="datePicker" id="sourcePicker" />
+                                <div id="gradient-donut" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">根据来源区分用户每年注册</h4>
+                                <div id="source-stacked-column" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+
+                    <!-- end col-->
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">根据地区区分用户每年注册</h4>
+                                <div id="province-stacked-column" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-body"  style="height: 451px;">
+                                <h4 class="header-title">地区分布</h4>
+                                <input class="datePicker" id="datePicker" />
+                                <div id="simple-pie" class="apex-charts"></div>
+                            </div>
+                            <!-- end card body-->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-->
+                </div>
+
+
+
+            </div>
+
+            <!-- Footer Start -->
+            <div th:replace="~{admin/incloud/footer::footer}"></div>
+            <!-- end Footer -->
+        </div> <!-- content-page -->
+
+    </div> <!-- end wrapper-->
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END Container -->
+
+
+
+
+
+<div class="rightbar-overlay"></div>
+<!-- /Right-bar -->
+
+
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<!--<script th:src="@{/assets/js/datePicker/moment.min.js}"></script>-->
+<!--<script th:src="@{/assets/js/datePicker/daterangepicker.min.js}"></script>-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+<!-- third party end -->
+
+<!--<script th:src="@{/assets/js/pages/demo.apex-mixed.js}"></script>-->
+
+<script th:inline="javascript" type="text/javascript">
+    //页面加载就调用
+    $(function(){
+
+        var mapList = [[${mapList}]];
+
+        var colors = [];
+        var data = [];
+        var categories = [];
+
+        console.log([[${series}]])
+        for (var i = 0;i<mapList.length;i++){
+            colors.push(randomColor());
+            data.push(mapList[i].countNum);
+            categories.push(mapList[i].year);
+        }
+
+        //今年  vs  往年(用户注册)
+        var allMixedOptions = {
+            chart: {height: 380, type: "line", stacked: !1, toolbar: {show: !1}},
+            stroke: {width: [0, 2, 4], curve: "smooth"},
+            plotOptions: {bar: {columnWidth: "50%"}},
+            colors: colors,
+            // series: [
+            //     {"name": "Team A", "type": "column", "data": [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]},
+            //     {"name": "Team B","type": "area", "data": [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]},
+            //     {name: "Team C", type: "line", data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]}],
+            series:[[${series}]],
+            fill: {
+                opacity: [.85, .25, 1],
+                gradient: {
+                    inverseColors: !1,
+                    shade: "light",
+                    type: "vertical",
+                    opacityFrom: .85,
+                    opacityTo: .55,
+                    stops: [0, 100, 100, 100]
+                }
+            },
+            // labels: ["01/01/2003", "02/01/2003", "03/01/2003", "04/01/2003", "05/01/2003", "06/01/2003", "07/01/2003", "08/01/2003", "09/01/2003", "10/01/2003", "11/01/2003"],
+            markers: {size: 0},
+            legend: {offsetY: -10},
+            xaxis: {
+                categories: [" 01", " 02", " 03", " 04", " 05", " 06", " 07", " 08", " 09 ", " 10", " 11", " 12"]
+                // categories: labelsPrice
+            },
+            yaxis: {title: {text: "Points"}},
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+                y: {
+                    // formatter: function (e) {
+                    //     console.log(e)
+                    //     return void 0 !== e ? e.toFixed(0) + "$" : e
+                    // },
+                    formatter: function(value,{ seriesIndex, dataPointIndex, w }) {
+                        // console.log(value)
+                        // console.log(w.config.series[seriesIndex].name)
+                        return value
+                    }
+                }
+            },
+            grid: {borderColor: "#f1f3fa"}
+        };
+        var allMixed = new ApexCharts(document.querySelector("#all-mixed"), allMixedOptions);
+        allMixed.render();
+
+
+        console.log(data)
+        //每年用户注册
+        var distributedColumnOptions = {
+            chart: {
+                height: 380, type: "bar", toolbar: {show: !1}, events: {
+                    click: function (o, e, t) {
+                        console.log(o, e, t)
+                    }
+                }
+            },
+            colors: colors,
+            plotOptions: {bar: {columnWidth: "45%", distributed: !0}},
+            dataLabels: {enabled: !1},
+            series: [{"name": "注册人数", "data": data}],
+            xaxis: {
+                categories: categories,
+                labels: {style: {colors: colors, fontSize: "14px"}}
+            },
+            tooltip: {
+                shared: !0,
+                intersect: !1,
+                y: {
+                    // formatter: function (e) {
+                    //     console.log(e)
+                    //     return void 0 !== e ? e.toFixed(0) + "$" : e
+                    // },
+                    formatter: function(value,{ seriesIndex, dataPointIndex, w }) {
+                        return value;
+                    }
+                }
+            },
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var distributedColumn = new ApexCharts(document.querySelector("#distributed-column"), distributedColumnOptions);
+        distributedColumn.render();
+
+        //根据系统区分用户每年注册
+        var color = [];
+        for (var i = 0;i<[[${systems}]].length;i++){
+            color.push(randomColor());
+        }
+        var stackedColumnOptions = {
+            chart: {height: 380, type: "bar", stacked: !0, toolbar: {show: !1}},
+            plotOptions: {bar: {horizontal: !1, columnWidth: "50%"}},
+            // series: [
+            //     {name: "Product A", data: [44, 55, 41, 67, 22, 43, 21, 49]},
+            //     {name: "Product B",data: [13, 23, 20, 8, 13, 27, 33, 12]},
+            //     {name: "Product C", data: [11, 17, 15, 15, 21, 14, 15, 13]}
+            //     ],
+            series: [[${systemJsonArray}]],
+            xaxis: {categories:categories},
+            colors: color,
+            fill: {opacity: 1},
+            legend: {offsetY: -10},
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var stackedColumn = new ApexCharts(document.querySelector("#stacked-column"), stackedColumnOptions);
+        stackedColumn.render();
+
+        // 系统统计
+        var systemSimplePieColor = [];
+        var systemSimplePieSeries = [];
+        var systemSimplePieLabels = [];
+        var systems = [[${systems}]];
+        for (var i = 0;i<systems.length;i++){
+            systemSimplePieColor.push(randomColor());
+            systemSimplePieLabels.push(systems[i].system);
+            systemSimplePieSeries.push(systems[i].countNum);
+        }
+        var simplePieOptions = {
+            chart: {
+                height: 320,
+                type: "pie",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        customIcons: [{
+                            icon: '<img src="../../assets/img/day.png" width="20">',
+                            index: 0,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("按日统计")
+                                provinces = systemStatisics(1);
+                                var dayColor = [];
+                                var daySeries = [];
+                                var dayLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    dayColor.push(randomColor());
+                                    dayLabels.push(provinces[i].system);
+                                    daySeries.push(provinces[i].countNum);
+                                }
+                                systemSimplePie.updateOptions({
+                                    series: daySeries,
+                                    labels: dayLabels,
+                                    colors: dayColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/week.png" width="20">',
+                            index: 1,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = systemStatisics(2);
+                                var weekColor = [];
+                                var weekSeries = [];
+                                var weekLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    weekColor.push(randomColor());
+                                    weekLabels.push(provinces[i].system);
+                                    weekSeries.push(provinces[i].countNum);
+                                }
+                                systemSimplePie.updateOptions({
+                                    series: weekSeries,
+                                    labels: weekLabels,
+                                    colors: weekColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/month.png" width="20">',
+                            index: 2,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = systemStatisics(3);
+                                var monthColor = [];
+                                var monthSeries = [];
+                                var monthLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    monthColor.push(randomColor());
+                                    monthLabels.push(provinces[i].system);
+                                    monthSeries.push(provinces[i].countNum);
+                                }
+                                systemSimplePie.updateOptions({
+                                    series: monthSeries,
+                                    labels: monthLabels,
+                                    colors: monthColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/year.png" width="20">',
+                            index: 3,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = systemStatisics(4);
+                                var yearColor = [];
+                                var yearSeries = [];
+                                var yearLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    yearColor.push(randomColor());
+                                    yearLabels.push(provinces[i].system);
+                                    yearSeries.push(provinces[i].countNum);
+                                }
+                                systemSimplePie.updateOptions({
+                                    series: yearSeries,
+                                    labels: yearLabels,
+                                    colors: yearColor,
+                                })
+                            }
+                        },{
+                            icon: '<p class="apexChartsDatePicker"><img src="../../assets/img/datePicker.png" width="20"></p>',
+                            index: 4,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log(1)
+                                $('#systemDatePicker').click()
+                            }
+                        }]
+                    }
+                },
+            },
+            series: systemSimplePieSeries,
+            labels: systemSimplePieLabels,
+            colors: systemSimplePieColor,
+            legend: {
+                show: !0,
+                position: "bottom",
+                horizontalAlign: "center",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: 0,
+                offsetY: -10
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 240}, legend: {show: !1}}}]
+        };
+        var systemSimplePie = new ApexCharts(document.querySelector("#system-simple-pie"), simplePieOptions);
+        systemSimplePie.render();
+
+        //地区分布
+        var simplePieColor = [];
+        var simplePieSeries = [];
+        var simplePieLabels = [];
+        var provinces = [[${provinces}]];
+        for (var i = 0;i<provinces.length;i++){
+            simplePieColor.push(randomColor());
+            simplePieLabels.push(provinces[i].province);
+            simplePieSeries.push(provinces[i].countNum);
+        }
+        var simplePieOptions = {
+            chart: {
+                height: 320,
+                type: "pie",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        customIcons: [{
+                            icon: '<img src="../../assets/img/day.png" width="20">',
+                            index: 0,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("按日统计")
+                                provinces = provinceStatisics(1);
+                                var dayColor = [];
+                                var daySeries = [];
+                                var dayLabels = [];
+                                console.log(provinces);
+                                for (var i = 0;i<provinces.length;i++){
+                                    dayColor.push(randomColor());
+                                    dayLabels.push(provinces[i].province);
+                                    daySeries.push(provinces[i].countNum);
+                                }
+                                simplePie.updateOptions({
+                                    series: daySeries,
+                                    labels: dayLabels,
+                                    colors: dayColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/week.png" width="20">',
+                            index: 1,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = provinceStatisics(2);
+                                var weekColor = [];
+                                var weekSeries = [];
+                                var weekLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    weekColor.push(randomColor());
+                                    weekLabels.push(provinces[i].province);
+                                    weekSeries.push(provinces[i].countNum);
+                                }
+                                simplePie.updateOptions({
+                                    series: weekSeries,
+                                    labels: weekLabels,
+                                    colors: weekColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/month.png" width="20">',
+                            index: 2,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = provinceStatisics(3);
+                                var monthColor = [];
+                                var monthSeries = [];
+                                var monthLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    monthColor.push(randomColor());
+                                    monthLabels.push(provinces[i].province);
+                                    monthSeries.push(provinces[i].countNum);
+                                }
+                                simplePie.updateOptions({
+                                    series: monthSeries,
+                                    labels: monthLabels,
+                                    colors: monthColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/year.png" width="20">',
+                            index: 3,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = provinceStatisics(4);
+                                var yearColor = [];
+                                var yearSeries = [];
+                                var yearLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    yearColor.push(randomColor());
+                                    yearLabels.push(provinces[i].province);
+                                    yearSeries.push(provinces[i].countNum);
+                                }
+                                simplePie.updateOptions({
+                                    series: yearSeries,
+                                    labels: yearLabels,
+                                    colors: yearColor,
+                                })
+                            }
+                        },{
+                            icon: '<p class="apexChartsDatePicker"><img src="../../assets/img/datePicker.png" width="20"></p>',
+                            index: 4,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log(1)
+                                $('#datePicker').click()
+                            }
+                        }]
+                    }
+                },
+            },
+            series: simplePieSeries,
+            labels: simplePieLabels,
+            colors: simplePieColor,
+            legend: {
+                show: !0,
+                position: "left",
+                horizontalAlign: "center",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: 0,
+                offsetY: -10
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 240}, legend: {show: !1}}}]
+        };
+        var simplePie = new ApexCharts(document.querySelector("#simple-pie"), simplePieOptions);
+        simplePie.render();
+
+        //根据来源统计用户注册数
+        var gradientDonutColor = [];
+        var gradientDonutSeries = [];
+        var gradientDonutLabels = [];
+        var sources = [[${sources}]];
+        for (var i = 0;i<sources.length;i++){
+            gradientDonutColor.push(randomColor());
+            gradientDonutLabels.push(sources[i].source);
+            gradientDonutSeries.push(sources[i].countNum);
+        }
+        console.log(gradientDonutColor);
+        console.log(gradientDonutSeries);
+        console.log(gradientDonutLabels);
+        var gradientDonutOptions = {
+            chart: {height: 320, type: "donut",
+                toolbar: {
+                    show: true,
+                    tools:{
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        customIcons: [{
+                            icon: '<img src="../../assets/img/day.png" width="20">',
+                            index: 0,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("根据用户来源按日统计")
+                                provinces = sourcesStatisics(1);
+                                var dayColor = [];
+                                var daySeries = [];
+                                var dayLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    dayColor.push(randomColor());
+                                    dayLabels.push(provinces[i].source);
+                                    daySeries.push(provinces[i].countNum);
+                                }
+                                gradientDonut.updateOptions({
+                                    series: daySeries,
+                                    labels: dayLabels,
+                                    colors: dayColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/week.png" width="20">',
+                            index: 1,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = sourcesStatisics(2);
+                                var weekColor = [];
+                                var weekSeries = [];
+                                var weekLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    weekColor.push(randomColor());
+                                    weekLabels.push(provinces[i].source);
+                                    weekSeries.push(provinces[i].countNum);
+                                }
+                                gradientDonut.updateOptions({
+                                    series: weekSeries,
+                                    labels: weekLabels,
+                                    colors: weekColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/month.png" width="20">',
+                            index: 2,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = sourcesStatisics(3);
+                                var monthColor = [];
+                                var monthSeries = [];
+                                var monthLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    monthColor.push(randomColor());
+                                    monthLabels.push(provinces[i].source);
+                                    monthSeries.push(provinces[i].countNum);
+                                }
+                                gradientDonut.updateOptions({
+                                    series: monthSeries,
+                                    labels: monthLabels,
+                                    colors: monthColor,
+                                })
+                            }
+                        },{
+                            icon: '<img src="../../assets/img/year.png" width="20">',
+                            index: 3,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                provinces = sourcesStatisics(4);
+                                var yearColor = [];
+                                var yearSeries = [];
+                                var yearLabels = [];
+                                for (var i = 0;i<provinces.length;i++){
+                                    yearColor.push(randomColor());
+                                    yearLabels.push(provinces[i].source);
+                                    yearSeries.push(provinces[i].countNum);
+                                }
+                                gradientDonut.updateOptions({
+                                    series: yearSeries,
+                                    labels: yearLabels,
+                                    colors: yearColor,
+                                })
+                            }
+                        },{
+                            icon: '<p class="apexChartsDatePicker"><img src="../../assets/img/datePicker.png" width="20"></p>',
+                            index: 4,
+                            title: '',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log(1)
+                                $('#sourcePicker').click()
+                            }
+                        }]
+                    }
+                },},
+            series: gradientDonutSeries,
+            labels: gradientDonutLabels,
+            colors: gradientDonutColor,
+            legend: {
+                show: !0,
+                position: "bottom",
+                horizontalAlign: "center",
+                verticalAlign: "middle",
+                floating: !1,
+                fontSize: "14px",
+                offsetX: 0,
+                offsetY: -10
+            },
+            responsive: [{breakpoint: 600, options: {chart: {height: 240}, legend: {show: !1}}}],
+            fill: {type: "gradient"}
+        };
+        var gradientDonut = new ApexCharts(document.querySelector("#gradient-donut"), gradientDonutOptions);
+        gradientDonut.render();
+
+
+        var sourceColor = [];
+        for (var i = 0;i<[[${sources}]].length;i++){
+            sourceColor.push(randomColor());
+        }
+        var sourceStackedColumnOptions = {
+            chart: {height: 380, type: "bar", stacked: !0, toolbar: {show: !1}},
+            plotOptions: {bar: {horizontal: !1, columnWidth: "50%"}},
+            // series: [
+            //     {name: "Product A", data: [44, 55, 41, 67, 22, 43, 21, 49]},
+            //     {name: "Product B",data: [13, 23, 20, 8, 13, 27, 33, 12]},
+            //     {name: "Product C", data: [11, 17, 15, 15, 21, 14, 15, 13]}
+            //     ],
+            series: [[${sourcesJsonArray}]],
+            xaxis: {categories:categories},
+            colors: sourceColor,
+            fill: {opacity: 1},
+            legend: {offsetY: -10},
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var sourceColumnOptions = new ApexCharts(document.querySelector("#source-stacked-column"), sourceStackedColumnOptions);
+        sourceColumnOptions.render();
+
+        var provinceColor = [];
+        for (var i = 0;i<[[${provinces}]].length;i++){
+            provinceColor.push(randomColor());
+        }
+        var provincesStackedColumnOptions = {
+            chart: {height: 380, type: "bar", stacked: !0, toolbar: {show: !1}},
+            plotOptions: {bar: {horizontal: !1, columnWidth: "50%"}},
+            // series: [
+            //     {name: "Product A", data: [44, 55, 41, 67, 22, 43, 21, 49]},
+            //     {name: "Product B",data: [13, 23, 20, 8, 13, 27, 33, 12]},
+            //     {name: "Product C", data: [11, 17, 15, 15, 21, 14, 15, 13]}
+            //     ],
+            series: [[${provincesJsonArray}]],
+            xaxis: {categories:categories},
+            colors: provinceColor,
+            fill: {opacity: 1},
+            legend: {offsetY: -10},
+            grid: {row: {colors: ["transparent", "transparent"], opacity: .2}, borderColor: "#f1f3fa"}
+        };
+        var provinceStackedcolumn = new ApexCharts(document.querySelector("#province-stacked-column"), provincesStackedColumnOptions);
+        provinceStackedcolumn.render();
+
+        //日期选择配置
+        var locale = {
+            "format": 'YYYY-MM-DD',
+            "separator": " - ",
+            "applyLabel": "确定",
+            "cancelLabel": "取消",
+            "fromLabel": "起始时间",
+            "toLabel": "结束时间'",
+            "customRangeLabel": "自定义",
+            "weekLabel": "W",
+            "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+            "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            "firstDay": 1
+        };
+        //地区分布日期选择激活
+        $('#datePicker').daterangepicker({
+            'locale': locale,
+            "alwaysShowCalendars": true,
+            "startDate": new Date(),
+            "endDate": new Date(),
+            "opens": "right",
+        }, function (start, end, label) {
+            //地区选择时间回调
+            //开始时间 start.format('YYYY-MM-DD')
+            //结束时间 end.format('YYYY-MM-DD')
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+
+            provinces = provinceStatisics(null,start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD'));
+            var dateColor = [];
+            var dateSeries = [];
+            var dateLabels = [];
+            for (var i = 0;i<provinces.length;i++){
+                dateColor.push(randomColor());
+                dateLabels.push(provinces[i].province);
+                dateSeries.push(provinces[i].countNum);
+            }
+            simplePie.updateOptions({
+                series: dateSeries,
+                labels: dateLabels,
+                colors: dateColor,
+            })
+
+        });
+
+
+
+
+        //根据来源统计用户注册数
+        $('#systemDatePicker').daterangepicker({
+            'locale': locale,
+            "alwaysShowCalendars": true,
+            "startDate": new Date(),
+            "endDate": new Date(),
+            "opens": "right",
+        }, function (start, end, label) {
+            //地区选择时间回调
+            //开始时间 start.format('YYYY-MM-DD')
+            //结束时间 end.format('YYYY-MM-DD')
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+
+            provinces = systemStatisics(null,start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD'));
+            var dateColor = [];
+            var dateSeries = [];
+            var dateLabels = [];
+            for (var i = 0;i<provinces.length;i++){
+                dateColor.push(randomColor());
+                dateLabels.push(provinces[i].system);
+                dateSeries.push(provinces[i].countNum);
+            }
+            systemSimplePie.updateOptions({
+                series: dateSeries,
+                labels: dateLabels,
+                colors: dateColor,
+            })
+
+        });
+
+
+        //根据来源统计用户注册数
+        $('#sourcePicker').daterangepicker({
+            'locale': locale,
+            "alwaysShowCalendars": true,
+            "startDate": new Date(),
+            "endDate": new Date(),
+            "opens": "right",
+        }, function (start, end, label) {
+            //地区选择时间回调
+            //开始时间 start.format('YYYY-MM-DD')
+            //结束时间 end.format('YYYY-MM-DD')
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+
+            provinces = sourcesStatisics(null,start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD'));
+            var dateColor = [];
+            var dateSeries = [];
+            var dateLabels = [];
+            for (var i = 0;i<provinces.length;i++){
+                dateColor.push(randomColor());
+                dateLabels.push(provinces[i].source);
+                dateSeries.push(provinces[i].countNum);
+            }
+            gradientDonut.updateOptions({
+                series: dateSeries,
+                labels: dateLabels,
+                colors: dateColor,
+            })
+
+        });
+
+
+
+
+
+        // 按地区 时间分组查询
+        function provinceStatisics(type,startDate,endDate) {
+           var   provinceStatisicsData ;
+            $.ajax({
+                type:"POST",
+                url:[[@{/admin/memberStatistics/provinceStatisics}]],
+                data:{type:type,startDate:startDate,endDate:endDate},
+                dataType:"json",
+                async: false,
+                success:function (data) {
+                    console.log(data.data);
+                    provinceStatisicsData =  data.data;
+                },
+                error:function(data){
+                    console.log(data.responseJSON);
+                }
+            });
+            if(provinceStatisicsData.length == 0){
+                alert("该时间段暂无数据！")
+                return undefined;
+            }else{
+                return provinceStatisicsData;
+            }
+        }
+
+        // 根据来源统计用户注册数
+        function sourcesStatisics(type,startDate,endDate) {
+            var   sourcesStatisicsData ;
+            $.ajax({
+                type:"POST",
+                url:[[@{/admin/memberStatistics/sourcesStatisics}]],
+            data:{type:type,startDate:startDate,endDate:endDate},
+            dataType:"json",
+                async: false,
+                success:function (data) {
+                console.log(data.data);
+                sourcesStatisicsData =  data.data;
+            },
+            error:function(data){
+                console.log(data.responseJSON);
+            }
+        });
+            if(sourcesStatisicsData.length == 0){
+                alert("该时间段暂无数据！")
+                return undefined;
+            }else{
+                return sourcesStatisicsData;
+            }
+        }
+
+
+        // 根据系统自定义统计
+        function systemStatisics(type,startDate,endDate) {
+            var   systemStatisicsData ;
+            $.ajax({
+                type:"POST",
+                url:[[@{/admin/memberStatistics/systemStatisics}]],
+            data:{type:type,startDate:startDate,endDate:endDate},
+            dataType:"json",
+                async: false,
+                success:function (data) {
+                console.log(data.data);
+                systemStatisicsData =  data.data;
+            },
+            error:function(data){
+                console.log(data.responseJSON);
+            }
+        });
+            if(systemStatisicsData.length == 0){
+                alert("该时间段暂无数据！")
+                return undefined;
+            }else{
+                return systemStatisicsData;
+            }
+        }
+
+        /*随机颜色*/
+        function randomColor() {
+            var r = Math.floor(Math.random()*256);
+            var g = Math.floor(Math.random()*256);
+            var b = Math.floor(Math.random()*256);
+            if(r < 16){
+                r = "0"+r.toString(16);
+            }else{
+                r = r.toString(16);
+            }
+            if(g < 16){
+                g = "0"+g.toString(16);
+            }else{
+                g = g.toString(16);
+            }
+            if(b < 16){
+                b = "0"+b.toString(16);
+            }else{
+                b = b.toString(16);
+            }
+            return "#"+r+g+b;
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

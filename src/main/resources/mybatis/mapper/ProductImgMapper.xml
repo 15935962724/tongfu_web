@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongfu.dao.ProductImgDao" >
+  <resultMap id="BaseResultMap" type="com.tongfu.entity.ProductImg" >
+    <result column="product" property="product" jdbcType="BIGINT" />
+    <result column="large" property="large" jdbcType="VARCHAR" />
+    <result column="medium" property="medium" jdbcType="VARCHAR" />
+    <result column="orders" property="orders" jdbcType="INTEGER" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="thumbnail" property="thumbnail" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tongfu.entity.ProductImg" >
+    insert into tf_product_img (product, large, medium, 
+      orders, source, thumbnail, 
+      title)
+    values (#{product,jdbcType=BIGINT}, #{large,jdbcType=VARCHAR}, #{medium,jdbcType=VARCHAR}, 
+      #{orders,jdbcType=INTEGER}, #{source,jdbcType=VARCHAR}, #{thumbnail,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR})
+  </insert>
+
+
+  <insert id="insertMap" parameterType="java.util.Map">
+    insert into tf_product_img
+    (product, large, medium,
+    orders, source, thumbnail,
+    title)
+    values
+    <foreach collection="productImages" item="item" index="index" separator=",">
+      (#{product,jdbcType=BIGINT}, #{item.large,jdbcType=VARCHAR}, #{item.medium,jdbcType=VARCHAR},
+      #{item.orders,jdbcType=INTEGER}, #{item.source,jdbcType=VARCHAR}, #{item.thumbnail,jdbcType=VARCHAR},
+      #{item.title,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.tongfu.entity.ProductImg" >
+    insert into tf_product_img
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="product != null" >
+        product,
+      </if>
+      <if test="large != null" >
+        large,
+      </if>
+      <if test="medium != null" >
+        medium,
+      </if>
+      <if test="orders != null" >
+        orders,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="thumbnail != null" >
+        thumbnail,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="product != null" >
+        #{product,jdbcType=BIGINT},
+      </if>
+      <if test="large != null" >
+        #{large,jdbcType=VARCHAR},
+      </if>
+      <if test="medium != null" >
+        #{medium,jdbcType=VARCHAR},
+      </if>
+      <if test="orders != null" >
+        #{orders,jdbcType=INTEGER},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbnail != null" >
+        #{thumbnail,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="selectByProductAndOrders" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select
+    product, large, medium,
+    orders, source, thumbnail,
+    title
+    from tf_product_img
+    where product = #{productId,jdbcType=BIGINT} and orders = #{orders,jdbcType=INTEGER}
+  </select>
+
+  <update id="updateByProductId" parameterType="java.util.HashMap" >
+    update tf_product_img
+    <set>
+      <if test="large != null" >
+        large = #{large,jdbcType=VARCHAR},
+      </if>
+      <if test="medium != null" >
+        medium = #{medium,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbnail != null" >
+        thumbnail = #{thumbnail,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where  product = #{productId,jdbcType=BIGINT} and orders = #{orders,jdbcType=INTEGER}
+  </update>
+
+  <select id="getProductImgs" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select * from tf_product_img
+    where product = #{productId,jdbcType=BIGINT}
+  </select>
+
+
+</mapper>

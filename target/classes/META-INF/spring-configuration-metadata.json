@@ -1,0 +1,58 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.tongfu.entity.Person",
+      "name": "person",
+      "type": "com.tongfu.entity.Person"
+    },
+    {
+      "sourceType": "com.tongfu.config.DruidConfig",
+      "name": "spring.datasource",
+      "sourceMethod": "druid()",
+      "type": "javax.sql.DataSource"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.tongfu.entity.Person",
+      "name": "person.age",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.tongfu.entity.Person",
+      "name": "person.birth",
+      "type": "java.util.Date"
+    },
+    {
+      "sourceType": "com.tongfu.entity.Person",
+      "name": "person.boss",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.tongfu.entity.Person",
+      "name": "person.dog",
+      "type": "com.tongfu.entity.Dog"
+    },
+    {
+      "sourceType": "com.tongfu.entity.Person",
+      "name": "person.last-name",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.tongfu.entity.Person",
+      "name": "person.lists",
+      "type": "java.util.List<java.lang.Object>"
+    },
+    {
+      "sourceType": "com.tongfu.entity.Person",
+      "name": "person.maps",
+      "type": "java.util.Map<java.lang.String,java.lang.Object>"
+    },
+    {
+      "name": "server.prot",
+      "description": "A description for 'server.prot'",
+      "type": "java.lang.String"
+    }
+  ]
+}

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--    // 强制Chromium内核，作用于360浏览器、QQ浏览器等国产双核浏览器：-->
+    <meta name="renderer" content="webkit"/>
+<!--    // 强制Chromium内核，作用于其他双核浏览器：-->
+    <meta name="force-rendering" content="webkit"/>
+<!--    // 如果有安装 Google Chrome Frame 插件则强制为Chromium内核，否则强制本机支持的最高版本IE内核，作用于IE浏览器：-->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+
+
+<title>公司简介-[[${company.name}]]</title>
+</head>
+
+<link rel="stylesheet" th:href="@{/assets/css/productView/demo.css}" type="text/css" />
+<link rel="stylesheet" th:href="@{/assets/css/productView/home.css}"  type="text/css" />
+<link rel="stylesheet" th:href="@{/assets/css/productView/2j.css}" type="text/css" />
+<link rel="stylesheet" th:href="@{/assets/css/productView/iconfont.css}" type="text/css" />
+<script th:src="@{/assets/js/productView/jquery.min.js}"></script>
+<link rel="stylesheet" th:href="@{/assets/css/productView/iconfont.js}" type="text/css" />
+<style>
+    .next .iconfont, .prev .iconfont {
+        font-size: 50px;
+    }
+
+    .gsjs {
+        width: 1200px;
+        background: #ffff;
+        margin: auto;
+        -moz-box-shadow: 0px 0px 12px #e1eefc;
+        -webkit-box-shadow: 0px 0px 12px #e1eefc;
+        box-shadow: 0px 0px 12px #e1eefc;
+        padding: 40px 200px;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    .gsjs .text {
+        font-size: 14px;
+        color: #333;
+        line-height: 160%;
+    }
+
+    .gsjs .text p {
+        padding-top: 10px;
+        text-align: justify;
+    }
+
+    .gsjs img {
+        padding: 10px 0px;
+        max-width: 800px;
+    }
+
+</style>
+<body>
+<div class="banner">
+    <img class="banner_logo" onerror="this.src='../../assets/img/companyLogo.jpg'" th:src="@{${company.logo}}"/>
+    <img onerror="this.src='../../assets/img/companyBackgroundImg.jpg'" th:src="@{${company.backgroundimg}}"/>
+</div>
+<div>
+    <div class="company">
+        <div class="title">
+            <li class="Selected" onclick="editTab(1,this)">
+                <a>公司简介</a>
+            </li>
+            <li onclick="editTab(2,this)">
+                <a>产品目录</a>
+            </li>
+            <li onclick="editTab(3,this)">
+                <a>新闻动态</a>
+            </li>
+            <li onclick="editTab(4,this)">
+                <a>学术活动</a>
+            </li>
+            <li onclick="editTab(5,this)">
+                <a>媒体报道</a>
+            </li>
+            <li onclick="editTab(6,this)">
+                <a>会议展览</a>
+            </li>
+
+        </div>
+    </div>
+
+</div>
+
+<div style="height:36px;width:100%;display:block;background: #f5faff;"></div>
+
+<!--公司简介-->
+<div class="content content1" style="padding-bottom:98px;">
+    <div class="gsjs">
+            <div class="text" th:utext="${company.introduction}">
+
+            </div>
+    </div>
+</div>
+<!--产品目录-->
+<div class="content content2" style="padding-bottom:50px;">
+        <div class="cplb_list">
+            <div class="cp_bt" style="background-image: initial;">
+            </div>
+            <ul>
+                <li th:each="product:${products}">
+                    <span id="photo"><a th:href="@{/admin/product/view(id=${product.id})}" target="_blank"><img onerror="this.src='../../assets/img/productLogo.jpg'" th:src="@{${product.image}}"/></a></span>
+                    <span id="cpbt"><a th:href="@{/admin/product/view(id=${product.id})}" th:text="${product.name}">Intelerad Image FusionTM</a></span>
+                    <div class="daoyu">
+                        <a th:href="@{/admin/product/view(id=${product.id})}" target="_blank" th:text="${#strings.abbreviate(product.introduction,30)}"></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+</div>
+
+<!--新闻动态-->
+<div class="content content3">
+
+        <div class="gsnew">
+            <ul>
+                <li th:each="news:${journalisms}">
+                    <a th:href="@{/admin/journalism/view(id=${news.id})}"><span class="tu" th:style="'background-image: url('+@{${news.logo}}+')'"></span></a>
+                    <div class="right">
+							<span id="bt">
+                                <a th:href="@{/admin/journalism/view(id=${news.id})}" th:text="${news.title}"></a>
+							</span>
+                        <span id="shij">日期：[[${#dates.format(news.modifyDate,'yyyy/MM/dd')}]]</span>
+                        <span id="shij">来自：[[${news.datasource}]]</span>
+                        <a class="btn" th:href="@{/journalism/view(companyId=${company.id},id=${news.id})}">了解详情</a>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.daoyu').hover(function() {
+                $("#sbhs").css('display', 'block');
+            }, function() {
+                $("#sbhs").css('display', 'none');
+            });
+            $("#sbhs").hover(function() {
+                $(this).css('display', 'block');;
+            }, function() {
+                $(this).css('display', 'none');
+            });
+        })
+    </script>
+</div>
+<!--学术活动-->
+<div class="content content4">
+    <!--    <div class="cp_bt">培训通知</div>-->
+    <div class="huod">
+        <ul>
+            <li th:each="learning:${learnings}">
+
+                <a th:href="@{/learning/view(id=${learning.id})}">
+                    <div class="huodImg" th:style="'background-image: url('+@{${learning.logo}}+')'"></div>
+                </a>
+                <div class="huodInfo">
+                    <a class="huodTitle" th:title="${learning.title}" th:href="@{/learning/view(id=${learning.id})}">[[${learning.title}]]</a>
+                    <div class="huodMsg">
+                        <p><i class="iconfont">&#xe70d;</i>[[${#dates.format(learning.holdingTime,'yyyy年MM月dd日')}]]</p>
+                        <p><i class="iconfont">&#xe60d;</i><a target="_blank" th:href="@{/learning/view(id=${learning.id})}">更多信息</a></p>
+                    </div>
+                    <div class="huodMsg">
+                        <p><i class="iconfont">&#xe832;</i>[[${learning.address}]]</p>
+                        <p><i class="iconfont">&#xe619;</i><a href="javaScript:void(0)" th:onclick="'opencode(\''+${learning.signupEntrance}+'\')'">报名入口</a></p>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+</div>
+<!--媒体报道-->
+<div class="content content5" style="padding-bottom:50px;">
+        <div class="newlist">
+            <ul>
+                <li th:each="media:${medias}">
+                    <a th:href="@{/admin/media/view(id=${media.id})}"><div class="huodImg" th:style="'background-image: url('+@{${media.logo}}+')'"></div></a>
+                    <div class="huodInfo">
+                        <a class="huodTitle" th:title="${media.title}" th:href="@{/media/view(companyId=${company.id},id=${media.id})}">[[${media.title}]]</a>
+                        <div class="huodMsg">
+                            时间：[[${#dates.format(media.modifyDate,'yyyy/MM/dd')}]]
+                        </div>
+                        <div class="huodMsg">
+                            来自：[[${media.datasource}]]
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+</div>
+<!--会议展览-->
+<div class="content content6">
+    <!--    <div class="cp_bt">培训通知</div>-->
+    <div class="huod">
+        <ul>
+            <li th:each="exhibition:${exhibitions}">
+                <a th:href="@{/exhibition/view(companyId=${company.id},id=${exhibition.id})}">
+                    <div class="huodImg" th:style="'background-image: url('+@{${exhibition.logo}}+')'"></div>
+                </a>
+                <div class="huodInfo">
+                    <a class="huodTitle" th:href="@{/exhibition/view(companyId=${company.id},id=${exhibition.id})}" th:title="${exhibition.title}">[[${exhibition.title}]]</a>
+                    <div class="huodMsg">
+                        <p><i class="iconfont">&#xe70d;</i>[[${#dates.format(exhibition.holdingTime,'yyyy年MM月dd日')}]]</p>
+                        <p><i class="iconfont">&#xe60d;</i><a target="_blank" th:href="@{/exhibition/view(companyId=${company.id},id=${exhibition.id})}">更多信息</a></p>
+                    </div>
+                    <div class="huodMsg">
+                        <p><i class="iconfont">&#xe832;</i>[[${exhibition.address}]]</p>
+                        <p><i class="iconfont">&#xe619;</i><a onclick="openTips('B51-22')" id="zhanwei">展位信息</a></p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+<script>
+    $(".content").hide();
+    $('.content1').show();
+    function editTab(type,_this) {
+        $(_this).siblings("li").removeClass("Selected");
+        $(_this).addClass("Selected");
+        if(type == 2){
+            $(".chilrenNav_list").show()
+        }else{
+            $(".chilrenNav_list").hide()
+        }
+        $('.content').hide();
+        $('.content'+type).show();
+    }
+</script>

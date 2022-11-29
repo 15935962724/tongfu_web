@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" >
+    <head>
+        <meta charset="utf-8" />
+        <title>主页</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+        <meta content="Coderthemes" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico"  th:href="@{/assets/images/favicon.ico}" >
+
+        <!-- third party css -->
+        <link href="assets/css/vendor/jquery-jvectormap-1.2.2.css" th:href="@{/assets/css/vendor/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+        <!-- third party css end -->
+        <!-- App css -->
+        <link href="assets/css/icons.min.css" th:href="@{/assets/css/icons.min.css}"  rel="stylesheet" type="text/css" />
+        <link href="assets/css/app.min.css" th:href="@{/assets/css/app.min.css}"  rel="stylesheet" type="text/css" />
+        <link href="assets/css/newCss.css" th:href="@{/assets/css/newCss.css}"  rel="stylesheet" type="text/css" />
+
+
+    </head>
+
+    <body>
+        <div th:include="~{web/incloud/top::top}"></div>
+
+        <!-- end Topbar -->
+
+        <div class="container-fluid">
+
+            <!-- Begin page -->
+            <div class="wrapper">
+
+                <!-- ========== Left Sidebar Start ========== -->
+                <!--<div th:replace="~{incloud/top::topbar}"></div>-->
+                <div th:replace="~{web/incloud/left::left}"></div>
+
+                    <!--<div class="content-page" th:include="~{web/incloud/shop_main::shop_main}"></div>-->
+                        <div class="content-page">
+
+                            <div class="content">
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 class="newIndex_Title">待处理</h4>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <div class="card newCard" style="background: linear-gradient(45deg, #289ffe 21%, #bfdff9 100%);">
+                                            <div class="newCard_Title">
+                                                <div class="">
+                                                    申请演示
+                                                </div>
+                                                <a th:href="@{/web/demonstrationStatistics/list(type=0)}" class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="newCard_Content">
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        待演示
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        [[${applyDemonstration.stayDemonstration}]]<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                                <span></span>
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        已演示
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        [[${applyDemonstration.alreadyDemonstration}]]<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>[[${applyDemonstration.increase}]]%
+<!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="card newCard" style="background: linear-gradient(45deg, #e71f19 21%, #fbc8c7 100%);">
+                                            <div class="newCard_Title">
+                                                <div class="">
+                                                    申请试用
+                                                </div>
+                                                <a th:href="@{/web/demonstrationStatistics/list(type=1)}" class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="newCard_Content">
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        待处理
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        [[${applyOnTrial.stayDemonstration}]]<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                                <span></span>
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        已处理
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        [[${applyOnTrial.alreadyDemonstration}]]<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>[[${applyOnTrial.increase}]]%
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="card newCard" style="background: linear-gradient(45deg, #000 21%, #a1a0a0 100%);">
+                                            <div class="newCard_Title">
+                                                <div class="">
+                                                    产品咨询
+                                                </div>
+                                                <a  th:href="@{/web/message/list}" class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="newCard_Content">
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        待回复
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        [[${advice.toBeReplied}]]<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                                <span></span>
+                                                <div class="newCard_Content_View">
+                                                    <div class="newCard_Content_View_Title">
+                                                        已回复
+                                                    </div>
+                                                    <div class="newCard_Content_View_Num">
+                                                        [[${advice.replied}]]<i class="mdi mdi-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>[[${advice.increase}]]%
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 class="newIndex_Title">数据分析</h4>
+                                    </div>
+                                </div>
+
+
+
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    全国销售地区统计
+                                                </div>
+                                                <a th:href="@{/web/orderStatistics/statistics}" class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;height: 300px">
+                                                <div id="map-chart" class="col-lg-12 apex-charts" style="height: 300px"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    全国城市排名
+                                                </div>
+                                                <a  th:href="@{/web/orderStatistics/statistics}" class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="pieRanking" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    品牌关注度
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="attentionLineChart" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+<!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%-->
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品访问数量
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="visitsProduct" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+<!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%-->
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品订单数量
+                                                </div>
+                                                <a th:href="@{/web/order/list}" class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="productOrder" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+<!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%-->
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品销售额
+                                                </div>
+                                                <a th:href="@{/web/order/list}" class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="productSale" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+<!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%-->
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品订单转化率
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="orderConversionRate" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+<!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i>30%-->
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="col-lg-12 card newCard" style="color: #333">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    医院使用排名
+                                                </div>
+                                                <a class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <div id="line-chart6" class="col-lg-12 apex-charts"></div>
+                                            </div>
+                                            <div class="newCard_Content_Bottom">
+
+                                                <!--                                                环比上日数据对比<i class="mdi mdi-arrow-up-bold"></i><i class="mdi mdi-arrow-down-bold"></i>30%-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品销量前三名
+                                                </div>
+                                                <a th:href="@{/web/orderSalesStatistics/statistics}" class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <table class="table table-striped dt-responsive nowrap" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>销售排名</th>
+                                                            <th>产品名称</th>
+                                                            <th>销量</th>
+                                                            <th>销售额</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr th:if="${productStart.index<3}" th:each="productQuantity,productStart:${productQuantityOrderByDesc}" >
+                                                            <th>[[${productStart.index+1}]]</th>
+                                                            <th>[[${productQuantity.name}]]</th>
+                                                            <th>[[${productQuantity.sumQuantity}]]</th>
+                                                            <th>&yen;[[${productQuantity.sumPrice}]]</th>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-12 card newCard" style="color: #333;">
+                                            <div class="col-lg-12 newCard_Title">
+                                                <div class="">
+                                                    产品销量后三名
+                                                </div>
+                                                <a th:href="@{/web/orderSalesStatistics/statistics}" class="">
+                                                    查看更多 <i class="mdi mdi-arrow-right-box"></i>
+                                                </a>
+                                            </div>
+
+                                            <div class="col-lg-12 newCard_Content" style="margin-bottom: 0;">
+                                                <table class="table table-striped dt-responsive nowrap" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>销售排名</th>
+                                                            <th>产品名称</th>
+                                                            <th>销量</th>
+                                                            <th>销售额</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr th:if="${i>=productQuantityOrderByDesc.size()-3}" th:each="i : ${#numbers.sequence(productQuantityOrderByDesc.size() - 1, 0, -1)}" >
+                                                            <th>[[${i+1}]]</th>
+                                                            <th>[[${productQuantityOrderByDesc[i].name}]]</th>
+                                                            <th>[[${productQuantityOrderByDesc[i].sumQuantity}]]</th>
+                                                            <th>&yen;[[${productQuantityOrderByDesc[i].sumPrice}]]</th>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                                <div class="row">
+                                    <div class="col-xl-12">
+
+                                        <div class="row">
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="product">
+                                                                <a th:href="@{/web/product/list}" ><i class="mdi mdi-baby-buggy widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Customers">产品</h5>
+                                                        <p class="mb-0 text-muted">产品数量[[${productCount}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${statusProductCount}]] </p>
+                                                        <p class="mb-0 text-muted">下架产品[[${marketableProductCount}]]</p>
+                                                        <p class="mb-0 text-muted">上架产品[[${upperShelfProductCount}]] </p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="ad">
+                                                                <a th:href="@{/web/ad/list}" ><i class="mdi mdi-book-open-page-variant widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Customers">广告</h5>
+                                                        <p class="mb-0 text-muted">广告数量[[${adCouont}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${toExamineAdCouont}]] </p>
+                                                        <p class="mb-0 text-muted">在展示[[${toShowAdCouont}]]</p>
+                                                        <p class="mb-0 text-muted">已过期[[${toOverdueadCouont}]] </p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="journalism">
+                                                                <a th:href="@{/web/journalism/list}"><i class="mdi mdi-bank widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Orders">新闻</h5>
+                                                        <p class="mb-0 text-muted">新闻数量[[${journalismCount}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${toExamineJournalismCouont}]] </p>
+                                                        <p class="mb-0 text-muted">在展示[[${toShowJournalismCouont}]]</p>
+                                                        <p class="mb-0 text-muted">点击量[[${hitsJournalismCouont}]]</p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                        </div> <!-- end row -->
+                                    </div> <!-- end col -->
+                                    <!-- end col -->
+                                </div>
+                                <!-- end row -->
+                                <!-- end row -->
+
+                                <div class="row">
+                                    <div class="col-xl-12">
+
+                                        <div class="row">
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="learning">
+                                                                <a th:href="@{/web/learning/list}" ><i class="mdi mdi-car-parking-lights widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Customers">学术活动</h5>
+                                                        <p class="mb-0 text-muted">学术活动数量[[${learngingMap.count_learning}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${learngingMap.stay_status}]] </p>
+                                                        <p class="mb-0 text-muted">在展示[[${learngingMap.already_status}]] </p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="media">
+                                                                <a th:href="@{/web/media/list}" ><i class="mdi mdi-contactless-payment widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Customers">媒体报道</h5>
+                                                        <p class="mb-0 text-muted">媒体报道数量[[${mediaMap.count_media}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${mediaMap.stay_status}]] </p>
+                                                        <p class="mb-0 text-muted">在展示[[${mediaMap.already_status}]]</p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                            <div class="col-lg-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <div class="float-right">
+                                                            <shiro:hasPermission name="exhibition">
+                                                                <a th:href="@{/web/exhibition/list}"><i class="mdi mdi-barley widget-icon"></i></a>
+                                                            </shiro:hasPermission>
+                                                        </div>
+                                                        <h5 class="text-muted font-weight-normal mt-0" title="Number of Orders">展会展览</h5>
+                                                        <p class="mb-0 text-muted">展会展览总数[[${exhibitionMap.count_exhibition}]] </p>
+                                                        <p class="mb-0 text-muted">待审核[[${exhibitionMap.stay_status}]] </p>
+                                                        <p class="mb-0 text-muted">在展示[[${exhibitionMap.already_status}]]</p>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div> <!-- end col-->
+
+                                        </div> <!-- end row -->
+                                    </div> <!-- end col -->
+                                    <!-- end col -->
+                                </div>
+
+                            </div> <!-- content -->
+                            <!-- Footer Start -->
+                            <div th:replace="~{web/incloud/footer::footer}"></div>
+
+                        </div>
+
+                    <!-- content-page -->
+                <!-- Left Sidebar End -->
+            </div> <!-- end wrapper-->
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- END Container -->
+
+        <div class="rightbar-overlay"></div>
+        <!-- /Right-bar -->
+        <!-- App js -->
+        <script th:src="@{/assets/js/app.min.js}"></script>
+        <!-- third party js -->
+        <script th:src="@{/assets/js/vendor/Chart.bundle.min.js}"></script>
+        <script th:src="@{/assets/js/vendor/jquery-jvectormap-1.2.2.min.js}"></script>
+        <script th:src="@{/assets/js/vendor/jquery-jvectormap-cn-mill.js}"></script>
+        <!-- third party js ends -->
+        <!-- demo app -->
+        <script  th:src="@{/assets/js/pages/demo.dashboard.js}"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.6.12/apexcharts.min.js"></script>
+        <!-- Todo js -->
+        <script th:src="@{/assets/js/ui/component.todo.js}"></script>
+
+        <script th:inline="javascript" type="text/javascript" >
+            $(function(){
+
+                //品牌关注度
+                var thisWeekCompanyFollows = [[${thisWeekCompanyFollows}]];
+                var lastWeekCompanyFollows = [[${lastWeekCompanyFollows}]];
+                var thisWeekCompanyFollowsArray = [];
+                var lastWeekCompanyFollowsArray = [];
+                for(var i = 0; i < thisWeekCompanyFollows.length; i++){
+                    thisWeekCompanyFollowsArray.push(thisWeekCompanyFollows[i].countCompany)
+                }
+                for(var i = 0; i < lastWeekCompanyFollows.length; i++){
+                    lastWeekCompanyFollowsArray.push(lastWeekCompanyFollows[i].countCompany)
+                }
+                var attentionLineChartOptions = {
+                    chart: {
+                        height: 200,
+                        type: "line",
+                        zoom: {
+                            enabled: !1
+                        },
+                        toolbar: {
+                            show: !1
+                        },
+                    },
+                    dataLabels: {
+                        enabled: !1
+                    },
+                    colors: ["#289ffe","#e71f19"],
+                    stroke: {
+                        width: [2,2],
+                        curve: "straight"
+                    },
+                    series: [{
+                        name: "本周",
+                        data: thisWeekCompanyFollowsArray
+                    }, {
+                        name: "上周",
+                        data: lastWeekCompanyFollowsArray
+                    }],
+                    grid: {
+                        row: {
+                            colors: ["transparent", "transparent"],
+                            opacity: .2
+                        },
+                        borderColor: "#f1f3fa"
+                    },
+                    yaxis: {
+                        show: !1
+                    },
+                    xaxis: {
+                        categories: ["1", "2", "3", "4", "5", "6", "7"]
+                    },
+                    tooltip: {
+                        custom: function(e) {
+                            return '<div class="arrow_box">' +
+                                '<span>本周：' + e.series[0][e.dataPointIndex] + '</span><br/>' +
+                                '<span>上周：' + e.series[1][e.dataPointIndex] + '</span>' +
+                                '</div>'
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                toolbar: {
+                                    show: !1
+                                }
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#attentionLineChart"), attentionLineChartOptions).render();
+
+                //产品访问数量
+                var thisWeek =  [[${thisWeek}]];
+                var lastWeek = [[${lastWeek}]];
+                var thisWeekArray = [];
+                var lastWeekArray = [];
+                for(var i = 0; i < thisWeek.length; i++){
+                    thisWeekArray.push(thisWeek[i].countProduct)
+                }
+                for(var i = 0; i < lastWeek.length; i++){
+                    lastWeekArray.push(lastWeek[i].countProduct)
+                }
+                var visitsProductOptions = {
+                    chart: {
+                        height: 200,
+                        type: "bar",
+                        zoom: {
+                            enabled: !1
+                        },
+                        toolbar: {
+                            show: !1
+                        },
+                    },
+                    dataLabels: {
+                        enabled: !1
+                    },
+                    labels: ['本周', '上周'],
+                    colors: ["#289ffe","#e71f19"],
+                    stroke: {
+                        width: [2,2],
+                        curve: "straight"
+                    },
+                    series: [{
+                        name: "本周",
+                        data: thisWeekArray
+                    }, {
+                        name: "上周",
+                        data: lastWeekArray
+                    }],
+                    grid: {
+                        row: {
+                            colors: ["transparent", "transparent"],
+                            opacity: .2
+                        },
+                        borderColor: "#f1f3fa"
+                    },
+                    yaxis: {
+                        show: !1
+                    },
+                    xaxis: {
+                        categories: ["1", "2", "3", "4", "5", "6", "7"]
+                    },
+                    tooltip: {
+                        custom: function(e) {
+                            return '<div class="arrow_box">' +
+                                '<span>本周：' + e.series[0][e.dataPointIndex] + '</span><br/>' +
+                                '<span>上周：' + e.series[1][e.dataPointIndex] + '</span>' +
+                                '</div>'
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                toolbar: {
+                                    show: !1
+                                }
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#visitsProduct"), visitsProductOptions).render();
+
+                //订单数量+销售额
+                var thisWeekOrder = [[${thisWeekOrder}]];
+                var lastWeekOrder = [[${lastWeekOrder}]];
+                var thisWeekOrderArray = [];
+                var lastWeekOrderArray = [];
+                var thisWeeCountkArray = [];
+                var lastWeekCountArray = [];
+                for(var i = 0; i < thisWeekOrder.length; i++){
+                    thisWeekOrderArray.push(thisWeekOrder[i].countOrder);
+                    thisWeeCountkArray.push(thisWeekOrder[i].sumAmount);
+                }
+                for(var i = 0; i < lastWeekOrder.length; i++){
+                    lastWeekOrderArray.push(lastWeekOrder[i].countOrder);
+                    lastWeekCountArray.push(lastWeekOrder[i].sumAmount);
+                }
+                //订单数量
+                var productOrderOptions = {
+                    chart: {
+                        height: 200,
+                        type: "line",
+                        zoom: {
+                            enabled: !1
+                        },
+                        toolbar: {
+                            show: !1
+                        },
+                    },
+                    dataLabels: {
+                        enabled: !1
+                    },
+                    colors: ["#289ffe","#e71f19"],
+                    stroke: {
+                        width: [2,2],
+                        curve: "straight"
+                    },
+                    series: [{
+                        name: "本周",
+                        data: thisWeekOrderArray
+                    }, {
+                        name: "上周",
+                        data: lastWeekOrderArray
+                    }],
+                    grid: {
+                        row: {
+                            colors: ["transparent", "transparent"],
+                            opacity: .2
+                        },
+                        borderColor: "#f1f3fa"
+                    },
+                    yaxis: {
+                        show: !1
+                    },
+                    xaxis: {
+                        categories: ["1", "2", "3", "4", "5", "6", "7"]
+                    },
+                    tooltip: {
+                        custom: function(e) {
+                            return '<div class="arrow_box">' +
+                                '<span>本周：' + e.series[0][e.dataPointIndex] + '</span><br/>' +
+                                '<span>上周：' + e.series[1][e.dataPointIndex] + '</span>' +
+                                '</div>'
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                toolbar: {
+                                    show: !1
+                                }
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#productOrder"), productOrderOptions).render();
+                //订单销售额
+                var productSaleOptions = {
+                    chart: {
+                        height: 200,
+                        type: "bar",
+                        zoom: {
+                            enabled: !1
+                        },
+                        toolbar: {
+                            show: !1
+                        },
+                    },
+                    dataLabels: {
+                        enabled: !1
+                    },
+                    labels: ['本周', '上周'],
+                    colors: ["#289ffe","#e71f19"],
+                    stroke: {
+                        width: [2,2],
+                        curve: "straight"
+                    },
+                    series: [{
+                        name: "本周",
+                        data: thisWeeCountkArray
+                    }, {
+                        name: "上周",
+                        data: lastWeekCountArray
+                    }],
+                    grid: {
+                        row: {
+                            colors: ["transparent", "transparent"],
+                            opacity: .2
+                        },
+                        borderColor: "#f1f3fa"
+                    },
+                    yaxis: {
+                        show: !1
+                    },
+                    xaxis: {
+                        categories: ["1", "2", "3", "4", "5", "6", "7"]
+                    },
+                    tooltip: {
+                        custom: function(e) {
+                            return '<div class="arrow_box">' +
+                                '<span>本周：' + e.series[0][e.dataPointIndex] + '</span><br/>' +
+                                '<span>上周：' + e.series[1][e.dataPointIndex] + '</span>' +
+                                '</div>'
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                toolbar: {
+                                    show: !1
+                                }
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#productSale"), productSaleOptions).render();
+
+
+                //产品订单转化率
+                var thisWeekConversionRate = [[${thisWeekConversionRate}]];
+                var lastWeekConversionRate = [[${lastWeekConversionRate}]];
+                var thisWeekConversionRateArray = [];
+                var lastWeekConversionRateArray = [];
+                for(var i = 0; i < thisWeekConversionRate.length; i++){
+                    thisWeekConversionRateArray.push(thisWeekConversionRate[i].conversionRate)
+                }
+                for(var i = 0; i < lastWeekConversionRate.length; i++){
+                    lastWeekConversionRateArray.push(lastWeekConversionRate[i].conversionRate)
+                }
+                var orderConversionRateOptions = {
+                    chart: {
+                        height: 200,
+                        type: "line",
+                        zoom: {
+                            enabled: !1
+                        },
+                        toolbar: {
+                            show: !1
+                        },
+                    },
+                    dataLabels: {
+                        enabled: !1
+                    },
+                    colors: ["#289ffe","#e71f19"],
+                    stroke: {
+                        width: [2,2],
+                        curve: "straight"
+                    },
+                    series: [{
+                        name: "本周",
+                        data: thisWeekConversionRateArray
+                    }, {
+                        name: "上周",
+                        data: lastWeekConversionRateArray
+                    }],
+                    grid: {
+                        row: {
+                            colors: ["transparent", "transparent"],
+                            opacity: .2
+                        },
+                        borderColor: "#f1f3fa"
+                    },
+                    yaxis: {
+                        show: !1
+                    },
+                    xaxis: {
+                        categories: ["1", "2", "3", "4", "5", "6", "7"]
+                    },
+                    tooltip: {
+                        custom: function(e) {
+                            return '<div class="arrow_box">' +
+                                '<span>本周：' + e.series[0][e.dataPointIndex] + '</span><br/>' +
+                                '<span>上周：' + e.series[1][e.dataPointIndex] + '</span>' +
+                                '</div>'
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                toolbar: {
+                                    show: !1
+                                }
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#orderConversionRate"), orderConversionRateOptions).render()
+
+                //医院使用排名
+                var hospitalOrderBy = [[${hospitalOrderBy}]];
+                var hospitalOrderBySeries = [];
+                var hospitalOrderByLabels = [];
+                for(var i = 0; i < 3; i++){
+                    hospitalOrderBySeries.push(hospitalOrderBy[i].countHospital)
+                    hospitalOrderByLabels.push(hospitalOrderBy[i].hospital)
+                }
+                var pieCharOptions = {
+                    chart: {
+                        height: 200,
+                        type: "donut"
+                    },
+                    series: hospitalOrderBySeries,
+                    legend: {
+                        show: !0,
+                        position: "bottom",
+                        horizontalAlign: "center",
+                        verticalAlign: "middle",
+                        floating: !1,
+                        fontSize: "14px",
+                        offsetX: 0,
+                        offsetY: -10
+                    },
+                    labels: hospitalOrderByLabels,
+                    colors: ["#289ffe","#e71f19","#000"],
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                height: 240
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#line-chart6"), pieCharOptions).render();
+
+
+
+
+                //全国城市排名
+                var orderSourceByCity = [[${orderSource}]];
+                var pieRankingLabels = [];
+                var pieRankingSeries = [];
+                for(var i = 0; i < orderSourceByCity.length; i++){
+                    pieRankingLabels.push(orderSourceByCity[i].city);
+                    pieRankingSeries.push(orderSourceByCity[i].countOrder);
+                }
+                var pieRankingOptions = {
+                    chart: {
+                        height: 300,
+                        type: "donut"
+                    },
+                    series: pieRankingSeries,
+                    legend: {
+                        show: !0,
+                        position: "bottom",
+                        horizontalAlign: "center",
+                        verticalAlign: "middle",
+                        floating: !1,
+                        fontSize: "14px",
+                        offsetX: 0,
+                        offsetY: -10
+                    },
+                    tooltip: {
+                        custom: function(e) {
+                            return '<div class="arrow_box">' +
+                                '<span>' + pieRankingLabels[e.seriesIndex] + '：'+ pieRankingSeries[e.seriesIndex] +'单</span>' +
+                                '</div>'
+                        }
+                    },
+                    labels: pieRankingLabels,
+                    // colors: ["#289ffe","#e71f19","#000"],
+                    responsive: [{
+                        breakpoint: 600,
+                        options: {
+                            chart: {
+                                height: 240
+                            },
+                            legend: {
+                                show: !1
+                            }
+                        }
+                    }]
+                };
+                new ApexCharts(document.querySelector("#pieRanking"), pieRankingOptions).render();
+
+
+
+
+                //全国销售地区统计
+                var orderSourceCityOrderByDesc = [[${orderSourceCityOrderByDesc}]];
+                var mapList = [];
+                for(var i = 0; i < orderSourceCityOrderByDesc.length; i++){
+                    var mapLatlng = {
+                        name: orderSourceCityOrderByDesc[i].city + "："+ orderSourceCityOrderByDesc[i].countOrder +"单",
+                        latLng: orderSourceCityOrderByDesc[i].latLng.split(',')
+                    };
+                    mapList.push(mapLatlng);
+                }
+                console.log(mapList);
+                $("#map-chart").vectorMap({
+                            map: "cn_mill",
+                            normalizeFunction: "polynomial",
+                            hoverOpacity: .7,
+                            hoverColor: !1,
+                            regionStyle: {initial: {fill: '#289ffe'}},
+                            markerStyle: {
+                                initial: {
+                                    r: 9,
+                                    fill: '#e71f19',
+                                    "fill-opacity": .9,
+                                    stroke: "#fff",
+                                    "stroke-width": 7,
+                                    "stroke-opacity": .4
+                                }, hover: {stroke: "#fff", "fill-opacity": 1, "stroke-width": 1.5}
+                            },
+                            backgroundColor: "transparent",
+                            markers: mapList,
+                            zoomOnScroll: !1
+                        });
+
+
+
+                /*随机颜色*/
+                function randomColor() {
+                    var color = "";
+                    for (var i = 0; i < 6; i++) {
+                        color += (Math.random() * 16 | 0).toString(16);
+                    }
+                    return "#" + color;
+                }
+
+            });
+        </script>
+    </body>
+</html>
